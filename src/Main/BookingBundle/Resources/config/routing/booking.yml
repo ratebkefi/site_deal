@@ -1,0 +1,28 @@
+front_booking_step1:
+    path:     /
+    defaults: { _controller: MainBookingBundle:Booking:index }
+front_booking_step3:
+    path:     /step1
+    defaults: { _controller: MainBookingBundle:Booking:step1 }
+front_booking_step2:
+    path:     /step2/{code_coupon}/{month}/{year}
+    defaults: { _controller: MainBookingBundle:Booking:step2 }
+    requirements:
+
+            year: \d{4}
+front_booking_load:
+    path:     /load
+    defaults: { _controller: MainBookingBundle:Booking:load }
+front_booking_user:
+    path:     /book/{deal}/{date}/{codeCoupon}
+    defaults: { _controller: MainBookingBundle:Booking:book }
+
+front_booking_calandar:
+    path:     /Calandar/{deal}/{month}/{year}/{monthEnd}/{yearEnd}
+    defaults: { _controller: MainBookingBundle:Booking:Calandar }
+disponibilite:
+    path:     /disponibilite/{id}
+    defaults: { _controller: MainBookingBundle:Booking:disponibilite }
+disponibilite_horaire:
+    path:     /horaire/{deal}/{date}
+    defaults: { _controller: MainBookingBundle:Booking:horaire }

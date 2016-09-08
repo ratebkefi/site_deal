@@ -1,0 +1,59 @@
+{% extends '::baseBack.html.twig' %}
+{% block javascripts %}
+    <script type="text/javascript">
+        var total= {{ sms.total }};
+        var send ={{ sms.smstmp|length }};{% set width=100 -((sms.smstmp|length)*100/sms.total) %}
+        var width= {{ width }};
+        $(function () {
+            $.ajaxSetup({async: false});
+            $('.bar').attr('style','width: '+width+'%');
+            {% for item in sms.smstmp %}
+            $.ajax({ type: "POST", url: "{{ path('sendind_dash_sms') }}", data: "id={{ sms.id }}&smstmpid="+{{ item.id }},success: function(msg){
+                send--;
+                width= 100-(send*100/total);
+                //console.log(width);
+                $('.bar').attr('style','width: '+width+'%');
+            }});
+            {% endfor %}
+
+        });
+    </script>
+{% endblock %}
+{% block body -%}
+    <!-- ==================== PAGE CONTENT ==================== -->
+    <div class="content">
+
+        <!-- ==================== WIDGETS CONTAINER ==================== -->
+        <div class="container-fluid">
+
+            <!-- ==================== END OF ROW ==================== -->
+            <div class="row-fluid">
+                <div class="span12">
+                    <!-- ==================== DEFAULT TABLE HEADLINE ==================== -->
+                    <div class="containerHeadline">
+                        <i class="icon-table"></i>
+
+                        <h2>Envoie  de compagne SMS</h2>
+                    </div>
+                    <!-- ==================== END OF DEFAULT TABLE HEADLINE ==================== -->
+
+                    <!-- ==================== DEFAULT TABLE FLOATING BOX ==================== -->
+                    <div class="floatingBox">
+                        <div class="container-fluid">
+
+                            <h4>Barres de progression</h4>
+
+                            <div class="progress progress-warning progress-striped active">
+                                <div class="bar" style="width: 0%"></div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ==================== END OF WIDGETS CONTAINER ==================== -->
+    </div>
+
+    <!-- ==================== END OF PAGE CONTENT ==================== -->
+{% endblock %}

@@ -1,0 +1,98 @@
+{% extends '::baseBack.html.twig' %}
+{% form_theme form 'form_table_layout.html.twig' %}
+{% block body -%}
+    <div class="content">
+        <div class="container-fluid">
+
+            <!-- ==================== COMMON ELEMENTS ROW ==================== -->
+            <div class="row-fluid">
+                <div class="span12">
+                    <!-- ==================== TEXT INPUTS HEADLINE ==================== -->
+                    <div class="containerHeadline">
+                        <i class="icon-edit"></i><h2>Modifier une annexe</h2>
+                        <div class="controlButton pull-right"><i class="icon-remove removeElement"></i></div>
+                        <div class="controlButton pull-right"><i class="icon-caret-down minimizeElement"></i></div>
+                    </div>
+                    <!-- ==================== END OF TEXT INPUTS HEADLINE ==================== -->
+
+                    <!-- ==================== TEXT INPUTS FLOATING BOX ==================== -->
+                    <div class="floatingBox">
+                        <div class="container-fluid">
+                            <div class="container-fluid">
+                                <form class="form-horizontal contentForm" method="POST" action="{{path('dash_annexe_update',{'id' : entity.id})}}">
+
+                                    {{ form_row(form.object) }}
+                                    {{ form_row(form.minCoupon, {'attr': {'min': '1'}}) }}
+                                    {{ form_row(form.quota, {'attr': {'min': '1'}}) }}
+                                    {{ form_row(form.nbrGratuite, {'attr': {'min': '0'}}) }}
+                                    {{ form_row(form.booking) }}
+                                    {{ form_row(form.remark,{'attr':{'class':'tinymce'}}) }}
+
+                                    {{ form_row(form.releaseDate, {'attr':{'class': 'datepickerField'}}) }}
+
+                                    {{ form_row(form.fixedCommission) }}
+                                    {{ form_row(form.variableCommission) }}
+                                    <div class="control-group">
+                                        <label class="control-label">Packs</label>
+                                        <div class="controls">
+                                            {{ form_widget(form.vedio,{'attr':{'class':'css-checkbox','for':'back_contractbundle_annexe_vedio'}}) }}
+                                            <label class="css-label" for="back_contractbundle_annexe_vedio">Vidéo</label>
+                                            {{ form_widget(form.image,{'attr':{'class':'css-checkbox','for':'back_contractbundle_annexe_image','id':'back_contractbundle_annexe_image'}}) }}
+                                            <label class="css-label" for="back_contractbundle_annexe_image">Image</label>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="formFooter">
+                                        <button type="submit" class="btn btn-success"><i class="icon-ok"> </i> Valider</button>
+                                        <button type="reset" class="btn btn-danger"><i class="icon-remove"> </i> Effacer</button>
+                                        <a href="{{ path('dash_annexe') }}"><button class="btn btn-inverse" type="button"><i class="icon-list"></i> Liste</button></a>
+                                        {{ form_widget(edit_form._token) }}
+                                    </div>
+                                </form>
+                            </div>
+
+                        </div>
+                    </div>
+                    <!-- ==================== END OF TEXT INPUTS FLOATING BOX ==================== -->
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+ {% block javascripts %}
+     <script src="{{ asset('tinymce/tinymce.min.js') }}"></script>
+
+     <script>
+         $(function () {
+             $('#back_commandebundle_command_reference').html('');
+             $('#back_commandebundle_command_reference').attr('required', 'required');
+             $("#back_commandebundle_command_deal").change(function () {
+                 if($('#back_commandebundle_command_deal').val()!="") {
+                     $.ajax({
+                         type: "POST",
+                         dataType: "json",
+                         async: false,
+                         url: "{{ path('back_ajx_reference') }}",
+                         data: "deal=" + $('#back_commandebundle_command_deal').val(),
+                         success: function (data) {
+                             qtedata=data;
+                             console.log(data)
+                             html='<option value=""></option>';
+                             $.each( data, function( key, val ) {
+                                 html += '<option value="'+val.id+'">'+val.name+'</option>';
+
+                             });
+
+                             $('#back_commandebundle_command_reference').html(html)
+                         }
+                     });
+                 }
+             });
+
+         })
+
+
+     </script>
+ {% endblock %}
+

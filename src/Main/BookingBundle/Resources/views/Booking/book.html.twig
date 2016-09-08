@@ -1,0 +1,114 @@
+{% block stylesheets %}
+
+    <!-- Font-awesome Icons -->
+    <link rel="stylesheet" href="{{ asset('public/css/font-awesome.min.css') }}">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="{{ asset('public/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('public/css/reservation.css') }}">
+{% endblock %}
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i
+                    class="fa fa-close"></i></span></button>
+    <h4 class="modal-title"><i class="fa fa-calendar pr-10"></i> <span>{{ date|date('d-m-Y') }}</span></h4>
+</div>
+
+<div class="modal-body">
+
+    <div class="row">
+        <form target="_parent"
+              action="{{ path('front_booking_user',{'date':date,'deal':deal,'codeCoupon':codeCoupon}) }}"
+              class="form-horizontal" method="POST" role="form">
+            <div class="col-sm-12 available">
+                {% set i =0 %}
+                {% set len = morning|length %}
+                {% for key,value in morning %}
+                    {% if i != len-1 %}
+                        {% set starHoure = afficherLeMonth(value) %}
+                        {% set bookDate = date~" "~starHoure~":"~"00:00" %}
+                        {% set capacite = capaciteParHeure(deal) %}
+                        {% set nombreReservation = numberBook(bookDate,deal) %}
+                        {% if nombreReservation<capacite %}
+						{% set lien =  path('front_booking_user',{'date':date~" "~afficherLeMonth(value)~":00:00",'deal':deal,'codeCoupon':codeCoupon})~"?reservation=1"  %}
+						{% set dateReservation = date~' '~afficherLeMonth(value)~':00:00' %}
+
+                            <a href="javascript:reservation('{{ lien }}','{{ dateReservation }}')" class="btn btn-danger" rel="tooltip" title="Reste {{ capacite - nombreReservation }} place">{{ afficherLeMonth(value) }}H:00</a>
+                        {% else %}
+                            <span class="btn btn-default">{{ afficherLeMonth(value) }}H:00</span>
+                        {% endif %}
+
+                    {% endif %}
+                    {% set i = i +1 %}
+                {% endfor %}
+                {% set i =0 %}
+                {% set len = afternon|length %}
+                {% for key,value in afternon %}
+                    {% if i != len-1 %}
+                        {% set starHoure = afficherLeMonth(value) %}
+                        {% set bookDate = date~" "~starHoure~":"~"00:00" %}
+                        {% set capacite = capaciteParHeure(deal) %}
+                        {% set nombreReservation = numberBook(bookDate,deal) %}
+                        {% if nombreReservation<capacite %}
+			            {% set lien =  path('front_booking_user',{'date':date~" "~afficherLeMonth(value)~":00:00",'deal':deal,'codeCoupon':codeCoupon})~"?reservation=1"  %}
+						{% set dateReservation = date~' '~afficherLeMonth(value)~':00:00' %}
+                            <a href="javascript:reservation('{{ lien }}','{{ dateReservation }}')" class="btn btn-danger"  rel="tooltip" title="Reste {{ capacite - nombreReservation }} place">{{ afficherLeMonth(value) }}H:00</a>
+                        {% else %}
+                            <span class="btn btn-default">{{ afficherLeMonth(value) }}H:00</span>
+
+                        {% endif %}
+
+                    {% endif %}
+                    {% set i = i +1 %}
+                {% endfor %}
+
+            </div>
+        </form>
+    </div>
+    <!-- /.row -->
+</div>
+
+
+{% block javascripts %}
+
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script type="text/javascript" src="{{ asset('public/js/jquery-1.11.3.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('public/js/jquery-migrate-1.2.1.js') }}"></script>
+    <!-- Latest compiled and minified JavaScript -->
+    <script type="text/javascript" src="{{ asset('public/js/bootstrap.min.js') }}"></script>
+    <!-- Main JS -->
+	    <link rel="stylesheet" href="{{ asset('public/css/sweet.css') }}">
+
+	        <script type="text/javascript" src="{{ asset('public/js/sweet-alert.js') }}"></script>
+
+<script>$(document).ready(function() {
+        $("a[rel='tooltip']").tooltip({'placement': 'right'});
+    });
+function reservation(url,dateReservation) {
+
+                swal({
+                            title: "Etes vous sûrs de vouloir confirmer votre réservation pour le " + dateReservation,
+                            text: "",
+                            type: "error",
+                            showCancelButton: true,
+                            confirmButtonClass: 'btn-danger',
+                            confirmButtonText: 'Reserver'
+
+                        },
+                        function (isConfirm) {
+                            if (isConfirm) {
+                                // ajax delete delete_mes_adresse
+                             $(location).attr('href', url);
+
+
+                            } else {
+
+                            }
+                        }
+                )
+                ;
+            }
+			</script>
+{% endblock %}
+

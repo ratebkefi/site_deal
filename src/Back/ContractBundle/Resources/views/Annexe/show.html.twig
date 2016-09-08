@@ -1,0 +1,162 @@
+{% extends '::baseBack.html.twig' %}
+
+{% block body -%}
+    <!-- ==================== PAGE CONTENT ==================== -->
+    <div class="content">
+        <!-- ==================== WIDGETS CONTAINER ==================== -->
+        <div class="container-fluid">
+            {% if app.user.roles[0]!='SERVICECLIENT' and app.user.roles[0]!='REDACTEUR' and app.user.roles[0]!='CHEFSERVICECLI' and app.user.roles[0]!='DAF'  and app.user.roles[0]!= 'FINANCIER' %}
+            <a href="{{ path('add_annexe_manager', { 'protocol_id': protocol_id ,'protocol_id': protocol_id,'partner':partner}) }}"><button class="btn btn-danger" type="button"><i class="icon-plus"></i> Ajouter</button></a>
+            <a href="{{ path('update_annexe_manager', { 'id': entity.id ,'protocol_id': protocol_id,'partner':partner}) }}"><button class="btn btn-info" type="button"><i class="icon-pencil"></i> Modifier</button></a>
+           {% endif %}
+            {% if app.user.roles[0]=='ROLE_SUPER_ADMIN' %}
+            <a class="btn btn-danger" href="{{ path('delete_annexe_manager', { 'id': entity.id ,'protocol_id': protocol_id,'partner':partner}) }}"><i class="icon-remove"></i> Supprimer</a>
+            {% endif %}
+
+            <!-- ==================== END OF ROW ==================== -->
+            <div class="row-fluid">
+                <div class="span12">
+                    <!-- ==================== DEFAULT TABLE HEADLINE ==================== -->
+                    <div class="containerHeadline">
+                        <i class="icon-table"></i>Annexe {{ entity.object| raw }}
+                    </div>
+                    <!-- ==================== END OF DEFAULT TABLE HEADLINE ==================== -->
+                    <!-- ==================== DEFAULT TABLE FLOATING BOX ==================== -->
+                    <div class="floatingBox table">
+                        <div class="container-fluid">
+                            <table class="table table-bordered">
+                                <tbody>
+
+                                    <tr>
+                                        <th>Objet</th>
+                                        <td>{{ entity.object| raw }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Minimum de coupons pour valider le deal</th>
+                                        <td>{{ entity.minCoupon }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Réservation</th>
+                                        <td>{{ entity.booking }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Remarques</th>
+                                        <td>{{ entity.remark| raw  }}</td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <th>Date de publication 1</th>
+                                        <td>{{ entity.releaseDate|date('d-m-Y H:i:s') }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Date de publication 2</th>
+                                        <td>{{ entity.releaseDate|date('d-m-Y H:i:s') }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Commission fixe (montant)</th>
+                                        <td>{{ entity.fixedCommission }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Commission variable (%)</th>
+                                        <td>{{ entity.variableCommission }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Protocole</th>
+                                        <td>{{ entity.protocol }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Planning</th>
+                                        <td>{{ entity.planning }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+            <!--div class="row-fluid">
+                <div class="span12">
+
+                    <div class="containerHeadline">
+                        <i class="icon-table"></i>Réference
+                    </div>
+
+                    <div class="floatingBox table">
+                        <div class="container-fluid">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>Titre</th>
+                                    <th>Prix boutique</th>
+                                    <th>Prix BIGDeal</th>
+                                    <th>max coupon</th>
+
+                                    <th>Livraison</th>
+                                    <th>Annexe</th>
+                                    <th>Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for entityReference in reference %}
+                                    <tr>
+                                        <td>{{ entityReference.title }}</td>
+                                        <td>{{ entityReference.shopPrice }}</td>
+                                        <td>{{ entityReference.bigdealPrice }}</td>
+                                        <td>{{ entityReference.maxCoupon }}</td>
+
+                                        <td>{% if entityReference.shipping ==1 %} Oui {% else %} Non {% endif %}</td>
+                                        <td>{{ entityReference.annexe }}</td>
+                                        <td>
+                                            <div class="btn-toolbar" style="margin: 0;">
+                                                <div class="btn-group">
+                                                    <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                                        Action <span
+                                                                class="caret"></span></button>
+                                                    <ul class="dropdown-menu pull-right">
+
+                                                        <li>
+                                                            <a href="{{ path('dash_reference_show', { 'id': entityReference.id ,'protocol_id':protocol_id,'annexe_id':entity.id,'partner':partner}) }}">Afficher</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="{{ path('update_reference_manager', { 'id': entityReference.id ,'protocol_id':protocol_id,'annexe_id':entity.id,'partner':partner}) }}">Modifier</a>
+                                                        </li>
+
+                                                        {% if app.user.roles[0]=='ROLE_SUPER_ADMIN' %}
+
+                                                            <li>
+                                                                <a href="javascript:confirmdeletbox('{{ path('delete_reference_manager', { 'id': entityReference.id ,'protocol_id':protocol_id,'annexe_id':entity.id,'partner':partner}) }}')">Supprimer</a>
+                                                            </li>
+                                                        {% endif %}
+
+                                                    </ul>
+                                                </div>
+                                            </div>
+
+
+
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div-->
+        </div>
+        <!-- ==================== END OF WIDGETS CONTAINER ==================== -->
+    </div>
+    <!-- ==================== END OF PAGE CONTENT ==================== -->
+{% endblock %}

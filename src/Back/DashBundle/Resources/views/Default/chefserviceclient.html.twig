@@ -1,0 +1,467 @@
+{% extends '::baseBack.html.twig' %}
+{% block body %}
+    <div class="container-fluid">
+        <div class="row-fluid" style="margin-bottom:0">
+            <div class="span12">
+                <div class="row-fluid" style="margin-bottom:0">
+                    <div class="span12">
+                        <div class="containerHeadline">
+                            <i class="icon-zoom-in"></i>
+                            <h2>Filtre</h2>
+                        </div>
+                        <div class="floatingBox">
+                            <div class="container-fluid">
+                                <form onsubmit="return false;">
+                                    <div class="span4">
+                                        <label>Agent</label>
+                                        <select id="agent" name="agent" class="span10 ">
+                                            <option value="">Choisissez nom d'agent</option>
+                                            {% for item in agents %}
+                                                <option value="{{ item.id }}">{{ item }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="span4">
+                                        <label>Date de début</label>
+                                        <input type="text" class="span10 datetime" name="dated" id="dated"
+                                               value="{{ dated|date('d/m/Y') }}"/>
+                                    </div>
+                                    <div class="span4">
+                                        <label>Date de fin</label>
+                                        <input type="text" name="datef" class="span10 datetime" id="datef"
+                                               value="{{ datef|date('d/m/Y') }}"/>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ==================== ROW ==================== -->
+        <div class="row-fluid">
+
+            <div class="span12">
+                <div class="row-fluid">
+                    <div class="span6">
+
+                        <div class="containerHeadline">
+                            <i class="icon-ticket"></i>
+
+                            <h2>Volume des tickets</h2>
+
+                            <div class="controlButton pull-right"><i class="icon-remove removeElement"></i></div>
+                            <div class="controlButton pull-right"><i class="icon-caret-down minimizeElement"></i></div>
+                            <div class="controlButton pull-right"><i class="icon-refresh"
+                                                                     onclick="loadFirstChart()"></i></div>
+                        </div>
+
+                        <div class="floatingBox">
+                            <div class="container-fluid">
+                                <div class="span12">
+                                    <div class="demoPieChart" id="firstPieChart">
+
+                                    </div>
+
+                                    <div class="legendLabel">Nombre de ticket résolut en moins de 24 : <strong>{{ delaiMoin24 }} Ticket</strong></div>
+                                </div>
+                            </div>
+                            <div class="container-fluid">
+                                <div class="span12">
+                                    <table id="firstPieChartTable" class="table">
+                                        <thead>
+                                        <tr>
+
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+
+                                        </tr>
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="span6">
+                        <div class="containerHeadline">
+                            <i class="icon-ticket"></i>
+                            <h2>Nombre de message</h2>
+
+                            <div class="controlButton pull-right"><i class="icon-remove removeElement"></i></div>
+                            <div class="controlButton pull-right"><i class="icon-caret-down minimizeElement"></i></div>
+                            <div class="controlButton pull-right"><i class="icon-refresh" onclick="loadLastChart()"></i></div>
+                        </div>
+
+                        <div class="floatingBox">
+                            <div class="container-fluid">
+                                <div class="span12">
+                                    <div class="demoPieChart" id="lastPieChart">
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="container-fluid">
+                                <div class="span12">
+                                    <table id="lastPieChartTable" class="table">
+                                        <thead>
+                                        <tr>
+
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row-fluid">
+                    <div class="span12">
+                        <div class="containerHeadline">
+                            <i class="icon-ticket"></i>
+                            <h2>Delai de traitement</h2>
+                            <div class="controlButton pull-right"><i class="icon-remove removeElement"></i></div>
+                            <div class="controlButton pull-right"><i class="icon-caret-down minimizeElement"></i></div>
+                            <div class="controlButton pull-right"><i class="icon-refresh " onclick="loadSecondChart()"></i></div>
+                        </div>
+                        <div class="floatingBox">
+                            <div class="container-fluid">
+                                <div class="span12">
+                                    <div class="demoPieChart" id="placeholder"></div>
+                                </div>
+                            </div><br/><br/><br/><br/><br/>
+                            <div class="container-fluid">
+                                <div class="span12">
+                                    <table id="secondPieChartTable" class="table">
+                                        <thead>
+                                        <tr>
+
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+
+                                        </tr>
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row-fluid">
+                    <div class="span6">
+                        <div class="containerHeadline">
+                            <i class="icon-ticket"></i>
+                            <h2>Montant de  Remboursements</h2>
+                            <div class="controlButton pull-right"><i class="icon-remove removeElement"></i></div>
+                            <div class="controlButton pull-right"><i class="icon-caret-down minimizeElement"></i></div>
+                            <div class="controlButton pull-right"><i class="icon-refresh"
+                                                                     onclick="loadRemboursements1Chart()"></i></div>
+                        </div>
+                        <div class="floatingBox">
+                            <div class="container-fluid">
+                                <div class="span12">
+                                    <div class="span3">
+                                        <label>Partenaire</label>
+                                        <select id="partenaire_id3" name="partenaire_id3" class="span10 selectpicker" data-live-search="true" onchange="chargerselectdeal3()" >
+                                            <option value="">Choisissez partenaire</option>
+                                            {% for item in partenaire %}
+                                                <option value="{{ item.id }}">{{ item }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="span3">
+                                        <label>Catégorie</label>
+                                        <select class="span12" onchange="chargerselectdeal3()" id="idcategorie3">
+                                            <option value=""></option>
+                                            {% for item in category %}
+                                                {% if item.category|length>0 %}
+                                                    <optgroup label="{{ item.name }}">
+                                                        {% for item2 in item.category %}
+                                                            <option value="{{ item2.id }}">{{ item2.name }}</option>
+                                                        {% endfor %}
+                                                    </optgroup>
+                                                {% else %}
+                                                    <option value="{{ item.id }}">{{ item.name }}</option>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="span3">
+                                        <label>Région</label>
+                                        <select class="span12" onchange="chargerselectdeal3()" id="idregion3">
+                                            <option value=""></option>
+                                            {% for item in region %}
+                                                <option value="{{ item.id }}">{{ item.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="span3">
+                                        <label>Deal</label>
+                                        <select class="span12 selectpicker10" data-live-search="true" id="iddearm3" onchange="loadRemboursements1Chart(this.value)">
+                                            <option value="">Choisissez un deal</option>
+
+                                        </select>
+                                    </div><br/><br/><br/><br/>
+                                    <div class="demoPieChart" id="rm3PieChart">
+                                    </div>
+                                </div>
+                            </div><br><br>
+                            <div class="container-fluid">
+                                <div class="span12">
+                                    <table id="rm3PieChartTable" class="table">
+                                        <thead>
+                                        <tr>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="span6">
+                        <div class="containerHeadline">
+                            <i class="icon-ticket"></i>
+                            <h2>Nombre Remboursements</h2>
+                            <div class="controlButton pull-right"><i class="icon-remove removeElement"></i></div>
+                            <div class="controlButton pull-right"><i class="icon-caret-down minimizeElement"></i></div>
+                            <div class="controlButton pull-right"><i class="icon-refresh"
+                                                                     onclick="loadRemboursementsChart()"></i></div>
+                        </div>
+                        <div class="floatingBox">
+                            <div class="container-fluid">
+                                <div class="span12">
+                                    <div class="span3">
+                                        <label>Partenaire</label>
+                                        <select id="partenaire_id2" name="partenaire_id2" class="span10 selectpicker" data-live-search="true"  onchange="chargerselectdeal2()" >
+                                            <option value="">Choisissez partenaire</option>
+                                            {% for item in partenaire %}
+                                                <option value="{{ item.id }}">{{ item }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="span3">
+                                        <label>Catégorie</label>
+                                        <select class="span12" onchange="chargerselectdeal2()" id="idcategorie">
+                                            <option value=""></option>
+                                            {% for item in category %}
+                                                {% if item.category|length>0 %}
+                                                    <optgroup label="{{ item.name }}">
+                                                        {% for item2 in item.category %}
+                                                            <option value="{{ item2.id }}">{{ item2.name }}</option>
+                                                        {% endfor %}
+                                                    </optgroup>
+                                                {% else %}
+                                                    <option value="{{ item.id }}">{{ item.name }}</option>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="span3">
+                                        <label>Région</label>
+                                        <select class="span12" onchange="chargerselectdeal2()" id="idregion">
+                                            <option value=""></option>
+                                            {% for item in region %}
+                                                <option value="{{ item.id }}">{{ item.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="span3">
+                                        <label>Deal</label>
+                                        <select class="span12 selectpicker10" data-live-search="true" id="iddearm" onchange="loadRemboursementsChart(this.value)">
+                                            <option value="">Choisissez un deal</option>
+
+                                        </select>
+                                    </div><br/><br/><br/><br/>
+                                    <div class="demoPieChart" id="rm2PieChart">
+                                    </div>
+                                </div>
+                            </div><br><br>
+                            <div class="container-fluid">
+                                <div class="span12">
+                                    <table id="rm2PieChartTable" class="table">
+                                        <thead>
+                                        <tr>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row-fluid">
+                    <div class="span6">
+                        <div class="containerHeadline">
+                            <i class="icon-ticket"></i>
+                            <h2>Volume des coupons</h2>
+                            <div class="controlButton pull-right"><i class="icon-remove removeElement"></i></div>
+                            <div class="controlButton pull-right"><i class="icon-caret-down minimizeElement"></i></div>
+                            <div class="controlButton pull-right"><i class="icon-refresh"
+                                                                     onclick="loadRmChart()"></i></div>
+                        </div>
+                        <div class="floatingBox">
+                            <div class="container-fluid">
+                                <div class="span12">
+                                    <div class="span6">
+                                        <label>Partenaire</label>
+                                        <select id="partenaire_id" name="partenaire_id" class="span10 selectpicker" data-live-search="true"  onchange="chargerselectdeal()" >
+                                            <option value="">Choisissez partenaire</option>
+                                            {% for item in partenaire %}
+                                                <option value="{{ item.id }}">{{ item }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="span6">
+                                        <label>Deal</label>
+                                        <select class="span12 selectpicker10" data-live-search="true" id="iddeal15874" onchange="loadRmChart(this.value)">
+                                            <option value="">Choisissez un deal</option>
+
+                                        </select>
+                                    </div><br/><br/><br/><br/>
+                                    <div class="demoPieChart" id="rmPieChart">
+                                    </div>
+                                </div>
+                            </div><br><br>
+                            <div class="container-fluid">
+                                <div class="span12">
+                                    <table id="rmPieChartTable" class="table">
+                                        <thead>
+                                        <tr>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="span6">
+                        <div class="containerHeadline">
+                            <i class="icon-ticket"></i>
+                            <h2>Nombre des commandes</h2>
+                            <div class="controlButton pull-right"><i class="icon-remove removeElement"></i></div>
+                            <div class="controlButton pull-right"><i class="icon-caret-down minimizeElement"></i></div>
+                            <div class="controlButton pull-right"><i class="icon-refresh"
+                                                                     onclick="loadNbrCommandeChart()"></i></div>
+                        </div>
+                        <div class="floatingBox">
+                            <div class="container-fluid">
+                                <div class="span12">
+                                    <div class="span6">
+                                        <label>Partenaire</label>
+                                        <select id="partenaireid" name="partenaireid" class="span10 selectpicker" data-live-search="true"  onchange="chargerselectdeal5()" >
+                                            <option value="">Choisissez partenaire</option>
+                                            {% for item in partenaire %}
+                                                <option value="{{ item.id }}">{{ item }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="span6">
+                                        <label>Deal</label>
+                                        <select class="span12 selectpicker10" data-live-search="true" id="iddealcmd1" onchange="loadNbrCommandeChart(this.value)">
+                                            <option value="">Choisissez un deal</option>
+
+                                        </select>
+                                    </div><br/><br/><br/><br/>
+                                    <div class="demoPieChart" id="nombreCommandePieChart">
+                                    </div>
+                                </div>
+                            </div><br><br>
+                            <div class="container-fluid">
+                                <div class="span12">
+                                    <table id="nombreCommandePieChartTable" class="table">
+                                        <thead>
+                                        <tr>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block stylesheets %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('RessourcesBack/css/bootstrap-select.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('RessourcesBack/css/jquery.dataTables.css') }}">
+
+{% endblock %}
+{% block javascripts %}
+
+
+    <script src="{{ asset('RessourcesBack/js/lib/jquery-inputmask/jquery.inputmask.min.js') }}"></script>
+    <script src="{{ asset('RessourcesBack/js/lib/jquery-inputmask/jquery.inputmask.extensions.js') }}"></script>
+    <script src="{{ asset('RessourcesBack/js/lib/jquery-inputmask/jquery.inputmask.date.extensions.js') }}"></script>
+
+    <script src="{{ asset('RessourcesBack/js/vendor/jquery.sparkline.min.js') }}"></script>               <!-- small charts plugin -->
+    <script src="{{ asset('RessourcesBack/js/vendor/jquery.flot.min.js') }}"></script>                    <!-- charts plugin -->
+    <script src="{{ asset('RessourcesBack/js/vendor/jquery.flot.resize.min.js') }}"></script>             <!-- charts plugin / resizing extension -->
+    <script src="{{ asset('RessourcesBack/js/vendor/jquery.flot.pie.min.js') }}"></script>                <!-- charts plugin / pie chart extension -->
+
+    <script src="{{ asset('RessourcesBack/js/bootstrap-select.js') }}"></script>
+
+    {% javascripts '@BackDashBundle/Resources/public/js/jquery.dataTables.js' %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    <script type="text/javascript">
+        var linkajx1 = "{{ path('back_ajx_ticket1_json') }}";
+        var linkajx10 = "{{ path('back_ajx_ticket10_json') }}";
+        var linkajx2 = "{{ path('back_ajx_ticket2_json') }}";
+        var linkajx3 = "{{ path('back_ajx_ticket3_json') }}";
+        var linkajx4 = "{{ path('back_ajx_ticket4_json') }}";
+        var linkajx5 = "{{ path('back_ajx_ticket5_json') }}";
+        var linkajx6 = "{{ path('back_ajx_ticket6_json') }}";
+        var linkajxdeal="{{ path('back_dash_json_cs_deal') }}";
+        var linkajxdeal2="{{ path('back_dash_json_cs_deal2') }}";
+        var linkajxdeal3="{{ path('back_dash_json_cs_deal2') }}";
+
+    </script>
+    {% javascripts '@BackDashBundle/Resources/public/js/chefservice.js' %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    <script>
+        $(function () {
+            $(".datetime").inputmask("date");
+        });
+
+
+
+    </script>
+
+{% endblock %}

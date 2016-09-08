@@ -1,0 +1,10 @@
+Bonjour <strong>{{ client.name }} {{ client.fname }}</strong>,<br/>
+Vous avez récemment commandé le deal <strong>{{ commande.deal.title }} </strong>dont le numéro de commande est : <strong>{{ commande.id }}</strong><br/>
+La transaction monétique vient d’être annulée par votre banque, nous avons donc  annulé votre commande. <strong>par ce que votre  solde insuffisant ou plafond atteint</strong><br/>
+Si vous avez reçu un coupon, merci de ne pas l’utiliser car il a été annulé.<br/>
+Le montant de votre commande vous sera remboursé par votre banque, si ce n’est pas le cas merci de nous contacter pour intervenir.<br/>
+Vous pouvez recommander votre deal en cliquant ici <a href="bigdeal.tn{{ path('deal_detail',  {'region':(app.session.get('region')|getAlias),'categorie':(commande.deal.planning.categoryId|getAlias), 'id': commande.deal.id ,'name':(commande.deal.title|getAlias)}) }}" >{{ commande.deal.title }}</a>
+Si vous avez des questions, n’hésitez pas à nous contacter.<br/>
+<br/>
+<br/>
+<strong>L’équipe BIGDeal</strong>

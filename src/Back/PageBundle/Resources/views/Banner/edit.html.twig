@@ -1,0 +1,109 @@
+{% extends '::baseBack.html.twig' %}
+{% form_theme form 'form_table_layout.html.twig' %}
+{% block javascripts %}
+    <!-- masked inputs -->
+    <script src="{{ asset('RessourcesBack/js/lib/jquery-inputmask/jquery.inputmask.min.js') }}"></script>
+    <script src="{{ asset('RessourcesBack/js/lib/jquery-inputmask/jquery.inputmask.extensions.js') }}"></script>
+    <script src="{{ asset('RessourcesBack/js/lib/jquery-inputmask/jquery.inputmask.date.extensions.js') }}"></script>
+    <script src="{{ asset('tinymce/tinymce.min.js') }}"></script>
+    <script>
+        $(".datetime").inputmask("date");
+        $(document).ready(function () {
+            $("#back_pagebundle_banner_name").attr({
+                'data-validation': 'required'
+            });
+            $("#filexxxx").attr({
+                'data-validation': 'required'
+            });
+            $("#back_pagebundle_banner_link").attr('data-validation', 'url');
+            $("#back_pagebundle_banner_dated").attr({
+                'data-validation': 'date',
+                'data-validation-format': 'dd/mm/yyyy'
+            });
+            $("#back_pagebundle_banner_datef").attr({
+                'data-validation': 'date',
+                'data-validation-format': 'dd/mm/yyyy'
+            });
+            $("#back_planningbundle_planner_cin").attr({'data-validation': 'length number', 'data-validation-length': '8-8'});
+            $("#back_planningbundle_planner_datecin").attr({
+                'data-validation': 'birthdate',
+                'data-validation-format': 'dd/mm/yyyy'
+            });
+            $("#back_planningbundle_planner_rib").attr({'data-validation': 'length number', 'data-validation-length': '20-20'});
+            $("#back_planningbundle_planner_phone").attr({'data-validation': 'length number', 'data-validation-length': '8-8'});
+            $("#back_planningbundle_planner_phoneurg").attr({'data-validation': 'length number', 'data-validation-length': '8-8'});
+            $.validate();
+        });
+    </script>
+{% endblock %}
+{% block body -%}
+    <div class="content">
+        <div class="container-fluid">
+
+            <!-- ==================== COMMON ELEMENTS ROW ==================== -->
+            <div class="row-fluid">
+                <div class="span12">
+                    <!-- ==================== TEXT INPUTS HEADLINE ==================== -->
+                    <div class="containerHeadline">
+                        <i class="icon-edit"></i>
+
+                        <h2>Ajouter/Modifier une bannière</h2>
+                    </div>
+                    <!-- ==================== END OF TEXT INPUTS HEADLINE ==================== -->
+
+                    <!-- ==================== TEXT INPUTS FLOATING BOX ==================== -->
+                    <div class="floatingBox">
+                        <div class="container-fluid">
+                            <h2>Bannière {{ page.name }}</h2>
+
+                            <div class="container-fluid">
+                                {{ form_start(form, {'method': 'POST','attr': {'class': 'form-horizontal contentForm'}}) }}
+                                {{ form_row(form.name) }}
+                                {{ form_row(form.link) }}
+                                {{ form_row(form.dated,{'attr':{'class':'datetime'}}) }}
+                                {{ form_row(form.datef,{'attr':{'class':'datetime'}}) }}
+                                {{ form_row(form.act) }}
+                                <div class="control-group">
+                                    <label class="control-label">Fichier : </label>
+
+                                    <div class="controls">
+                                        <input type="text" value="{{ page.media }}" name="file" id="filexxxx">
+                                        <span class="add-on">
+                                            <a class='btn btn-success iframe-btnx'
+                                               href='{{ asset('tinymce/plugins/filemanager/dialog.php') }}?type=2&field_id=filexxxx'>
+                                                <i class="icon-download"></i></a>
+                                        </span>
+                                    </div>
+
+                                </div>
+                                {{ form_row(form.width) }}
+                                {{ form_row(form.height) }}
+                                {{ form_row(form.zone) }}
+                                {{ form_row(form.target) }}
+
+
+                                <div class="formFooter">
+                                    <button type="submit" class="btn btn-success"><i class="icon-ok"> </i>
+                                        Valider
+                                    </button>
+                                    <button type="reset" class="btn btn-danger"><i class="icon-remove"> </i>
+                                        Effacer
+                                    </button>
+                                    <a href="{{ path('back_banner_homepage') }}">
+                                        <button class="btn btn-inverse" type="button"><i class="icon-list"></i>
+                                            Liste
+                                        </button>
+                                    </a>
+                                    {{ form_widget(form._token) }}
+                                </div>
+                                {{ form_end(form) }}
+                            </div>
+
+                        </div>
+                    </div>
+                    <!-- ==================== END OF TEXT INPUTS FLOATING BOX ==================== -->
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

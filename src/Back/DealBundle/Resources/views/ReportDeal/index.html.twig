@@ -1,0 +1,132 @@
+{% extends '::baseBack.html.twig' %}
+{% block body -%}
+    <!-- ==================== PAGE CONTENT ==================== -->
+    <div class="content">
+        <!-- ==================== WIDGETS CONTAINER ==================== -->
+        <div class="container-fluid">
+            <!-- ==================== END OF ROW ==================== -->
+            <div class="row-fluid">
+                <div class="span12">
+                    <div class="containerHeadline">
+                        <i class="icon-zoom-in"></i>
+                        <h2>Filtre de recherche</h2>
+                        <div class="controlButton pull-right"><i class="icon-caret-down minimizeElement"></i></div>
+                    </div>
+                    <div class="floatingBox table ">
+                        {{ form_start(form, {'method': 'GET','attr': {'class': 'form-horizontal contentForm','style':'padding:0; margin:0'}}) }}
+                        <div class="container-fluid" style="padding: 3px 10px">
+                            <div class="span2">
+                                <label>N° deal</label>
+                                {{ form_widget(form.id,{'attr':{'class':'span12'}}) }}
+                            </div>
+                            <div class="span2">
+                                <label>Titre</label>
+                                {{ form_widget(form.title,{'attr':{'autocomplete':'off','class':'span12'}}) }}
+                            </div>
+
+                        </div>
+
+                        <div class="container-fluid" style="padding: 3px 10px 20px">
+                            <div class="span1">
+                                <label>&nbsp;</label>
+                                <input type="submit" value="Rechecher" name="Rechecher" class="btn btn-success"/>
+
+                            </div>
+
+                            <div class="span1" >
+                                <label>&nbsp;</label>
+                                <input type="submit" value="Export" name="Export" class="btn btn-danger"/>
+                            </div>
+                            <div class="span2" >
+                                <label>&nbsp;</label>
+                                <input type="submit" name="enquete"  value="Envoyer enquête de satisfaction" name="part" class="btn btn-danger"/>
+                            </div>
+                        </div>
+                        {{ form_end(form) }}
+
+                    </div>{% for type, flashMessages in app.session.flashbag.all() %}
+                    {% for flashMessage in flashMessages %}
+                        <br/><div class="alert  {{type}}" >
+                        {{ flashMessage|trans }}
+                    </div>
+                    {% endfor %}
+                {% endfor %}
+                    <!-- ==================== DEFAULT TABLE HEADLINE ==================== -->
+                    <div class="containerHeadline">
+                        <i class="icon-table"></i>
+                        <h2>Deal Coupon Report</h2>
+                    </div>
+                    <!-- =================== END OF DEFAULT TABLE HEADLINE ==================== -->
+                    <!-- ==================== DEFAULT TABLE FLOATING BOX ==================== -->
+                       
+					<div class="floatingBox table">
+                        <div class="container-fluid">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>Nom de l'acheteur</th>
+                                    <th>Email Acheteur</th>
+                                    <th>Tel</th>
+                                    <th>Cassier</th>
+                                    <th>Prix</th>
+                                    <th>Date de commande</th>
+                                    <th>Date de payement</th>
+                                    <th>Reference</th>
+                                    <th>Coupon Status</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for key,entity in pagination %}
+                                    {% set adresse = getAdresse(entity.command.client.id) %}
+                                    {% set indicationAdresse = getIndicationAdresse(entity.command.client.id) %}
+                                    <tr>
+                                        <td>{{ entity.client }}  </td>
+                                        <td>{{ entity.command.client.email }}</td>
+                                        <td> {{ entity.command.client.phone }} </td>
+
+                                        <td> {{ entity.command.caisse }} </td>
+                                        <td> {{ entity.command.reference.bigdealPrice }} TND</td>
+                                        <td> {{ entity.command.dcr|date('d-m-Y H:i:s') }} </td>
+                                        <td> {{ entity.dcr|date('d-m-Y H:i:s') }} </td>
+                                        <td> {{ entity.command.reference }} </td>
+                                        <td>{{ entity.vendu|getVenduCoupon }} - {{ entity.recu|getRecuCoupon }}</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                            {# display navigation #}
+                            <div class="pagination pagination-large" style="text-align: center">
+                                {{ knp_pagination_render(pagination) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ==================== END OF WIDGETS CONTAINER ==================== -->
+    </div>
+    <link rel="stylesheet" type="text/css" href="{{ asset('RessourcesBack/css/bootstrap-select.css') }}">
+{% endblock %}
+    {% block javascripts %}
+        {% javascripts '@MainFrontBundle/Resources/public/js/bootstrap-typeahead.min.js' %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+        {% endjavascripts %}
+
+
+        <script src="{{ asset('RessourcesBack/js/bootstrap-select.js') }}"></script>
+        <script>
+            $('#back_dealbundle_reportdealfilter_title').typeahead({
+               ajax: {
+                    url: '{{ path("ajxdealback") }}',
+                    triggerLength: 1,
+                    items:10
+                },
+                afterSelect: function (item) {
+                    //save the id value into the hidden field
+
+                },
+                displayField: 'full_name'
+
+            })
+        </script>
+    {% endblock %}

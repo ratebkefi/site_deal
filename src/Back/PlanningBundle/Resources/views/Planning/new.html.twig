@@ -1,0 +1,131 @@
+{% extends '::baseBack.html.twig' %}
+
+{% block body -%}
+    <div class="content">
+        <div class="container-fluid">
+
+            <!-- ==================== COMMON ELEMENTS ROW ==================== -->
+            <div class="row-fluid">
+                <div class="span12">
+                    <!-- ==================== TEXT INPUTS HEADLINE ==================== -->
+                    <div class="containerHeadline">
+                        <i class="icon-edit"></i><h2>Ajouter un planning</h2>
+                        <div class="controlButton pull-right"><i class="icon-remove removeElement"></i></div>
+                        <div class="controlButton pull-right"><i class="icon-caret-down minimizeElement"></i></div>
+                    </div>
+                    <!-- ==================== END OF TEXT INPUTS HEADLINE ==================== -->
+
+                    <!-- ==================== TEXT INPUTS FLOATING BOX ==================== -->
+                    <div class="floatingBox">
+                        <div class="container-fluid">
+                            <h2>Planning {{ entity.id }}</h2>
+                            <div class="container-fluid">
+                                <form class="form-horizontal contentForm" method="POST" action="{{path('dash_planning_create')}}">
+                                    <div class="control-group">
+                                        <label class="control-label">Etat</label>
+                                        <div class="controls">
+                                            {{ form_widget(form.state) }}
+                                        </div>
+                                        <br/>
+                                         <label class="control-label">Object</label>
+                                        <div class="controls">
+                                            {{ form_widget(form.object) }}
+                                        </div>
+                                         <br/>
+                                         <label class="control-label">Tarif</label>
+                                        <div class="controls">
+                                            {{ form_widget(form.tariff) }}
+                                        </div>
+                                         <br/>
+                                         <label class="control-label">Description</label>
+                                        <div class="controls">
+                                            {{ form_widget(form.description) }}
+                                        </div>
+                                         <br/>
+                                         <label class="control-label">Date de début</label>
+                                        <div class="controls">
+                                            {{ form_widget(form.startDate) }}
+                                        </div>
+                                          
+                                         <br/>
+                                         <label class="control-label">Date de fin</label>
+                                        <div class="controls">
+                                            {{ form_widget(form.endDate) }}
+                                        </div>
+                                         <br/>
+                                         <label class="control-label">Remarques</label>
+                                        <div class="controls">
+                                            {{ form_widget(form.remarks) }}
+                                        </div>
+                                         <br/>
+                                         <label class="control-label">Catégorie</label>
+                                        <div class="controls">
+                                            {{ form_widget(form.categoryId) }}
+                                        </div>
+                                         <br/>
+                                         <label class="control-label">Région</label>
+                                        <div class="controls">
+                                            {{ form_widget(form.regionId) }}
+                                        </div>
+                                    </div>
+
+                                    <div class="formFooter">
+                                        <button type="submit" class="btn btn-success"><i class="icon-ok"> </i> Valider</button>
+                                        <button type="reset" class="btn btn-danger"><i class="icon-remove"> </i> Effacer</button>
+                                        <a href="{{ path('dash_planning') }}"><button class="btn btn-inverse" type="button"><i class="icon-list"></i> Liste</button></a>
+                                        {{ form_widget(form._token) }}
+                                    </div>
+                                </form>
+                            </div>
+
+                        </div>
+                    </div>
+                    <!-- ==================== END OF TEXT INPUTS FLOATING BOX ==================== -->
+                </div>
+            </div>
+        </div>
+    </div>
+<link href="{{ asset('RessourcesBack/css/bootstrap-datetimepicker.css') }}" type="text/css" rel="stylesheet" />
+
+        {% block javascripts %}
+     
+
+
+<script src="{{ asset('tinymce/tinymce.min.js') }}"></script>
+<script src="{{ asset('RessourcesBack/js/vendor/bootstrap-datetimepicker.min.js') }}"></script>
+<script type="text/javascript">
+            $("#back_planningbundle_planning_startDate").datetimepicker({format: 'yyyy-mm-dd hh:ii:ss'});
+            $("#back_planningbundle_planning_endDate").datetimepicker({format: 'yyyy-mm-dd hh:ii:ss'});
+        </script>
+<script>
+     
+tinymce.init({selector: '#back_planningbundle_planning_description',
+            plugins: [
+                "advlist autolink lists link image charmap print preview anchor",
+                "searchreplace visualblocks code fullscreen ",
+                "insertdatetime media table contextmenu paste moxiemanager responsivefilemanager filemanager importcss textcolor "
+            ],
+            toolbar: "insertfile undo redo | styleselect | forecolor fontselect fontsizeselect | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | forecolor backcolor table",
+            autosave_ask_before_unload: false,
+            theme_advanced_fonts: "Arial=arial,helvetica,sans-serif;Arial Black=arial black;Courier New=courier new,courier,monospace;Times New Roman=times new roman;Georgia=georgia;Comic Sans MS=comic sans ms;Book Antiqua=book antiqua;Tahoma=tahoma;Trebuchet MS=trebuchet ms;",
+            max_height: 600,
+            min_height: 160,
+            height: 180});
+       tinymce.init({selector: '#back_planningbundle_planning_remarks',
+            plugins: [
+                "advlist autolink lists link image charmap print preview anchor",
+                "searchreplace visualblocks code fullscreen ",
+                "insertdatetime media table contextmenu paste moxiemanager responsivefilemanager filemanager importcss textcolor "
+            ],
+            toolbar: "insertfile undo redo | styleselect | forecolor fontselect fontsizeselect | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | forecolor backcolor table",
+            autosave_ask_before_unload: false,
+            theme_advanced_fonts: "Arial=arial,helvetica,sans-serif;Arial Black=arial black;Courier New=courier new,courier,monospace;Times New Roman=times new roman;Georgia=georgia;Comic Sans MS=comic sans ms;Book Antiqua=book antiqua;Tahoma=tahoma;Trebuchet MS=trebuchet ms;",
+            max_height: 600,
+            min_height: 160,
+            height: 180});
+        </script>
+       
+         
+        
+                {% endblock %}
+{% endblock %}

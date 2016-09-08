@@ -1,0 +1,60 @@
+<link href="{{ asset('RessourcesBack/css/bootstrap-responsive.min.css') }}" type="text/css" rel="stylesheet"/>
+<link href="{{ asset('RessourcesBack/css/thekamarel.css') }}" type="text/css" rel="stylesheet"/>
+<link href="{{ asset('RessourcesBack/css/styles.css') }}" type="text/css" rel="stylesheet"/>
+<link href="{{ asset('RessourcesBack/css/fancy-style.css') }}" type="text/css" rel="stylesheet"/>
+
+{% block body -%}
+    <div class="content">
+        <div class="">
+
+            <!-- ==================== COMMON ELEMENTS ROW ==================== -->
+            <div class="row-fluid">
+                <div class="span12">
+                    <!-- ==================== TEXT INPUTS HEADLINE ==================== -->
+                    <div class="containerHeadline">
+                        <h2>Notes</h2>
+
+                    </div>
+                    <!-- ==================== END OF TEXT INPUTS HEADLINE ==================== -->
+                    <!-- ==================== TEXT INPUTS FLOATING BOX ==================== -->
+                    <div class="floatingBox">
+                        <div class="container-fluid">
+                            <div class="container-fluid">
+                                <div class="floatingBox table">
+                                    <div class="container-fluid">
+                                        <a href="{{ path('note_ticket_add',{'id':id}) }}" class="btn btn-primary">
+                                            <i class="icon-user" style="opacity: 1;"></i> Ajouter une note
+                                        </a>
+                                        <table class="table">
+                                            <thead>
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>Utilisateur</th>
+                                                <th>Note</th>
+
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for item in noteTicket %}
+                                                <tr>
+                                                    <td> {{ item.dcr|date('d-m-Y H:i:s') }}</td>
+                                                    <td> {{ item.user.name }}</td>
+                                                    <td> {{ item.message }}</td>
+                                                </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ==================== END OF TEXT INPUTS FLOATING BOX ==================== -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

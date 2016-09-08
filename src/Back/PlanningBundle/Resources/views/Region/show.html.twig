@@ -1,0 +1,50 @@
+{% extends '::baseBack.html.twig' %}
+{% block body -%}
+    <!-- ==================== PAGE CONTENT ==================== -->
+    <div class="content">
+        <!-- ==================== WIDGETS CONTAINER ==================== -->
+        <div class="container-fluid">
+            <form action="{{ path('dash_region_delete', { 'id': entity.id }) }}" method="GET">
+                <a href="{{ path('dash_region_new') }}"><button class="btn btn-danger" type="button"><i class="icon-plus"></i> Ajouter</button></a>
+                <a href="{{ path('dash_region_edit', { 'id': entity.id }) }}"><button class="btn btn-info" type="button"><i class="icon-pencil"></i> Modifier</button></a>
+                <a class="btn btn-danger" href="javascript:confirmdeletbox('{{ path('dash_region_delete', {'id': entity.id}) }}')"><i class="icon-remove"> </i> Supprimer</a>
+                <a href="{{ path('dash_region') }}"><button class="btn btn-inverse pull-right" type="button" id="form_submit"><i class="icon-list"></i> Liste</button></a>
+                {{ form_widget(delete_form._token) }}
+            </form>
+            <!-- ==================== END OF ROW ==================== -->
+            <div class="row-fluid">
+                <div class="span12">
+                    <!-- ==================== DEFAULT TABLE HEADLINE ==================== -->
+                    <div class="containerHeadline">
+                        <i class="icon-table"></i><h2>Région {{ entity.name }}</h2>
+                    </div>
+                    <!-- ==================== END OF DEFAULT TABLE HEADLINE ==================== -->
+                    <!-- ==================== DEFAULT TABLE FLOATING BOX ==================== -->
+                    <div class="floatingBox table">
+                        <div class="container-fluid">
+                            <table class="table table-bordered">
+                                <tbody>
+                                    
+                                    <tr>
+                                        <th>Nom</th>
+                                        <td>{{ entity.name }}</td>
+                                    </tr>
+                                                                        <tr>
+                                        <th>Région Nationale</th>
+                                        <td>{% if entity.national == 0 %}Non{% else %}Oui{% endif %}</td>
+                                    </tr>
+                                                                        <tr>
+                                        <th>Périmètre</th>
+                                        <td>{{ entity.perimeter }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ==================== END OF WIDGETS CONTAINER ==================== -->
+    </div>
+    <!-- ==================== END OF PAGE CONTENT ==================== -->
+{% endblock %}

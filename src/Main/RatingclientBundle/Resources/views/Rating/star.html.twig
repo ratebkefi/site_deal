@@ -1,0 +1,16 @@
+{% spaceless %}
+
+            {% for i in 1..maxValue %}
+                {% set style = 'fa fa-star-o' %}
+                {% if i <= rate %}
+                    {% set style = 'fa fa-star' %}
+                {% else %}
+                    {% set style = rate|isHalfStar(i) ? 'fa fa-star-half-o' %}
+                {% endif %}
+                {% if style == '' %}
+                    {% set style = 'fa fa-star-o' %}
+                {% endif %}
+                <span class="{{ style }}"></span>
+            {% endfor %}
+
+{% endspaceless %}

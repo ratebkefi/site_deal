@@ -1,0 +1,48 @@
+coupon_commande:
+    path:     /{id}
+    defaults: { _controller: BackCommandeBundle:Coupon:index}
+    requirements:
+        id: \d+
+
+coupon_commande_traiter:
+    path:     /{id}/traiter
+    defaults: { _controller: BackCommandeBundle:Coupon:traiter}
+    requirements:
+        id: \d+
+
+coupon_commande_tracking:
+    path:     /{id}/tracking
+    defaults: { _controller: BackCommandeBundle:Coupon:tracking}
+    requirements:
+        id: \d+
+
+coupon_commande_annule:
+    path:     /{id}/annule
+    defaults: { _controller: BackCommandeBundle:Coupon:annule}
+    requirements:
+        id: \d+
+
+coupon_commande_approuver:
+    path:     /{id}/approuver
+    defaults: { _controller: BackCommandeBundle:Coupon:approuver}
+    requirements:
+        id: \d+
+
+coupon_commande2:
+    path:     /print/{id}
+    defaults: { _controller: BackCommandeBundle:Coupon:print}
+    requirements:
+        id: \d+
+
+coupon_manager:
+    path:     /couponmanager
+    defaults: { _controller: BackCommandeBundle:Coupon:manager}
+coupon_livraison:
+    path:     /livraison
+    defaults: { _controller: BackCommandeBundle:Coupon:livraison}
+livrer_coupon:
+    path:     /livrer
+    defaults: { _controller: BackCommandeBundle:Coupon:livrer}
+print_coupon:
+    path:     /print
+    defaults: { _controller: BackCommandeBundle:Coupon:imprimer}

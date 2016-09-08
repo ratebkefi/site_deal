@@ -1,0 +1,34 @@
+list_chefredactor:
+    path:     /
+    defaults: { _controller: BackDealBundle:ChefRedactor:index }
+
+add_chefredactor_manager:
+    path:     /add
+    defaults: { _controller: BackDealBundle:ChefRedactor:add}
+
+update_chefredactor_manager:
+    path:     /update/{id}
+    defaults: { _controller: BackDealBundle:ChefRedactor:edit}
+    requirements:
+        id: \d+
+view_chefredactor_manager:
+    path:     /view/{id}
+    defaults: { _controller: BackDealBundle:ChefRedactor:view}
+    requirements:
+        id: \d+
+
+activate_chefredactor_manager:
+    path:     /act/{id}
+    defaults: { _controller: BackDealBundle:ChefRedactor:activate}
+    requirements:
+        id: \d+
+unactivate_chefredactor_manager:
+    path:     /unact/{id}
+    defaults: { _controller: BackDealBundle:ChefRedactor:unactivate}
+    requirements:
+        id: \d+
+delete_chefredactor_manager:
+    path:     /unact/{id}
+    defaults: { _controller: BackDealBundle:ChefRedactor:delete}
+    requirements:
+        id: \d+

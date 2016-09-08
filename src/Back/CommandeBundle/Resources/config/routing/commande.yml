@@ -1,0 +1,42 @@
+#Commande
+back_commande:
+    path:     /{page}
+    defaults: { _controller: BackCommandeBundle:Command:index, page: 1 }
+    requirements:
+        id: \d+
+update_commande_manager:
+    path:     /update/{id}
+    defaults: { _controller: BackCommandeBundle:Command:edit}
+    requirements:
+        id: \d+
+
+add_commande_manager:
+    path:     /add/{id}
+    defaults: { _controller: BackCommandeBundle:Command:add }
+    requirements:
+        id: \d+
+
+show_commande_manager:
+    path:     /show/{id}
+    defaults: { _controller: BackCommandeBundle:Command:show}
+    requirements:
+        id: \d+
+paye_commande_manager:
+    path:     /paye/{id}
+    defaults: { _controller: BackCommandeBundle:Command:paye}
+    requirements:
+        id: \d+
+ahs_commun_json_villes:
+    pattern: /json/villes
+    defaults: { _controller: "BackCommandeBundle:Command:villes"}
+
+ahs_commun_json_codesPostaux:
+    pattern: /json/codesPostaux
+    defaults: { _controller: "BackCommandeBundle:Command:codesPostaux"}
+
+
+commande_annuler:
+    path:     /annulercmd/{id}
+    defaults: { _controller: BackCommandeBundle:Command:annulercmd }
+    requirements:
+        id: \d+

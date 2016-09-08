@@ -1,0 +1,7 @@
+parameters:
+#    back_planning.example.class: Back\PlanningBundle\Example
+
+services:
+#    back_planning.example:
+#        class: %back_planning.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]

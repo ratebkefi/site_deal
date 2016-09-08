@@ -1,0 +1,187 @@
+{% extends '::baseBack.html.twig' %}
+{% block body -%}
+    <!-- ==================== PAGE CONTENT ==================== -->
+    <div class="content">
+        <!-- ==================== WIDGETS CONTAINER ==================== -->
+        <div class="container-fluid">
+            {% if  app.user.roles[0]!= 'DAF' %}
+
+            {% if entity.stat==1 %}
+            <a href="{{ path('block_client_manager', { 'id': entity.id }) }}" class="btn btn-danger"><i class="icon-ban-circle"></i> Bloquer</a>
+            {% else %}
+                <a href="{{ path('unblock_client_manager', { 'id': entity.id }) }}" class="btn btn-success"><i class="icon-eye-open"></i> Débloquer</a>
+            {% endif %}
+            {% endif %}
+            <a href="{{ path('back_client_edit', { 'id': entity.id }) }}"><button class="btn btn-info" type="button"><i class="icon-pencil"></i> Modifier</button></a>
+
+            <a href="{{ path('back_client') }}"><button class="btn btn-inverse pull-right" type="button" id="form_submit"><i class="icon-list"></i> Liste</button></a>
+
+
+            <!-- ==================== END OF ROW ==================== -->
+            <div class="row-fluid">
+                <div class="span12">
+                    <!-- ==================== DEFAULT TABLE HEADLINE ==================== -->
+                    <div class="containerHeadline">
+                        <i class="icon-table"></i><h2>Client : {{ entity.fname }} {{ entity.name }}</h2>
+                    </div>
+                    <!-- ==================== END OF DEFAULT TABLE HEADLINE ==================== -->
+                    <!-- ==================== DEFAULT TABLE FLOATING BOX ==================== -->
+                    <div class="floatingBox table">
+                        <div class="container-fluid">
+                            <table class="table table-bordered">
+                                <tbody>
+
+                                <tr>
+                                    <th>Client :</th>
+                                    <td>{{ entity.fname }} {{ entity.name }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Sexe :</th>
+                                    <td>{{ entity.sex }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Date de naissance :</th>
+                                    <td>{% if entity.datebirth is not null %} {{ entity.datebirth|date('d-m-Y') }}{% endif%}</td>
+                                </tr>
+                                <tr>
+                                    <th>Téléphone :</th>
+                                    <td>{{ entity.phone }}</td>
+                                </tr>
+                                {% for item in entity.adresses %}
+                                <tr>
+                                    <th>Adresse {{ loop.index }} :</th>
+                                    <td>{{ item.adress }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Indcation Adresse {{ loop.index }} :</th>
+                                    <td>{{ item.indcation }}</td>
+                                </tr>
+                                {% endfor %}
+                                <tr>
+                                    <th>Facebook ID :</th>
+                                    <td>{{ entity.fbid }}</td>
+                                </tr>
+                                <tr>
+                                    <th>C.I.N :</th>
+                                    <td>{{ entity.cin }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Date d'inscription :</th>
+                                    <td>{{ entity.dcr|date('d-m-Y') }}</td>
+                                </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+            </div>
+			
+			
+			<div class="row-fluid">
+			<div class="span12">
+                    <!-- ==================== DEFAULT TABLE HEADLINE ==================== -->
+                    <div class="containerHeadline">
+                        <i class="icon-table"></i><h2>Historique commande client : {{ entity.fname }} {{ entity.name }}</h2>
+                    </div>
+                    <!-- ==================== END OF DEFAULT TABLE HEADLINE ==================== -->
+                    <!-- ==================== DEFAULT TABLE FLOATING BOX ==================== -->
+                    <div class="floatingBox table">
+                        <div class="containerHeadline">
+                            <table class="table">
+								<thead>
+									<tr>
+									
+									<th>N° commande</th>
+									<th>Date création</th>
+									<th>Deal</th>
+									<th>Reference</th>
+									<th>Total commande</th>
+									<th>Quantité</th>
+									<th>Payer à</th>
+									<th>Status</th>
+									</tr>
+								</thead>
+                                <tbody>
+                             {% for entity in commande %}
+                                    {% set CouponAnnuler = entity.id|listCouponAnnuler %}
+
+<tr>
+                                <td>  {{ "%09d"|format(entity.id) }}</td>
+                                        <td>{{ entity.dcr|date("d/m/Y H:i:s") }}</td>
+                                        <td>{{ entity.deal }}</td>
+                                        <td>{{ entity.reference.title }}</td>
+                                        <td>{{ entity.reference.bigdealPrice *  entity.qte }} DT</td>
+                                        <td>{{ entity.qte }}</td>
+                                        <td>{% if entity.caisse is not null %}{{ entity.caisse.libelle }}{% endif %}
+                                        </td>
+                                        <td>{% if  CouponAnnuler or  entity.etat==3 %} Annulé {% elseif entity.etat == 1 %} Payé {% elseif entity.etat==0 %} En attente{% endif %}</td>
+
+                                </tbody>
+								</tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                </div>
+			</div>
+			
+			
+			
+			<div class="row-fluid">
+			<div class="span12">
+                    <!-- ==================== DEFAULT TABLE HEADLINE ==================== -->
+                    <div class="containerHeadline">
+                        <i class="icon-table"></i><h2>Historique Tickets client : {{ entity.fname }} {{ entity.name }}</h2>
+                    </div>
+                    <!-- ==================== END OF DEFAULT TABLE HEADLINE ==================== -->
+                    <!-- ==================== DEFAULT TABLE FLOATING BOX ==================== -->
+                    <div class="floatingBox table">
+                        <div class="containerHeadline">
+                            <table class="table">
+								<thead>
+								<tr>
+									<th>Code Subject</th>
+									<th>Date</th>
+									<th>Dernière réponse</th>
+									<th>Client</th>
+									<th>Status</th>
+									<th>Priorité</th>
+									<th>Assigné à</th>
+								</tr>
+								</thead>
+                                <tbody>
+ {% for item in tickets %}
+                                    {% set lastReply = getLastReply( item.id ) %}
+                                    {% set nombreMessage = getNumberReply( item.id ) %}
+                                    <tr >
+                                        <td><a href="{{ path('view_ticket',{'id':item.id}) }}"> {{ item.code }} - {{ item.object  }}</a></td>
+                                        <td>{{ item.dcr|date('d-m-Y H:i:s') }}  </td>
+                                        <td> {% if nombreMessage !=1 %}{{ lastReply|date('d-m-Y H:i:s') }} {% else %} N.A {% endif %}</td>
+                                        <td>{%if item.commande %} {{ item.commande.client }} {% endif %}</td>
+                                        <td>{% if item.status ==1 %} Ouvert {% elseif  item.status ==2 %}En cours {% else %} Cloturé {% endif %}</td>
+                                        <td>{% if item.priorite ==1 %} normal {% elseif  item.priorite ==2 %}Urgent {% else %} Très urgent {% endif %}
+                                        </td>
+                                        <td>{{ item.user.name }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                </div>
+			</div>
+        </div>
+        <!-- ==================== END OF WIDGETS CONTAINER ==================== -->
+    </div>
+    <!-- ==================== END OF PAGE CONTENT ==================== -->
+{% endblock %}

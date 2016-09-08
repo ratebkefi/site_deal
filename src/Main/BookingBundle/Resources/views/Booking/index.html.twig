@@ -1,0 +1,102 @@
+	<meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="description" content="{% block description %}{% endblock %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+{% block stylesheets %}
+
+<!-- Font-awesome Icons -->
+    <link rel="stylesheet" href="{{ asset('public/css/font-awesome.min.css')}}">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="{{ asset('public/css/bootstrap.min.css')}}">
+
+    <link rel="stylesheet" href="{{ asset('public/css/reservation.css')}}">
+
+    {% endblock %}
+
+<title>{% block title %}Bigdeal :: Réservation{% endblock %}</title>
+    {% block body %}
+
+<div class="wrapper bg">
+    <header>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <a class="navbar-brand" href="{{ path('front_booking_step1') }}"><img src="{{ asset('public/images/logo.png') }}" alt="Big Deal" class="img-responsive" /></a>
+                </div>
+            </div>
+            
+        </div>
+    </header>
+    <div class="container">
+        <div id="content">
+
+            <div class="reserver">
+                {% for type, flashMessages in app.session.flashbag.all() %}
+                    {% for flashMessage in flashMessages %}
+                        <br/><div class="alert  {{type}}" >
+                        {{ flashMessage|trans }}
+                    </div>
+                    {% endfor %}
+                {% endfor %}
+                <div class="reserver-body">
+					<div class="row">
+		                <div class="col-md-12 text-center reserver-title"><h3><strong>Bienvenue</strong>, Veuillez entrer votre code coupon pour réserver</h3></div>
+		            </div>
+                    <form method="POST" action="{{ path('front_booking_step3') }}" class="form-horizontal form">
+                        <div class="form-group">
+                            <label for="code" class="col-sm-offset-1 col-sm-3 control-label">Code coupon</label>
+                            <div class="col-sm-6">
+                                <input type="text" name="code_coupon" placeholder="code coupon..." class="form-control" id="code" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-10">
+                                <input type="submit" value="Valider" class="btn btn-danger pull-right" required="required">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="reserver-footer">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <div class="container">
+            <div class="wrap">
+                <div class="col-md-12">
+                    Bigdeal © {{ 'now'|date('Y') }}
+                </div>
+            </div>
+        </div>
+    </footer>
+</div>
+    {% endblock %}
+.
+{% block javascripts %}
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+<script type="text/javascript" src="{{ asset('public/js/jquery-1.11.3.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('public/js/jquery-migrate-1.2.1.js') }}"></script>
+<!-- Latest compiled and minified JavaScript -->
+<script type="text/javascript" src="{{ asset('public/js/bootstrap.min.js') }}"></script>
+<!-- Main JS -->
+    <script>
+        $(document).ready(function () {
+            $('.alert-success').delay(5000).fadeOut();
+        });
+        $(document).ready(function () {
+            $('.alert-error').delay(5000).fadeOut();
+        });
+
+    </script>
+{% endblock %}
+
+
+
+
+

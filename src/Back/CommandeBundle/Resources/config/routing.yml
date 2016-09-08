@@ -1,0 +1,46 @@
+back_client:
+    resource: "@BackCommandeBundle/Resources/config/routing/client.yml"
+    prefix:   /client
+
+back_locality:
+    resource: "@BackCommandeBundle/Resources/config/routing/locality.yml"
+    prefix:   /locality
+
+back_bank:
+    resource: "@BackCommandeBundle/Resources/config/routing/bank.yml"
+    prefix:   /bank
+
+back_paymentmethod:
+    resource: "@BackCommandeBundle/Resources/config/routing/paymentmethod.yml"
+    prefix:   /paymentmethod
+back_commande:
+    resource: "@BackCommandeBundle/Resources/config/routing/commande.yml"
+    prefix:   /commande
+coupon_commande:
+    resource: "@BackCommandeBundle/Resources/config/routing/coupon.yml"
+    prefix:   /commande/coupon
+list_caissier:
+    resource: "@BackCommandeBundle/Resources/config/routing/caissier.yml"
+    prefix:   /caissier
+list_responsablecaissier:
+    resource: "@BackCommandeBundle/Resources/config/routing/responsablecaissier.yml"
+    prefix:   /respcaisse
+list_financier:
+    resource: "@BackCommandeBundle/Resources/config/routing/financier.yml"
+    prefix:   /financier
+list_serviceclient:
+    resource: "@BackCommandeBundle/Resources/config/routing/serviceclient.yml"
+    prefix:   /serviceclient
+list_chefserviceclient:
+    resource: "@BackCommandeBundle/Resources/config/routing/chefserviceclient.yml"
+    prefix:   /chefserviceclient
+back_remboursement:
+    resource: "@BackCommandeBundle/Resources/config/routing/remboursement.yml"
+    prefix:   /remboursement
+list_daf:
+    resource: "@BackCommandeBundle/Resources/config/routing/daf.yml"
+    prefix:   /daf
+list_directeurcommercial:
+    resource: "@BackCommandeBundle/Resources/config/routing/directeurcommercial.yml"
+    prefix:   /directeurcommercial
+

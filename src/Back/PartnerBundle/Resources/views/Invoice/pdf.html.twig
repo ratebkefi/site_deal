@@ -1,0 +1,92 @@
+<table cellspacing="0" style="width: 100%; border: solid 1px black;  text-align: center; font-size: 12pt;">
+    <tr>
+        <th style="border-right: solid 1px black;">
+            <table>
+                <tr>
+                    <td align="left"><p><small>SARL au capital de 20 000 Dinars</small></p></td>
+                </tr>
+                <tr>
+                    <td align="left"><p><small>Siège social: {{entreprise.libelle}} </small></p></td>
+                </tr>
+                <tr>
+                    <td align="left"><p><small>Code TVA: {{entreprise.mf}}</small></p></td>
+                </tr>
+                <tr>
+                    <td align="left"><p><small>Tel/Fax: {{entreprise.tel}}</small></p></td>
+                </tr>
+            </table>
+        </th>
+        <th style=" border-right: solid 1px black;vertical-align: top;" >
+            <table width="100%" cellspacing="7" cellpadding="7" style="border-collapse: collapse;">
+                <tr>
+                    <td valign="top"><span style="font-size:16pt;">STE {{entreprise.libelle}} SARL</span></td>
+                </tr>
+                <tr>
+                    <td  style="border-top:1px solid black;"><span style="font-size:26pt;padding:15px;">FACTURE</span></td>
+                </tr>
+            </table>
+        </th>
+    </tr>
+</table>
+<table cellspacing="0" style="width: 100%;border-collapse: collapse; border: solid 1px black; border-top: none; text-align: center; font-size: 10pt;" >
+    <tr>
+        <td style="border-right: solid 1px black; text-align: center;border-bottom: solid 1px black;">DATE :</td>
+        <td style="border-right: solid 1px black; text-align: center;border-bottom: solid 1px black;"><b>{{ invoice.dcr|date('d/m/Y') }}</b></td>
+
+        <td rowspan="2" style="border-right: solid 1px black; text-align: center;border-bottom: solid 1px black;">N° : <b>{{ invoice.numfacture }}</b></td>
+    </tr>
+    <tr>
+        <td style="border-right: solid 1px black; text-align: center;border-bottom: solid 1px black;">CLIENT :</td>
+        <td style="border-right: solid 1px black; text-align: center;border-bottom: solid 1px black;"><b>{{ invoice.user.name }}</b></td>
+    </tr>
+    <tr>
+        <td collspan="3">MF  <strong>{{ invoice.user.tva }}</strong></td>
+    </tr>
+</table>
+<p>&nbsp;</p>
+<table cellspading="20"  style="width: 100%; border: solid 1px black; border-top: none; text-align: center; font-size: 10pt;">
+    <tr>
+        <td style="border-right: solid 1px black; text-align: center;border-bottom: solid 1px black;"><p><b>CODE</b></p></td>
+        <td style="border-right: solid 1px black; text-align: center;border-bottom: solid 1px black;"><p><b>DESIGNATION</b></p></td>
+        <td style="border-right: solid 1px black; text-align: center;border-bottom: solid 1px black;"><p><b>CA Réalisé</b></p></td>
+        <td style="border-right: solid 1px black; text-align: center;border-bottom: solid 1px black;"><p><b>Frais HT</b></p></td>
+        <td style="border-right: solid 1px black; text-align: center;border-bottom: solid 1px black;"><p><b>TOTAL HT</b></p></td>
+    </tr>
+    <tr>
+        <td style="border-right: solid 1px black; text-align: center;border-bottom: solid 1px black;padding: 10px;">COMM</td>
+        <td style="border-right: solid 1px black; text-align: center;border-bottom: solid 1px black;padding: 10px;">Commission sur deal</td>
+        <td style="border-right: solid 1px black; text-align: center;border-bottom: solid 1px black;padding: 10px;">
+            {% set ca= invoice.ca %}
+            {{ ca|number_format(3, '.', ',')  }} </td>
+        <td style="border-right: solid 1px black; text-align: center;border-bottom: solid 1px black;padding: 10px;">
+            {% set fraisht=(invoice.comFixe + invoice.comVariable)*100/118 %}
+            {{ fraisht|number_format(3, '.', ',')}}</td>
+        <td style="border-right: solid 1px black; text-align: center;border-bottom: solid 1px black;padding: 10px;">
+            {% set totalht=(invoice.comFixe + invoice.comVariable)*100/118 %}
+            {{ totalht|number_format(3, '.', ',')}}</td>
+
+    </tr>
+    {% set totalttc=(invoice.comFixe + invoice.comVariable) %}
+    <tr>
+        <td style="border-right: solid 1px black; text-align: center;border-bottom: solid 1px black;padding: 10px;" colspan="3">&nbsp;</td>
+        <td style="border-right: solid 1px black; text-align: center;border-bottom: solid 1px black;padding: 10px;">TVA 18%</td>
+        <td style="border-right: solid 1px black; text-align: center;border-bottom: solid 1px black;padding: 10px;">{% set tva = totalttc - totalht %}  {{ tva|number_format(3, '.', ',') }} </td>
+    </tr>
+    <tr>
+        <td style="border-right: solid 1px black; text-align: center;border-bottom: solid 1px black;padding: 10px;" colspan="3">&nbsp;</td>
+        <td style="border-right: solid 1px black; text-align: center;border-bottom: solid 1px black;padding: 10px;">TIMBRE FISCAL </td>
+        <td style="border-right: solid 1px black; text-align: center;border-bottom: solid 1px black;padding: 10px;">0.500</td>
+    </tr>
+    <tr>
+        <td style="border-right: solid 1px black; text-align: center;border-bottom: solid 1px black;padding: 10px;" colspan="3">&nbsp;</td>
+        <td style="border-right: solid 1px black; text-align: center;border-bottom: solid 1px black;padding: 10px;"><p><b>TOTAL GENERAL TTC</b></p></td>
+        <td style="border-right: solid 1px black; text-align: center;border-bottom: solid 1px black;padding: 10px;" nowrap>{% set newtotal=totalttc+0.5 %}{{ newtotal|number_format(3, '.', ',') }} </td>
+    </tr>
+</table>
+<p>Arrêtée la présente facture à la somme: {{ text }}.</p>
+<p><small><b>CONDITIONS GENERALES DE VENTE : </b></small></p>
+<p><small>Le client reconnais avoir reçu la liste des coupons vendu sur le site www.bigdeal.tn</small></p>
+<p><small>En cas de litige suite au non paiement de la facture, les honoraires d'avocat fixés forfaitairement à 100DT</small></p>
+<p><small> ainsi que les frais d'enregistrement sont à la charge exclusive du client.</small></p>
+<p><small> Seuls les tribunaux de Tunis sont compétents pour connaître des litiges pouvant découler de la présente facture.</small></p>
+<p><small> <b>PS : POUR TOUTES VOS RECLAMATIONS PRIERES DE CONTACTER LA DIRECTION AU 52 975 852 MERCI</b></small></p>

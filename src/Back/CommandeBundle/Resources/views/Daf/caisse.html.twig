@@ -1,0 +1,206 @@
+{% extends '::baseBack.html.twig' %}
+{% block body -%}
+    {% set totalEspece = 0 %}
+    {% set totalCheque = 0 %}
+    {% for item in caisse %}
+        {% set totalEspece = totalEspece + item.montantEspece %}
+        {% set totalCheque = totalCheque + item.montantCheque %}
+    {% endfor %}
+
+
+    <!-- ==================== PAGE CONTENT ==================== -->
+    <div class="content">
+
+
+        <!-- ==================== WIDGETS CONTAINER ==================== -->
+        <div class="container-fluid">
+            <!-- ==================== END OF ROW ==================== -->
+            <div class="row-fluid">
+
+                <div class="span12">
+
+                    <div class="containerHeadline">
+                        <i class="icon-zoom-in"></i>
+
+                        <h2>Filtre de recherche</h2>
+
+                        <div class="controlButton pull-right"><i class="icon-caret-down minimizeElement"></i></div>
+                    </div>
+                    <div class="floatingBox table ">
+                        {{ form_start(form, {'method': 'GET','attr': {'class': 'form-horizontal contentForm','style':'padding:0; margin:0'}}) }}
+                        <div class="container-fluid" style="padding: 3px 10px">
+
+
+                            <div class="span2">
+                                <label>Date Commande de</label>
+                                {{ form_widget(form.dpafp,{'attr':{'class':'span10 datetimepicker'}}) }}
+                            </div>
+                            <div class="span2">
+                                <label>Date Commande à</label>
+                                {{ form_widget(form.dpatp,{'attr':{'class':'span10 datetimepicker'}}) }}
+                            </div>
+
+
+
+                        </div>
+                        <div class="container-fluid" style="padding: 3px 10px">
+                            <div class="span8">
+                                <label>Deal</label>
+                                {{ form_widget(form.deal,{'attr':{'class':'span12'}}) }}
+                            </div>
+
+
+
+                            <div class="span2{% if app.user.roles[0]!='ROLE_ADMIN' %} hidden{% endif %}">
+
+                                <label>Payé à la caisse</label>
+                                {{ form_widget(form.paypar,{'attr':{'class':'span10'}}) }}
+
+                            </div>
+                        </div>
+
+                        <div class="container-fluid" style="padding: 3px 10px 20px">
+
+                            <div class="span2">
+                                <label>&nbsp;</label>
+                                <input type="submit" value="Rechecher" class="btn btn-success" />
+
+                            </div>
+                        </div>
+                        {{ form_end(form) }}
+
+                    </div>
+                    <!-- ==================== DEFAULT TABLE HEADLINE ==================== -->
+                    <div class="containerHeadline">
+                        <i class="icon-table"></i>
+
+                        <h2>Caisses </h2>
+                    </div>
+
+                    <!-- ==================== END OF DEFAULT TABLE HEADLINE ==================== -->
+                    <!-- ==================== DEFAULT TABLE FLOATING BOX ==================== -->
+                    <div class="floatingBox table">
+                        <div class="container-fluid">
+                            <table class="table" id="my_table">
+                                <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>ID Deal</th>
+                                    <th>Réference</th>
+                                    <th>Marchant</th>
+                                    <th>Etat de la commande</th>
+                                    <th>Deal</th>
+                                    <th>Début de publication</th>
+                                    <th>Fin de publication</th>
+                                    <th>Date de paiement</th>
+                                    <th>Caissier</th>
+                                    <th>Prix unitaire</th>
+                                    <th>Quantité</th>
+                                    <th>Total</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for entity in pagination %}
+                                    <tr>
+                                        <td>{{ entity.id }}</td>
+                                        <td>{{ entity.deal.id }}</td>
+                                        <td>{{ entity.reference.title }}</td>
+                                        <td>{{ entity.deal }}</td>
+                                        <td>{% if  entity.etat ==1 %} Payé {% else %} Non payé{% endif %}</td>
+                                        <td>{{ entity.deal }}</td>
+                                        <td>{{ entity.deal.planning.startDate|date('d-m-Y H:i:s') }}</td>
+                                        <td>{{ entity.deal.planning.endDate|date('d-m-Y H:i:s') }}</td>
+                                        <td>{{ entity.dpa|date('d-m-Y H:i:s') }}</td>
+                                        <td>{% if entity.caisse is not null %}{{ entity.caisse.libelle }}{% endif %}</td>
+                                        <td>{{ entity.reference.bigdealPrice }} DT</td>
+
+                                        <td>{{ entity.qte }}</td>
+
+                                        {% if entity.caisse.id ==26 %}
+                                            <td>{{ entity.reference.bigdealPrice *  entity.qte + 3 }} DT</td>
+                                        {% else %}
+                                            <td>{{ entity.reference.bigdealPrice *  entity.qte }} DT</td>
+                                        {% endif %}
+                                        <td>
+                                            <a href="javascript:void()" id="bt-{{ loop.index }}"
+                                               onclick="afficher({{ loop.index }})">
+                                            <span class="label peterRiver " data-original-title=""
+                                                  title="Liste des operations">
+                                                <i class="icon-angle-up edit " style="opacity: 1;"></i>
+                                            </span></a>
+                                        </td>
+ 
+
+                                    </tr>
+                                    <tr class="greenSea whiteText text-right" style="display: none;"
+                                        id="box-{{ loop.index }}">
+                                        <td colspan="12" class="type last ">
+                                            {% for item in entity.operation %}
+                                                {% if item.numCheque is not null %}
+                                                    <span class="text-right brandBold">Chéque :</span> {{ item.numCheque }} - {{ item.titulaire }} - {{ item.montant }} DT
+                                                    <br/>
+                                                {% else %}
+												{% if entity.caisse.id == 19 %}
+																																						<strong>BigFid : </strong>{{ item.montant }}  B<br/>
+		{% else %}
+                                                    <strong>Espèce : </strong>{{ item.montant }}  DT<br/>
+                                                {% endif %}
+                                                {% endif %}
+                                            {% endfor %}
+
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                            {# display navigation #}
+                            <div class="pagination pagination-large" style="text-align: center">
+                                {{ knp_pagination_render(pagination) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ==================== END OF WIDGETS CONTAINER ==================== -->
+    </div>
+
+    <!-- ==================== END OF PAGE CONTENT ==================== -->
+{% endblock %}
+{% block javascripts %}
+    <!-- masked inputs -->
+    <script src="{{ asset('RessourcesBack/js/lib/jquery-inputmask/jquery.inputmask.min.js') }}"></script>
+    <script src="{{ asset('RessourcesBack/js/lib/jquery-inputmask/jquery.inputmask.extensions.js') }}"></script>
+    <script src="{{ asset('RessourcesBack/js/lib/jquery-inputmask/jquery.inputmask.date.extensions.js') }}"></script>
+    <script src="{{ asset('RessourcesBack/js/vendor/jquery-ui-1.10.2.custom.min.js') }}"></script>        <!-- jquery ui dragging -->
+    <script>
+        function afficher(id) {
+            $("#box-" + id).fadeIn();
+            $("#bt-" + id).attr('onclick', "unshow(" + id + ")");
+            $("#bt-" + id + " span i").removeClass("icon-angle-up");
+            $("#bt-" + id + " span i").addClass("icon-angle-down");
+            $("#bt-" + id + " span").removeClass("peterRiver");
+            $("#bt-" + id + " span").addClass("red");
+        }
+        function unshow(id) {
+            $("#box-" + id).fadeOut();
+            $("#bt-" + id).attr('onclick', "afficher(" + id + ")")
+            $("#bt-" + id + " span i").removeClass("icon-angle-down");
+            $("#bt-" + id + " span i").addClass("icon-angle-up");
+            $("#bt-" + id + " span").removeClass("red");
+            $("#bt-" + id + " span").addClass("peterRiver");
+        }
+        $(function () {
+            $(".datetimepicker").inputmask("date");
+            $("#back_commandebundle_commandfilter_cincc").inputmask("mask", {"mask": "99999999"});
+            // fancybox
+            $('.paye').fancybox({
+                'height': 'auto',
+                'width': 990,
+                'type': 'iframe',
+                'autoScale': false
+            });
+        })
+    </script>
+{% endblock %}

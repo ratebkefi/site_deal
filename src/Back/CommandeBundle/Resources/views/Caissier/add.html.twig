@@ -1,0 +1,147 @@
+{% extends '::baseBack.html.twig' %}
+{% form_theme form 'form_table_layout.html.twig' %}
+{% block body -%}
+    <div class="content">
+        <div class="container-fluid">
+
+            <!-- ==================== COMMON ELEMENTS ROW ==================== -->
+            <div class="row-fluid">
+                <div class="span12">
+                    <!-- ==================== TEXT INPUTS HEADLINE ==================== -->
+                    <div class="containerHeadline">
+                        <i class="icon-edit"></i>
+
+                        <h2>Ajouter un caissier</h2>
+
+                        <div class="controlButton pull-right"><i class="icon-remove removeElement"></i></div>
+                        <div class="controlButton pull-right"><i class="icon-caret-down minimizeElement"></i></div>
+                    </div>
+                    <!-- ==================== END OF TEXT INPUTS HEADLINE ==================== -->
+
+                    <!-- ==================== TEXT INPUTS FLOATING BOX ==================== -->
+                    <div class="floatingBox">
+                        <div class="container-fluid">
+
+                            <div class="container-fluid">
+                                {{ form_start(form, {'method': 'POST','attr': {'class': 'form-horizontal contentForm'}}) }}
+
+                                <div class="control-group">
+                                    <label class="control-label">Nom de la caisse : </label>
+
+                                    <div class="controls">
+                                        <input name="nomecaisse" type="text" value="" class="span10"  required="required"/>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">Latitude : </label>
+
+                                    <div class="controls">
+                                        <input name="latitude" id="latitude" type="text" value="" class="span10"  required="required"/>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">longitude : </label>
+
+                                    <div class="controls">
+                                        <input name="longitude"  id="longitude" type="text" value="" class="span10" required="required"/>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">Adresse de la caisse : </label>
+
+                                    <div class="controls">
+                                        <input name="adresse" type="text" value="" class="span10"  required="required" id="adresse"/>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">Horaire de la caisse : </label>
+
+                                    <div class="controls">
+                                        <input name="horaire" type="text" value="" class="span10"  required="required" id="horaire"/>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">Téléphone de la caisse : </label>
+
+                                    <div class="controls">
+                                        <input name="tel" type="text" value="" class="span10"  required="required" id="tel"/>
+                                    </div>
+                                </div>
+                                {{ form_row(form.name) }}
+
+                                {{ form_row(form.datenaisse) }}
+                                {{ form_row(form.email) }}
+                                {{ form_row(form.cin) }}
+                                {{ form_row(form.datecin) }}
+                                {{ form_row(form.bank) }}
+                                {{ form_row(form.agency) }}
+                                {{ form_row(form.rib) }}
+                                {{ form_row(form.address) }}
+                                {{ form_row(form.phone) }}
+                                {{ form_row(form.profilePictureFile) }}
+                                {{ form_row(form.phoneurg) }}
+                                {{ form_row(form.adresseurg) }}
+                                <div class="formFooter">
+                                    <button type="submit" class="btn btn-success"><i class="icon-ok"> </i> Valider
+                                    </button>
+                                    <button type="reset" class="btn btn-danger"><i class="icon-remove"> </i> Effacer
+                                    </button>
+                                    <a href="{{ path('list_caissier') }}">
+                                        <button class="btn btn-inverse" type="button"><i class="icon-list"></i> Liste
+                                        </button>
+                                    </a>
+                                    {{ form_widget(form._token) }}
+                                </div>
+                                {{ form_end(form) }}
+                            </div>
+
+                        </div>
+                    </div>
+                    <!-- ==================== END OF TEXT INPUTS FLOATING BOX ==================== -->
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+ {% block javascripts %}
+     <!-- masked inputs -->
+     <script src="{{ asset('RessourcesBack/js/lib/jquery-inputmask/jquery.inputmask.min.js') }}"></script>
+     <script src="{{ asset('RessourcesBack/js/lib/jquery-inputmask/jquery.inputmask.extensions.js') }}"></script>
+     <script src="{{ asset('RessourcesBack/js/lib/jquery-inputmask/jquery.inputmask.date.extensions.js') }}"></script>
+     <script type="text/javascript" src="{{ asset('tinymce/tinymce.min.js') }}"></script>
+     <script>
+         $(".datepicker").inputmask("date");
+     </script>
+     <script>
+         $(document).ready(function () {
+             $("#latitude").attr({
+                 'data-validation': 'number',
+                 'data-validation-allowing': 'float'
+             });
+
+             $("#longitude").attr({
+                 'data-validation': 'number',
+                 'data-validation-allowing': 'float'
+             });
+             $("#back_commandebundle_cassier_name").attr({
+                 'data-validation': 'length',
+                 'data-validation-length': 'min4'
+             });
+
+             $("#back_commandebundle_cassier_email").attr('data-validation', 'email');
+             $("#back_commandebundle_cassier_datenaisse").attr({
+                 'data-validation': 'birthdate',
+                 'data-validation-format': 'dd/mm/yyyy'
+             });
+             $("#back_commandebundle_cassier_cin").attr({'data-validation': 'length number', 'data-validation-length': '8-8'});
+             $("#back_commandebundle_cassier_datecin").attr({
+                 'data-validation': 'birthdate',
+                 'data-validation-format': 'dd/mm/yyyy'
+             });
+             $("#back_commandebundle_cassier_rib").attr({'data-validation': 'length number', 'data-validation-length': '20-20'});
+             $("#back_commandebundle_cassier_phone").attr({'data-validation': 'length number', 'data-validation-length': '8-8'});
+             $("#back_commandebundle_cassier_phoneurg").attr({'data-validation': 'length number', 'data-validation-length': '8-8'});
+             $.validate();
+         });
+     </script>
+ {% endblock %}

@@ -1,0 +1,440 @@
+{% extends '::baseBack.html.twig' %}
+{% block body -%}
+
+    <!-- ==================== PAGE CONTENT ==================== -->
+    <div class="content">
+        <!-- ==================== WIDGETS CONTAINER ==================== -->
+        <div class="container-fluid">
+            <!-- ==================== END OF ROW ==================== -->
+            <div class="row-fluid">
+                <div class="span12">
+
+                    <!-- ==================== DEFAULT TABLE HEADLINE ==================== -->
+
+                    <div class="containerHeadline">
+                        <i class="icon-zoom-in"></i>
+
+                        <h2>Filtre de recherche</h2>
+
+                        <div class="controlButton pull-right"><i class="icon-caret-down minimizeElement"></i></div>
+                    </div>
+                    <div class="floatingBox table ">
+                        {{ form_start(form, {'method': 'GET','attr': {'class': 'form-horizontal contentForm','style':'padding:0; margin:0'}}) }}
+                        <div class="container-fluid" style="padding: 3px 10px">
+
+                            <div class="span3" style="margin-top: 10px;">
+                                <label>N° deal</label>
+                                {{ form_widget(form.id,{'attr':{'class':'span12'}}) }}
+                            </div>
+                            <div class="span3" style="margin-top: 10px;">
+                                <label>Titre</label>
+                                {{ form_widget(form.title,{'attr':{'autocomplete':'off','class':'span12 selectpicker','data-live-search':'true'}}) }}
+                            </div>
+
+                            <div class="span3" style="margin-top: 10px;">
+                                <label>Date debut Deal de</label>
+                                {{ form_widget(form.dpafp,{'attr':{'class':'span10 datetimepicker'}}) }}
+                            </div>
+                            <div class="span3" style="margin-top: 10px;">
+                                <label>Date fin Deal </label>
+                                {{ form_widget(form.dpatp,{'attr':{'class':'span10 datetimepicker'}}) }}
+                            </div>
+
+                            <div class="span3" style="margin-top: 10px;">
+                                <label>Catégorie</label>
+                                {{ form_widget(form.category,{'attr':{'class':'span12 selectpicker','data-live-search':'true'}}) }}
+
+                            </div>
+                            <div class="span2" style="margin-top: 10px;">
+                                <label>Région</label>
+                                {{ form_widget(form.region,{'attr':{'class':'span12 selectpicker','data-live-search':'true'}}) }}
+                            </div>
+                            <div class="span2" style="margin-top: 10px;">
+                                <label>Partenaire</label>
+                                {{ form_widget(form.partenar,{'attr':{'class':'span12 selectpicker','data-live-search':'true'}}) }}
+                            </div>
+							<div class="span2 " style="margin-top: 10px;">
+                                <label>Deal en cours</label>
+                                {{ form_widget(form.en_cours,{'attr':{'class':'span2'}}) }}
+                            </div>
+                            <div class="span12">
+                                <label>&nbsp;</label>
+                                <input type="submit" value="Rechecher" class="btn btn-success"/>
+
+                            </div>
+                        </div>
+
+                        <div class="container-fluid" style="padding: 3px 10px 20px">
+
+                        </div>
+                        {{ form_end(form) }}
+
+                    </div>
+                    <div class="containerHeadline">
+                        <i class="icon-flag"></i>
+
+                        <h2>Légende</h2>
+
+                        <div class="controlButton pull-right"><i class="icon-caret-down minimizeElement"></i></div>
+                    </div>
+                    <div class="floatingBox table ">
+                        <div class="container-fluid">
+                            <div class="span3">
+                                <div class="alert alert-info">
+                                    <strong>Date de publication passée.</strong>
+                                </div>
+                            </div>
+                            <div class="span3">
+                                <div class="alert alert-error">
+                                    <strong>Date publication dans moins 48 heures</strong>
+                                </div>
+                            </div>
+                            <div class="span3">
+                                <div class="alert alert-warning">
+                                    <strong>Date publication entre 48 et 96 heures!</strong>
+                                </div>
+                            </div>
+                            <div class="span3">
+                                <div class="alert alert-success">
+                                    <strong>Date publication aprés 96 heures!</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="containerHeadline">
+                        <i class="icon-table"></i>
+
+                        <h2>Liste Deal</h2>
+                    </div>
+                    <!-- ==================== END OF DEFAULT TABLE HEADLINE ==================== -->
+                    <!-- ==================== DEFAULT TABLE FLOATING BOX ==================== -->
+                    <div class="floatingBox table">
+                        <div class="container-fluid">
+                            <table class="tablesorter centerFirstLast" id="membersTable">
+                                <thead>
+                                <tr>
+                                    <th data-placeholder="chercher par ID...">ID</th>
+                                    <th data-placeholder="chercher par Titre...">Titre</th>
+                                    <th data-placeholder="chercher par Titre...">Date de publication</th>
+                                    <th data-placeholder="chercher par Nombre de coupon vendus...">Nombre de coupons
+                                        vendus
+                                    </th>
+                                    <th data-placeholder="chercher par deal Activé...">En cours</th>
+                                    <th data-placeholder="chercher par deal Confirmé...">Confirmé</th>
+                                    <th data-placeholder="chercher par Catégorie...">Catégorie</th>
+                                    <th data-placeholder="chercher par région...">Région</th>
+                                    <th data-placeholder="chercher par Partenaire...">Partenaire</th>
+                                    <th data-placeholder="Nombre de partage sur facebook...">Nbr partage sur facebook</th>
+									{% if app.user.roles[0]!= 'CAISSIER' %}
+                                    <th data-placeholder="chercher par Rédacteur...">Rédacteur</th>
+									{% endif %}
+                                    {% if app.user.roles[0]!= 'CAISSIER'  and app.user.roles[0]!= 'FINANCIER'   and app.user.roles[0]!= 'COMMERCIAL'  %}
+                                        <th class="actions">Actions
+                                        </th>
+                                    {% endif %}
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                {% for entity in pagination %}
+                                    {% set nombreCouponVendu = getCouponVendu(entity.id) %}
+                                    {% set nombrePartageFb = getnombreShareFacebook(entity.id) %}
+{% if app.user.roles[0]== 'CAISSIER' %}
+{% if  "now"|date("Y-m-d H:i:s")  >= entity.planning.startDate|date('Y-m-d H:i:s') and "now"|date("Y-m-d H:i:s")  <= entity.planning.endDate|date('Y-m-d H:i:s') and entity.planning.state== 3 %}
+                                    <tr class="{{ date('now')|deferenceDateDeal(date(entity.planning.startDate)) }}">
+                                        <td>{{ entity.id }}</td>
+                                        <td>
+                                            {% if app.user.roles[0]  =="CAISSIER" %}
+                                                <a href="{{ path('apercu_deal_view', { 'id': entity.id }) }}">{{ entity.title }}</a>
+                                            {% else %}
+                                                <a href="{{ path('show_deal_manager', { 'id': entity.id }) }}">{{ entity.title }}</a>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {{ entity.planning.startDate|date('d/m/Y H:i') }}
+
+                                        </td>
+                                        <td>{{ nombreCouponVendu }}</td>
+                                        <td>
+                                            {% if  "now"|date("Y-m-d H:i:s")  >= entity.planning.startDate|date('Y-m-d H:i:s') and "now"|date("Y-m-d H:i:s")  <= entity.planning.endDate|date('Y-m-d H:i:s') and entity.planning.state== 3 %}
+                                                Oui
+                                            {% else %}
+                                                Non
+                                            {% endif %}
+                                        </td>
+                                        <td>{% if nombreCouponVendu>=entity.planning.defaultannexe.minCoupon %} Oui {% else %} Non {% endif %}</td>
+                                        <td>{{ entity.planning.categoryId }}</td>
+                                        <td>{{ entity.planning.regionId }}</td>
+                                        <td>{{ entity.planning.defaultannexe.protocol.user.name }}</td>
+                                        <td>{{ nombrePartageFb }}</td>
+										{% if app.user.roles[0]!= 'CAISSIER' %}
+                                        <td>{{ entity.redacteur }}</td>
+										{% endif %}
+                                        {% if   app.user.roles[0]!= 'CAISSIER'  and app.user.roles[0]!= 'FINANCIER'  and app.user.roles[0]!= 'COMMERCIAL'   %}
+
+                                            <td>
+                                                <div class="btn-toolbar" style="margin: 0;">
+                                                    <div class="btn-group">
+                                                        <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                                            Action <span
+                                                                    class="caret"></span></button>
+                                                        <ul class="dropdown-menu pull-right">
+                                                            {% if app.user.roles[0]!='SERVICECLIENT' and app.user.roles[0]!='REDACTEUR' and app.user.roles[0]!='CHEFSERVICECLI' and app.user.roles[0]!='PALAINER'  and app.user.roles[0]!= 'COMMERCIAL' %}
+                                                                <li style="text-align: left">
+                                                                    <a href="{{ path('update_deal_manager', { 'id': entity.id }) }}">Modifier</a>
+                                                                </li>
+                                                            {% endif %}
+                                                            <li style="text-align: left">
+                                                                <a target="_blank"
+                                                                   href="{{ path('apercu_deal_view', { 'id': entity.id }) }}">Aperçu</a>
+                                                            </li>
+                                                            {% if app.user.roles[0]!='SERVICECLIENT' and app.user.roles[0]!='REDACTEUR' and app.user.roles[0]!='CHEFSERVICECLI' and app.user.roles[0]!='PALAINER' %}
+                                                                <li style="text-align: left">
+                                                                    <a target="_blank"
+                                                                       href="{{ path('pdf_annexe_manager', { 'id': entity.planning.defaultannexe.id ,'protocol_id': entity.planning.defaultannexe.protocol.id}) }}">Annexe
+                                                                        au Protocole D’accord </a>
+                                                                </li>
+                                                            {% endif %}
+
+                                                            <li style="text-align: left">
+                                                                <a class="iframe-btnx"
+                                                                   href="{{ path('show_planning_manager',{'id':entity.planning.id,'regionid':entity.planning.regionId.id}) }}">Planning </a>
+                                                            </li>{% if app.user.roles[0]!='SERVICECLIENT' and app.user.roles[0]!='REDACTEUR' and app.user.roles[0]!='CHEFSERVICECLI'  and app.user.roles[0]!='PALAINER' %}
+                                                            <li style="text-align: left">
+                                                                <a target="_blank"
+                                                                   href="{{ path('back_reportdeal') }}?back_commandebundle_redactorfilter[title]= {{ entity.title }} &Rechecher=Rechecher">Rapport </a>
+                                                            </li>
+                                                            {% endif %}
+                                                            {% if app.user.roles[0]=="CHEFRED" and entity.redacteur is not null %}
+                                                                <li style="text-align: left">
+                                                                    <a
+                                                                       href="{{ path('back_change_redactor_deal',{'id':entity.id}) }}"
+                                                                      >Changer le rédacteur </a>
+                                                                </li>
+                                                            {% endif %}
+                                                        </ul>
+                                                    </div>
+                                                </div>
+
+
+                                            </td>
+                                        {% endif %}
+                                    </tr>
+									                                        {% endif %}
+																			{% else %}
+																			
+																			
+																			
+																			
+																			
+																			
+																			
+																			<tr class="{{ date('now')|deferenceDateDeal(date(entity.planning.startDate)) }}">
+                                        <td>{{ entity.id }}</td>
+                                        <td>
+                                            {% if app.user.roles[0]  =="CAISSIER" %}
+                                                <a href="{{ path('apercu_deal_view', { 'id': entity.id }) }}">{{ entity.title }}</a>
+                                            {% else %}
+                                                <a href="{{ path('show_deal_manager', { 'id': entity.id }) }}">{{ entity.title }}</a>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {{ entity.planning.startDate|date('d/m/Y H:i') }}
+
+                                        </td>
+                                        <td>{{ nombreCouponVendu }}</td>
+                                        <td>
+                                            {% if  "now"|date("Y-m-d H:i:s")  >= entity.planning.startDate|date('Y-m-d H:i:s') and "now"|date("Y-m-d H:i:s")  <= entity.planning.endDate|date('Y-m-d H:i:s') and entity.planning.state== 3 %}
+                                                Oui
+                                            {% else %}
+                                                Non
+                                            {% endif %}
+                                        </td>
+                                        <td>{% if nombreCouponVendu>=entity.planning.defaultannexe.minCoupon %} Oui {% else %} Non {% endif %}</td>
+                                        <td>{{ entity.planning.categoryId }}</td>
+                                        <td>{{ entity.planning.regionId }}</td>
+                                        <td>{{ entity.planning.defaultannexe.protocol.user.name }}</td>
+										<td>{{ nombrePartageFb }}</td>
+
+										{% if app.user.roles[0]!= 'CAISSIER' %}
+                                        <td>{{ entity.redacteur }}</td>
+										{% endif %}
+                                        {% if   app.user.roles[0]!= 'CAISSIER'  and app.user.roles[0]!= 'FINANCIER'  and app.user.roles[0]!= 'COMMERCIAL'   %}
+
+                                            <td>
+                                                <div class="btn-toolbar" style="margin: 0;">
+                                                    <div class="btn-group">
+                                                        <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                                            Action <span
+                                                                    class="caret"></span></button>
+                                                        <ul class="dropdown-menu pull-right">
+                                                            {% if app.user.roles[0]!='SERVICECLIENT' and app.user.roles[0]!='REDACTEUR' and app.user.roles[0]!='CHEFSERVICECLI' and app.user.roles[0]!='PALAINER'  and app.user.roles[0]!= 'COMMERCIAL' and app.user.roles[0]!= 'DAF' %}
+                                                                <li style="text-align: left">
+                                                                    <a href="{{ path('update_deal_manager', { 'id': entity.id }) }}">Modifier</a>
+                                                                </li>
+                                                            {% endif %}
+                                                            <li style="text-align: left">
+                                                                <a target="_blank"
+                                                                   href="{{ path('apercu_deal_view', { 'id': entity.id }) }}">Aperçu</a>
+                                                            </li>
+                                                            {% if app.user.roles[0]!='SERVICECLIENT' and app.user.roles[0]!='REDACTEUR' and app.user.roles[0]!='CHEFSERVICECLI' and app.user.roles[0]!='PALAINER' %}
+                                                                <li style="text-align: left">
+                                                                    <a target="_blank"
+                                                                       href="{{ path('pdf_annexe_manager', { 'id': entity.planning.defaultannexe.id ,'protocol_id': entity.planning.defaultannexe.protocol.id}) }}">Annexe
+                                                                        au Protocole D’accord </a>
+                                                                </li>
+                                                            {% endif %}
+
+                                                            <li style="text-align: left">
+                                                                <a class="iframe-btnx"
+                                                                   href="{{ path('show_planning_manager',{'id':entity.planning.id,'regionid':entity.planning.regionId.id}) }}">Planning </a>
+                                                            </li>{% if app.user.roles[0]!='SERVICECLIENT' and app.user.roles[0]!='REDACTEUR' and app.user.roles[0]!='CHEFSERVICECLI'  and app.user.roles[0]!='PALAINER' %}
+                                                            <li style="text-align: left">
+                                                                <a target="_blank"
+                                                                   href="{{ path('back_reportdeal') }}?back_commandebundle_redactorfilter[title]= {{ entity.title }} &Rechecher=Rechecher">Rapport </a>
+                                                            </li>
+                                                            {% endif %}
+                                                            {% if app.user.roles[0]=="CHEFRED" and entity.redacteur is not null %}
+                                                                <li style="text-align: left">
+                                                                    <a
+                                                                       href="{{ path('back_change_redactor_deal',{'id':entity.id}) }}"
+                                                                      >Changer le rédacteur </a>
+                                                                </li>
+                                                            {% endif %}
+                                                        </ul>
+                                                    </div>
+                                                </div>
+
+
+                                            </td>
+                                        {% endif %}
+                                    </tr>
+                                        {% endif %}
+
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                            {# display navigation #}
+                            <div class="pagination pagination-large" style="text-align: center">
+                                {{ knp_pagination_render(pagination) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ==================== END OF WIDGETS CONTAINER ==================== -->
+    </div>
+
+    <!-- ==================== END OF PAGE CONTENT ==================== -->
+    <link rel="stylesheet" type="text/css" href="{{ asset('RessourcesBack/css/bootstrap-select.css') }}">
+
+{% endblock %}
+    {% block javascripts %}
+        <script src="{{ asset('RessourcesBack/js/bootstrap-select.js') }}"></script>
+
+        <script src="{{ asset('RessourcesBack/js/vendor/jquery.tablesorter.min.js') }}"></script>                   <!-- bootstrap slider plugin -->
+        <script src="{{ asset('RessourcesBack/js/vendor/jquery.tablesorter.widgets.min.js') }}"></script>                   <!-- bootstrap slider plugin -->
+        <script src="{{ asset('RessourcesBack/js/vendor/jquery.tablesorter.pager.min.js') }}"></script>                   <!-- bootstrap slider plugin -->
+        <script src="{{ asset('RessourcesBack/js/lib/jquery-inputmask/jquery.inputmask.min.js') }}"></script>
+        <script src="{{ asset('RessourcesBack/js/lib/jquery-inputmask/jquery.inputmask.extensions.js') }}"></script>
+        <script src="{{ asset('RessourcesBack/js/lib/jquery-inputmask/jquery.inputmask.date.extensions.js') }}"></script>
+        {% javascripts '@MainFrontBundle/Resources/public/js/bootstrap-typeahead.min.js' %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+        {% endjavascripts %}
+
+
+        <script>
+            $(function () {
+                $(".datetimepicker").inputmask("date");
+                $('.btn-iframe').fancybox({
+                    'width': 420,
+                    'height': 200,
+                    'type': 'iframe',
+                    'autoScale': true
+                });
+            });
+
+            $('#back_dealbundle_filterdeal_title').typeahead({
+
+                ajax: {
+                    url: '{{ path('ajxdealback') }}',
+                    triggerLength: 1,
+                    items: 10
+                },
+                afterSelect: function (item) {
+                    //save the id value into the hidden field
+
+                },
+                displayField: 'full_name'
+
+            })
+
+
+            $("#membersTable").tablesorter({
+                headers: {
+                    0: {sorter: 'numeric'},
+                    1: {sorter: 'numeric'},
+                    2: {sorter: 'shortDate', dateFormat: "ddmmyyyy" },
+                    3: {sorter: 'text'},
+                    4: {sorter: 'text'},
+                    5: {sorter: 'text'},
+                    6: {sorter: 'text'},
+                    7: {sorter: 'text'},
+                    8: {sorter: false, filter: false}
+                },
+
+                dateFormat: 'uk',
+
+                // sort on the first column and third column in ascending order
+                sortList: [[1, 0]],
+
+                // hidden filter input/selects will resize the columns, so try to minimize the change
+                widthFixed: true,
+
+                // initialize zebra striping and filter widgets
+                widgets: ["zebra", "filter"],
+
+                widgetOptions: {
+
+                    // If there are child rows in the table (rows with class name from "cssChildRow" option)
+                    // and this option is true and a match is found anywhere in the child row, then it will make that row
+                    // visible; default is false
+                    filter_childRows: false,
+
+                    // if true, a filter will be added to the top of each table column;
+                    // disabled by using -> headers: { 1: { filter: false } } OR add class="filter-false"
+                    // if you set this to false, make sure you perform a search using the second method below
+                    filter_columnFilters: true,
+
+                    // css class applied to the table row containing the filters & the inputs within that row
+                    filter_cssFilter: 'tablesorter-filter',
+
+                    // add custom filter functions using this option
+                    // see the filter widget custom demo for more specifics on how to use this option
+                    filter_functions: null,
+
+                    // if true, filters are collapsed initially, but can be revealed by hovering over the grey bar immediately
+                    // below the header row. Additionally, tabbing through the document will open the filter row when an input gets focus
+                    filter_hideFilters: true,
+
+                    // Set this option to false to make the searches case sensitive
+                    filter_ignoreCase: true,
+
+                    // Delay in milliseconds before the filter widget starts searching; This option prevents searching for
+                    // every character while typing and should make searching large tables faster.
+                    filter_searchDelay: 300,
+
+                    // Set this option to true to use the filter to find text from the start of the column
+                    // So typing in "a" will find "albert" but not "frank", both have a's; default is false
+                    filter_startsWith: false,
+
+                    // Filter using parsed content for ALL columns
+                    // be careful on using this on date columns as the date is parsed and stored as time in seconds
+                    filter_useParsedData: false
+
+                }
+
+            })
+        </script>
+    {% endblock %}

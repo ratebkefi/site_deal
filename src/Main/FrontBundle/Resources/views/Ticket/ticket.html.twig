@@ -1,0 +1,58 @@
+{% extends '::base.html.twig' %}
+{% block stylesheets %}
+{% endblock %}
+{% block body %}
+	<div class="row">
+		<div class="col-md-12 entry">
+			<h1>Mon compte</h1>
+		</div>
+	</div>
+    <div class="informations">
+        <!-- Profile Menu -->
+        {{ render(controller('MainFrontBundle:Client:menuclient')) }}
+        <!-- Nav -->
+
+        <div class="container">
+            <div class="row">
+				<div class="col-md-12 entry ml-minus">
+                <a href="{{ path('ajouter_ticket') }}" title="Nouveau ticket" class="btn btn-primary mb10">Ouvrir un nouveau ticket</a>
+				</div>
+            </div>
+        </div>
+        <!-- Liste de mes tickets -->
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Code </th>
+                    <th>Objet </th>
+                    <th>Date de création </th>
+                    <th>Dernière réponse</th>
+                    <th>Statut</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in pagination %}
+                {% set lastReply = getLastReply( item.id ) %}
+                {% set nombreMessage = getNumberReply( item.id ) %}
+                <tr>
+                    <td>{{ item.code }}</td>
+                    <td>{{ item.object }}</td>
+                    <td>{{ item.dcr|date('d-m-Y H:i:s') }}</td>
+                    <td>{% if nombreMessage !=1 %}{{ lastReply|date('d-m-Y H:i:s') }} {% else %} N.A {% endif %}</td>
+                    <td>{% if item.status ==1 %}<span class="badge badge-success"> Ouvert </span>{% elseif  item.status ==2 %}<span class="badge">En cours </span>{% else %}<span class="badge badge-warning"> Cloturé </span>{% endif %}</td>
+
+                    <td><a href="{{ path('detail_ticket',{'id':item.id}) }}" title="Détails ticket" class="btn btn-primary"><i class="fa fa-ticket"></i> Détails</a></td>
+                </tr>
+                {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+
+{% endblock %}
+

@@ -1,0 +1,18 @@
+back_planning:
+    resource: "@BackPlanningBundle/Resources/config/routing/category.yml"
+    prefix:   /category
+back_region:
+    resource: "@BackPlanningBundle/Resources/config/routing/region.yml"
+    prefix:   /region
+back_planning_home:
+    resource: "@BackPlanningBundle/Resources/config/routing/planning.yml"
+    prefix:   /planning
+back_requiredInfo:
+    resource: "@BackPlanningBundle/Resources/config/routing/requiredInfo.yml"
+    prefix:   /requiredInfo
+back_reponseRequiredInfo:
+    resource: "@BackPlanningBundle/Resources/config/routing/reponseRequiredInfo.yml"
+    prefix:   /reponseRequiredInfo
+list_planner:
+    resource: "@BackPlanningBundle/Resources/config/routing/planner.yml"
+    prefix:   /planner

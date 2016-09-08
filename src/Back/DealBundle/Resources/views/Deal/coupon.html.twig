@@ -1,0 +1,129 @@
+{% set commFix = 0 %}
+{% set commVar = 0 %}
+{% set CA = 0 %}
+{% set PrixCoupon = 0 %}
+{% set CVariable = 0 %}
+
+
+<!-- ==================== DEFAULT TABLE FLOATING BOX ==================== -->
+<div class="floatingBox table">
+<div class="container-fluid">
+
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th class="hidden"><label><input type="checkbox" checked ="checked" name="all" id="all"/> Sélectionner
+                                            tout</label></th>
+                                    <th>N° Coupon</th>
+                                    <th>Prix</th>
+                                    <th>Etat de vente</th>
+									<th>Etat de reception</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+ {% set nbr =  entities | length %}
+{% for item in entities %}
+
+<!--
+	<input id="{{ item.id }}" type="checkbox" class="" checked="checked" name="coupon[]"
+       value="{{ item.id }}" onclick="modifFacture({{ item.id }} , {{ item.price }})" >
+    <label class="css-label" for="{{ item.id }}">{{ item.code }} Prix : {{ item.price }} TND
+        Etat de vente :  {{ item.vendu|getVenduCoupon }}
+        Etat de reception : {{ item.recu|getRecuCoupon }}
+    </label>
+ -->
+   <tr id="tr{{ item.id }}">
+	   <td class="hidden"><input id="{{ item.id }}" class="itemcheck" type="checkbox" checked="checked" name="coupon[]"
+       value="{{ item.id }}" onclick="modifFacture({{ item.id }} , {{ item.price }})" ></td>
+	   <td>{{ item.code }}</td>
+	   <td>{{ item.price }} TND</td>
+	   <td>{{ item.vendu|getVenduCoupon }}</td>
+	   <td>{{ item.recu|getRecuCoupon }}</td>
+   </tr>
+
+    {% if facture==0 %}
+{% set commFix = item.fixedCommission %}
+{% endif %}
+    {% set commVar = item.variableCommission %}
+    {% if item.vendu ==3 %}
+        {% set PrixCoupon = PrixCoupon + item.price %}
+    {% endif %}
+{% endfor %}
+</tbody>
+</table>
+</div>
+</div>
+
+
+{% set CA =  PrixCoupon  %}
+{% set CVariable = (CA  - minprice*nbrgratuit) * commVar/100 %}
+<span class="label  badge" >Recette : {{ PrixCoupon }} TND</span>
+<span class="label  badge-important" id="span_ca">Chiffre d'affaire : {{ CA - minprice*nbrgratuit }} TND</span>
+<span class="label  badge-primary"  >Gratuité  : {{ minprice*nbrgratuit }} TND</span>
+<span class="label  badge-warning" id="com_fixe">Commission Fixe : {{ commFix }} TND</span>
+<span class="label  badge-success" id="span_com_variable">Commission Variable : {{ CVariable }} TND</span>
+<span class="label  badge-info" >Commission TTC : {{ CVariable + commFix }} TND</span>
+<input type="hidden" value="{{ CA }}" name="ca" id="ca" >
+<input type="hidden" value="{{ CVariable }}" name="com_variable" id="com_variable" >
+<input type="hidden" value="{{ commFix }}" name="com_fixe" id="com_fixe">
+
+{% block javascripts %}
+<script>
+    var price =new Array();
+    {% for item in entities %}
+    price[{{ item.id }}]={{ item.price }};
+    {% endfor %}
+    function modifFacture(idCoupon,prixCoupon)
+    {
+        var CA = $("#ca").val();
+        var NewCA = 0;
+        var ComVariable = 0;
+
+        if( $('#' + idCoupon).is(':checked') ){
+            //add
+             NewCA = parseFloat( CA ) + prixCoupon;
+            $("#ca").val(NewCA);
+
+            $('#span_ca').html("Chiffre d'affaire  : " + NewCA + " TND");
+        }
+        else
+        {
+            //moins
+             NewCA = parseFloat( CA ) - prixCoupon;
+            $("#ca").val(NewCA)  ;
+            $('#span_ca').html("Chiffre d'affaire  : " + NewCA + " TND");
+
+
+        }
+        ComVariable = parseFloat(NewCA * {{ commVar }}/100) ;
+        $("#com_variable").val(ComVariable);
+        $('#span_com_variable').html("Commission Variable : " + ComVariable + " TND");
+    }
+
+    $(document).ready(function () {
+
+            $('#all').click(function (event) {  //on click
+
+                if (this.checked) { // check select status
+
+                    $('.itemcheck').each(function () { //loop through each checkbox
+
+                        this.checked = true;  //select all checkboxes with class "checkbox1"
+
+                        modifFacture($(this).val() , price[$(this).val()])
+                        ///console.log(price)
+                    });
+                } else {
+
+                    $('.itemcheck').each(function () { //loop through each checkbox
+
+                        this.checked = false; //deselect all checkboxes with class "checkbox1"
+
+                        modifFacture($(this).val() ,  price[$(this).val()])
+
+                    });
+                }
+            });
+        });
+</script>
+{% endblock %}

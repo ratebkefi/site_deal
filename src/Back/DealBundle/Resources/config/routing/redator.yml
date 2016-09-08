@@ -1,0 +1,34 @@
+list_redactor:
+    path:     /
+    defaults: { _controller: BackDealBundle:Redactor:index }
+
+add_redactor_manager:
+    path:     /add
+    defaults: { _controller: BackDealBundle:Redactor:add}
+
+update_redactor_manager:
+    path:     /update/{id}
+    defaults: { _controller: BackDealBundle:Redactor:edit}
+    requirements:
+        id: \d+
+view_redactor_manager:
+    path:     /view/{id}
+    defaults: { _controller: BackDealBundle:Redactor:view}
+    requirements:
+        id: \d+
+
+activate_redactor_manager:
+    path:     /act/{id}
+    defaults: { _controller: BackDealBundle:Redactor:activate}
+    requirements:
+        id: \d+
+unactivate_redactor_manager:
+    path:     /unact/{id}
+    defaults: { _controller: BackDealBundle:Redactor:unactivate}
+    requirements:
+        id: \d+
+delete_redactor_manager:
+    path:     /unact/{id}
+    defaults: { _controller: BackDealBundle:Redactor:delete}
+    requirements:
+        id: \d+

@@ -1,0 +1,49 @@
+{% extends '::baseBack.html.twig' %}
+{% form_theme form 'form_table_layout.html.twig' %}
+{% block body -%}
+    <div class="content">
+        <div class="container-fluid">
+
+            <!-- ==================== COMMON ELEMENTS ROW ==================== -->
+            <div class="row-fluid">
+                <div class="span12">
+                    <!-- ==================== TEXT INPUTS HEADLINE ==================== -->
+                    <div class="containerHeadline">
+                        <i class="icon-edit"></i>
+
+                        <h2>Modifier Big Fid</h2>
+                    </div>
+                    <!-- ==================== END OF TEXT INPUTS HEADLINE ==================== -->
+
+                    <!-- ==================== TEXT INPUTS FLOATING BOX ==================== -->
+                    <div class="floatingBox">
+                        <div class="container-fluid">
+                            <div class="container-fluid">
+                                {{ form_start(form, {'method': 'POST','attr': {'class': 'form-horizontal contentForm'}}) }}
+                                        {{ form_row(form.valeur) }}
+
+                                        <div class="formFooter">
+                                            <button type="submit" class="btn btn-success"><i class="icon-ok"> </i>
+                                                Valider
+                                            </button>
+                                            <button type="reset" class="btn btn-danger"><i class="icon-remove"> </i>
+                                                Effacer
+                                            </button>
+                                            <a href="{{ path('back_parameter') }}">
+                                                <button class="btn btn-inverse" type="button"><i class="icon-list"></i>
+                                                    Liste
+                                                </button>
+                                            </a>
+                                            {{ form_widget(form._token) }}
+                                        </div>
+                                {{ form_end(form) }}
+                            </div>
+
+                        </div>
+                    </div>
+                    <!-- ==================== END OF TEXT INPUTS FLOATING BOX ==================== -->
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

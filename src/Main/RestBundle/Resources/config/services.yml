@@ -1,0 +1,7 @@
+parameters:
+#    main_rest.example.class: Main\RestBundle\Example
+
+services:
+#    main_rest.example:
+#        class: %main_rest.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]

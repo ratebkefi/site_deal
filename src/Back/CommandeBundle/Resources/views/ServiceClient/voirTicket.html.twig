@@ -1,0 +1,497 @@
+{% extends '::baseBack.html.twig' %}
+{% form_theme form 'form_table_layout.html.twig' %}
+{% form_theme form1 'form_table_layout.html.twig' %}
+{% block body -%}
+    {% set reponse = listeMessage(ticket.id) %}
+
+    <div class="content">
+        <div class="container-fluid">
+            <!-- ==================== COMMON ELEMENTS ROW ==================== -->
+            <div class="row-fluid">
+                <div class="span12 voir-ticket">
+                    <!-- ==================== TEXT INPUTS HEADLINE ==================== -->
+                    <div class="containerHeadline">
+                        <i class="icon-edit"></i>
+                        <h2>Détails Ticket</h2>
+                        <div class="controlButton pull-right"><i class="icon-remove removeElement"></i></div>
+                        <div class="controlButton pull-right"><i class="icon-caret-down minimizeElement"></i></div>
+                    </div>
+                    <!-- ==================== END OF TEXT INPUTS HEADLINE ==================== -->
+                    <!-- ==================== TEXT INPUTS FLOATING BOX ==================== -->
+                    <div class="floatingBox">
+                        <div class="container-fluid">
+                            <div class="pull-right">
+                                <a href="{{ path('note_ticket',{'id':ticket.id}) }}" class="paye">
+                                    <button class="btn  btn-danger" type="button"><i class="icon-delete">({{ nbrNote }}) </i>Afficher Notes
+                                    </button>
+                                </a>
+                                <a href="{{ path('historique_ticket',{'id':ticket.id}) }}" class="paye">
+                                    <button class="btn  btn-danger" type="button"><i class="icon-delete"></i>Afficher
+                                        l'historique
+                                    </button>
+                                </a>
+                                {% if  app.user.roles[0]!= 'DAF'  and app.user.roles[0]!= 'FINANCIER' and app.user.roles[0]!= 'DIRECTEURCOMMERCIAL'  %}
+
+                                    {% if ticket.status ==3 %}
+                                        <a href="{{ path('ouvrire_ticket',{'id':ticket.id}) }}">
+                                            <button class="btn  btn-inverse" type="button"><i class="icon-delete"></i>Réouvrir
+                                                Ticket
+                                            </button>
+                                        </a>
+                                    {% endif %}
+                                    {% if ticket.status !=3 %}
+                                        <a href="{{ path('fermer_ticket',{'id':ticket.id}) }}">
+                                            <button class="btn  btn-inverse" type="button"><i class="icon-delete"></i>Fermer
+                                                Ticket
+                                            </button>
+                                        </a>
+                                        <button class="controlButton minimizeElement btn btn-danger" id="show">Répondre <i
+                                                class="icon-chevron-down pull-right"></i></button>
+
+                                    {% endif %}
+                                {% endif %}
+
+                            </div>
+                            {% if ticket.status ==3 %}
+                                <p class="pull-right" style="clear:both"><strong> Ce ticket est marqué comme fermé . Pas
+                                        de nouvelles réponses de tickets
+                                        peuvent être ajoutés . </strong></p>
+                                    {% endif %}
+                            <br/><br/>
+                            {{ form_start(form1, {'enctype': 'multipart/form-data','method': 'POST','attr': {'class': 'form-horizontal contentForm','name':'messageTicket'}}) }}
+                            <div class="table" style="display: none">
+                                <h3>Ajouter un nouveau message</h3>
+                                {{ form_row(form1.message,{'attr':{'class':'form-control span9 ','rows':'12'}}) }}
+                                {{ form_row(form1.file,{'attr':{'class':'input-file','id':'my-file'}}) }}
+                                <div class="formFooter">
+                                    <button type="submit" class="btn btn-success">Envoyer</button>
+                                </div>
+                            </div>
+                            {{ form_row(form1._token) }}
+                            {{ form_end(form1) }}
+                            <!-- =================== Informations sur ticket ===================== -->
+                            <div class="container-fluid">
+                                <!-- ==================== COMMON ELEMENTS ROW ==================== -->
+                                <div class="row-fluid">
+                                    <div class="span12 voir-ticket">
+                                        <!-- ==================== TEXT INPUTS HEADLINE ==================== -->
+                                        <div class="containerHeadline">
+                                            <h2>Informations sur les tickets</h2>
+                                            <div class="controlButton pull-right"><i
+                                                    class="icon-caret-down minimizeElement"></i></div>
+                                        </div>
+                                        <!-- ==================== END OF TEXT INPUTS HEADLINE ==================== -->
+                                        <!-- ==================== TEXT INPUTS FLOATING BOX ==================== -->
+                                        <div class="floatingBox">
+                                            <div class="container-fluid">
+                                                <!-- Détail de ticket -->
+                                                {{ form_start(form, {'method': 'POST','attr': {'id': 'form-voirticket','class': 'form-horizontal contentForm','name':'ticket'}}) }}
+                                                <div class="row-fluid">
+                                                    <div class="span12">
+                                                        <div class="headline"><h3>Client</h3></div>
+                                                        <div class="marg-bottom-40"><a target="_blank" href="{{ path('view_client_manager',{'id':ticket.commande.client.id}) }}">{{ ticket.commande.client }}</a></div>
+                                                    </div>
+                                                </div>
+                                                <div class="row-fluid">
+                                                    <div class="span6">
+                                                        <div class="headline"><h3>Objet</h3></div>
+                                                        <div class="marg-bottom-40">{{ form_widget(form.object) }}</div>
+                                                    </div>
+                                                    <div class="span6">
+                                                        <div class="headline"><h3>Deal</h3></div>
+                                                        <div class="marg-bottom-40">
+                                                            <strong>Deal ID
+                                                                # {{ ticket.commande.deal.id }}</strong>
+                                                            <p>{{ ticket.commande.deal.title }}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row-fluid">
+                                                    <div class="span6">
+                                                        <div class="headline"><h3>Date</h3></div>
+                                                        <div class="marg-bottom-40">
+                                                            <span>{{ ticket.dcr|date('d-m-Y H:i:s') }}</span></div>
+                                                    </div>
+                                                    <div class="span6">
+                                                        <div class="headline bg-color-light"><h3>Etat</h3></div>
+                                                        <div class="marg-bottom-40">
+                                                            <span>{% if ticket.status == 1 %} Ouvert {% elseif ticket.status == 2 %} En cours {% else %} Cloturé {% endif %}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row-fluid">
+                                                    <div class="span6">
+                                                        <div class="headline"><h3>Code</h3></div>
+                                                        <div class="marg-bottom-40"><span>{{ ticket.code }}</span></div>
+                                                    </div>
+                                                    <div class="span6">
+                                                        <div class="headline"><h3>Priorité</h3></div>
+                                                        <div class="marg-bottom-40">{{ form_widget(form.priorite) }}</div>
+                                                    </div>
+                                                </div>
+                                                <div class="row-fluid">
+                                                    <div class="span6">
+                                                        <div class="headline"><h3>Assigné à</h3></div>
+                                                        <div class="marg-bottom-40">
+                                                            {% if app.user.roles[0]=='SERVICECLIENT' %}
+                                                                {{ ticket.user }}
+                                                                {{ form_widget(form.user, {'attr': {'style': 'display:none'}}) }}
+
+                                                            {% else %}
+                                                                {{ form_widget(form.user) }}
+                                                            {% endif %}
+
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="span6">
+                                                        {% if componRembouser|length >0 %}
+
+                                                            <div class="headline"><h3>Demande de remboursement</h3></div>
+                                                            <div id="marg-bottom-40" class="marg-bottom-40">
+                                                                <strong>La liste des coupons</strong><br>
+
+
+                                                                {% for item in  componRembouser %}
+                                                                    <div class="row-fluid">
+                                                                        <div class="span6">
+                                                                            {{ item.code }} - {{ item.vendu|getVenduCoupon }} - {{ item.recu|getRecuCoupon }}
+                                                                        </div>
+                                                                    </div>
+                                                                {% endfor %}
+                                                            </div>
+
+                                                        {% endif %}
+
+                                                        <div class="marg-bottom-40 ">
+                                                            <input type="checkbox" name="rembours" id="remboursement"> <h5>S'agit-il d'une demande de remboursement?</h5>
+                                                        </div>
+                                                        <div class="marg-bottom-40" id="marg-bottom-401"
+                                                             style="display: none;">
+                                                            <strong>La liste des coupons</strong>
+                                                            <br>
+                                                            {% for item in listeCoupon %}
+                                                                <div class="row-fluid">
+                                                                    <div class="span12">
+                                                                        <input id="coupon_{{ item.id }}"
+                                                                               onclick="showHideBigFid({{ item.id }})"
+                                                                               type="checkbox" class="css-checkbox couponcheck"
+                                                                               name="remboursement[]"
+                                                                               id="{{ item.code }}"
+                                                                               value="{{ item.id }}">
+                                                                        <label for="coupon_{{ item.id }}"
+                                                                               class="css-label">{{ item.code }}({{ item.vendu|getVenduCoupon }} | {{ item.recu|getRecuCoupon }})
+                                                                            {% if item.recu==2 %}
+                                                                                {% set break = false %}
+                                                                                {% for date in dates if not break %}
+                                                                                    {%  if date.coupon.code == item.code %}
+                                                                                        {{ date.dcr|date("d/m/Y H:i:s")  }}
+                                                                                        {% set break = true %}
+                                                                                    {%  endif %}
+                                                                                {% endfor %}
+                                                                            {%  endif %}
+
+                                                                        </label>
+                                                                    </div>
+                                                                    <div class="span12" id="view_bigfid_{{ item.id }}"
+                                                                         style="display: none;">
+                                                                        <input id="bigfid_{{ item.id }}"
+                                                                               onclick="showHidePriceBigFid({{ item.id }})"
+                                                                               type="checkbox" class="css-checkbox bigfidcheck"
+                                                                               name="bigfid_{{ item.id }}" >
+                                                                        <label for="bigfid_{{ item.id }}"
+                                                                               class="css-label">BigFid</label>
+                                                                        <div id="div_bigfid_{{ item.id }}" class=""
+                                                                             style="display: none">
+                                                                            <table>
+                                                                                <tr>
+                                                                                    <td><label >Montant:</label>
+                                                                                    </td>
+                                                                                    <td><input type="text"
+                                                                                               value="{{ item.price|getBigfid }}"
+                                                                                               name="prix_{{ item.id }}"
+                                                                                               style="width: 50px"></td>
+                                                                                </tr>
+                                                                            </table>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="span12" id="view_virement_{{ item.id }}"
+                                                                         style="display: none;">
+                                                                        <input id="virement_{{ item.id }}"
+                                                                               onclick="showHideVirement({{ item.id }})"
+                                                                               type="checkbox" class="css-checkbox virementcheck"
+                                                                               name="virement_{{ item.id }}" >
+                                                                        <label for="virement_{{ item.id }}"
+                                                                               class="css-label">Virement bancaire</label>
+                                                                        <div id="div_virement_{{ item.id }}" class=""
+                                                                             style="display: none">
+                                                                            <table>
+                                                                                <tr>
+                                                                                    <td valign="top"><label>RIB:</label></td>
+                                                                                    <td valign="top"><input type="text" value=""
+                                                                                                            name="rib_{{ item.id }}" data-validation="length number" data-validation-length="20-20" style="width: 130px"></td>
+                                                                                    <td valign="top"><label >Montant:</label></td>
+                                                                                    <td valign="top"><input type="text" value=""
+                                                                                                            name="montant_virement_{{ item.id }}"
+                                                                                                            style="width: 80px"></td>
+                                                                                </tr>
+                                                                            </table>
+                                                                        </div>
+                                                                    </div>
+
+
+                                                                </div>
+                                                            {% endfor %}
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="clearfix"></div>
+                                                    {% if  app.user.roles[0]!= 'DAF'  and app.user.roles[0]!= 'FINANCIER' and app.user.roles[0]!= 'DIRECTEURCOMMERCIAL' %}
+
+                                                        <div class="formFooter">
+                                                            <button type="submit" class="btn btn-success"><i
+                                                                    class="icon-ok"> </i> Valider
+                                                            </button>
+                                                            <button type="reset" class="btn btn-danger"><i
+                                                                    class="icon-remove"> </i> Effacer
+                                                            </button>
+                                                            <a href="{{ path('list_ticket') }}">
+                                                                <button class="btn btn-inverse" type="button"><i
+                                                                        class="icon-list"></i> Liste
+                                                                </button>
+                                                            </a>
+                                                        </div>
+
+                                                    </div>
+                                                    {{ form_widget(form._token) }}
+
+                                                    {{ form_end(form) }}
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="container-fluid">
+                                    <div class="row-fluid">
+                                        <div class="span12 voir-ticket">
+                                            <div class="containerHeadline">
+                                                <h2>Conversation</h2>
+
+                                                <div class="controlButton pull-right"><i
+                                                        class="icon-caret-down minimizeElement"></i></div>
+                                            </div>
+                                            <div class="floatingBox">
+                                                <div class="container-fluid">
+                                                    <section class="comment-list">
+                                                        {% for item in reponse %}
+                                                            {% if item.client is not null %}
+                                                                <!-- Message Client -->
+                                                                <article class="row-fluid">
+                                                                    <div class="span2">
+                                                                        <h4 class="media-heading pull-right">{{ item.client }}</h4>
+                                                                    </div>
+                                                                    <div class="span9">
+                                                                        <div class="panel panel-default arrow left">
+                                                                            <div class="panel-body">
+                                                                                <div class="comment-post">
+                                                                                    <p>
+                                                                                        {{ item.message|raw|nl2br }}
+                                                                                    </p>
+                                                                                    <span><i class="icon-calendar pr-10"></i>{{ item.dpa|date('d-m-Y H:i:s') }}</span>
+                                                                                        {% if item.path %}
+                                                                                        <a target="_blank"
+                                                                                           href="{{ asset('uploads/ticket/'~item.path) }}"
+                                                                                           title="Télecharger"
+                                                                                           class="dark-blue pull-right"><i
+                                                                                                class="icon-paperclip icon-2x"></i></a>
+                                                                                        {% endif %}
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </article>
+                                                            {% elseif item.user is not null %}
+                                                                <!-- Message Administrateur -->
+                                                                <article class="row-fluid">
+                                                                    <div class="offset1 span9">
+                                                                        <div class="panel panel-default arrow right">
+                                                                            <div class="panel-body">
+                                                                                <div class="comment-post">
+                                                                                    <p>
+                                                                                        {{ item.message|raw|nl2br }}
+                                                                                    </p>
+                                                                                    <span class="pull-left"><i
+                                                                                            class="icon-calendar pr-10"></i>{{ item.dpa|date('d-m-Y H:i:s') }}</span>
+                                                                                        {% if item.path %}
+                                                                                        <a target="_blank"
+                                                                                           href="{{ asset('uploads/ticket/'~item.path) }}"
+                                                                                           title="Télecharger"
+                                                                                           class="dark-blue pull-right"><i
+                                                                                                class="icon-paperclip icon-2x"></i></a>
+                                                                                        {% endif %}
+                                                                                    <a href="javascript:confirmdeletbox('{{ path('supprimer_ticket',{'id':item.id,'ticket':ticket.id}) }}')"
+                                                                                       title="Supprimer"
+                                                                                       class="teal pull-right"><i
+                                                                                            class="icon-remove icon-2x pr-10"></i></a>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="span2">
+                                                                        <h4 class="media-heading">{{ item.user }}</h4>
+                                                                    </div>
+                                                                </article>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    </section>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- ==================== END OF TEXT INPUTS FLOATING BOX ==================== -->
+                                    </div>
+                                </div>
+                                <!-- =================== Fin Conversation ================= -->
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ==================== END OF TEXT INPUTS FLOATING BOX ==================== -->
+                </div>
+            </div>
+        </div>
+
+    {% endblock %}
+    {% block javascripts %}
+        {% javascripts '@BackPlanningBundle/Resources/public/js/jquery.form-validator.js' %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+        {% endjavascripts %}
+        <script>
+            $().ready(function () {
+                /*$.validate({
+                 modules: 'security'
+                 } );*/
+            });
+        </script>  
+        <script>
+            function showHideVirement(couponId) {
+                var check;
+
+                check = $("#virement_" + couponId + "").prop("checked");
+                if (check) {
+                    $("#div_virement_" + couponId + "").show();
+                } else {
+
+                    $("#div_virement_" + couponId + "").hide();
+                }
+            }
+            function showHideBigFid(couponId) {
+                var check;
+                check = $("#coupon_" + couponId + "").prop("checked");
+                if (check) {
+                    $("#view_bigfid_" + couponId + "").show();
+                    $("#view_bigfid_" + couponId + "").show();
+                    $("#view_virement_" + couponId + "").show();
+                    $("#bigfid_" + couponId + "").prop('checked', true);
+                    $("#div_bigfid_" + couponId + "").show();
+
+
+                } else {
+                    $("#view_bigfid_" + couponId + "").hide();
+                    $("#div_bigfid_" + couponId + "").hide();
+                    $("#div_virement_" + couponId + "").hide();
+                    $("#view_virement_" + couponId + "").hide();
+                    $("#bigfid_" + couponId + "").prop('checked', false);
+                    $("#virement_" + couponId + "").prop('checked', false);
+                }
+            }
+            function showHidePriceBigFid(couponId) {
+                var check;
+                check = $("#bigfid_" + couponId + "").prop("checked");
+
+                if (check) {
+                    $("#div_bigfid_" + couponId + "").show();
+                } else {
+                    $("#div_bigfid_" + couponId + "").hide();
+                }
+
+            }
+            var check;
+            $("#remboursement").on("click", function () {
+                check = $("#remboursement").prop("checked");
+                if (check) {
+                    $("#marg-bottom-401").show();
+                } else {
+                    $("#marg-bottom-401").hide();
+                }
+            });
+            /* if($("#remboursement").is(':checked'))
+             {
+             $("#marg-bottom-40").show();  // checked
+             alert("ererere");
+             }
+         
+             else
+             $("#marg-bottom-40").hide();  // unchecked
+             */
+            $(document).ready(function () {
+
+                $('.paye').fancybox({
+                    'height': 'auto',
+                    'width': 990,
+                    'type': 'iframe',
+                    'autoScale': false
+                });
+                /* $("#show").click(function () {
+                 $(".table").show();
+                 $("#show").hide();
+                 });*/
+            });
+            /* Repondre Slide Effect */
+            $(document).ready(function () {
+
+
+
+                $(".table").hide(10);
+                $("#show").click(function (e) {
+                    if ($(this).html() == 'Répondre <i class="icon-chevron-down pull-right"></i>') {
+                        $(".table").slideDown("fast"); //Slide Down Effect
+                        $(this).html('Annuler <i class="icon-chevron-up pull-right"></i>');
+                    } else {
+                        $(".table").slideUp("fast");  //Slide Up Effect
+                        $(this).html('Répondre <i class="icon-chevron-down pull-right"></i>');
+                    }
+                    e.preventDefault();
+                });
+
+                /* Remboursement checkbox message d'erreur */
+                $("#form-voirticket").submit(function () {
+                    var check1 = $("#remboursement").prop("checked");
+                    var check2;
+                    check2 = $(".bigfidcheck").prop("checked");
+                    var check3;
+                    check3 = $(".couponcheck").prop("checked");
+                    var check4;
+                    check4 = $(".virementcheck").prop("checked");
+
+                    if (check1) {
+                        if ($('[name="remboursement[]"]:checked').length > 0) {
+                            if ($(".bigfidcheck:checked").length == 0 && $(".virementcheck:checked").length == 0) {
+                                alert("Please check at least one checkbox");
+                                return false;
+                            }
+
+                        }
+                        else if (!check3) {
+                            alert("Please check at least one checkbox 1");
+                            return false;
+                        }
+                    }
+                });
+            });
+
+        </script>
+
+
+    {% endblock %}
+
+

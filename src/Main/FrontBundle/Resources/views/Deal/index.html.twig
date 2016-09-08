@@ -1,0 +1,1169 @@
+{% extends '::base.html.twig' %}
+{% block title %}
+{% if deal.seoTitle %}
+{{ deal.seoTitle }}
+{% else %}
+{{ deal.planning.defaultannexe.reference[0].shopPrice|getPourcentage(deal.planning.defaultannexe.reference[0].bigdealPrice) }} % de remise chez 
+{% set pointVente=deal.planning.defaultannexe.protocol.user.sellingpoint %} 
+{% if pointVente|length != 0 %}
+{% if pointVente[0].visible == 0   %}
+{% for item in pointVente %}
+{{ item.name }}
+{% endfor %}
+{% else %}
+{{ pointVente[0].visibleAdress }}
+{% endif %}
+{% endif %}
+| BIGDeal Tunisie
+{% endif %}
+
+{% endblock %}
+
+{% block description %}{% if deal.seoDescription %}{{ deal.seoDescription }}{% else %}{{ (deal.title) }}{% endif %}{% endblock %}
+
+{% block head %}
+<meta property="og:site_name" content="BIGDeal"/>
+<meta property="og:type" content="website"/>
+<meta property="og:image" content="{{ asset(deal.image1| imagine_filter('facebook_share'))|replace({' ': '%20'}) }}"/>
+
+<meta property="og:url" 
+content="{{ app.request.getSchemeAndHttpHost()~path(app.request.attributes.get('_route'),app.request.attributes.get('_route_params')) }}"/>
+{% if deal.seoTitle %}
+<meta property="og:title" content="{{ (deal.seoTitle) }}"/>
+{% else %}
+<meta property="og:title" content="{{ (deal.title) }}"/>
+{% endif %}
+{% if deal.seoDescription %}
+<meta property="og:description" content="{{ deal.seoDescription }}"/>
+{% else %}
+{% autoescape 'html' %}
+<meta property="og:description" content="{{ (deal.deal|striptags('<b>')|raw) }}"/>
+{% endautoescape %}
+{% endif %}
+
+{% endblock %}
+
+{% block stylesheets %}
+<!-- BxSlider -->
+<link rel="stylesheet" href="{{ asset('public/css/jquery.bxslider.css') }}">
+<link rel="stylesheet" href="{{ asset('bundles/dcsrating/css/rating.css') }}"/>
+<link rel="stylesheet" href="{{ asset('public/css/enjoyhint/enjoyhint.css') }}">
+<style>
+  .fa {
+    color: #de0e79;
+    font-size: 1.3em;
+
+  }
+
+  .modal-open .modal {
+    z-index: 10000;
+  }
+
+  .mySkip, .myNext, .mySkip:focus, .myNext:focus {
+    color: white;
+    border-color: #de0e79;
+    border-radius: 0;
+    margin-top: 10px;
+  }
+
+
+  .mySkip, .mySkip:hover, .mySkip:focus {
+    background: transparent;
+  }
+
+  .myNext, .myNext:hover, .myNext:focus {
+    background: #de0e79;
+  }
+
+  .enjoy_hint_label {
+    margin-top: -11px;
+  }
+</style>
+
+{% endblock %}
+{% block javascripts %}
+{% javascripts '@MainFrontBundle/Resources/public/js/jquery.jscroll.min.js' %}
+<script type="text/javascript" src="{{ asset_url }}"></script>
+{% endjavascripts %}
+<script type="text/javascript">
+  $(document).ready(function () {
+    $('.alert-success').delay(5000).fadeOut();
+  });
+  $(document).ready(function () {
+    $('.alert-error').delay(5000).fadeOut();
+  });
+  $(document).ready(function () {
+    $('#comment').jscroll({
+      loadingHtml: '<div class="row"><div class="col-md-12 col-sm-12"><div id="loading"><img src="{{ asset('public/images/loading.gif') }}" alt="Loader"></div></div></div>',
+      nextSelector: '.last a'
+
+    });
+    $('#shwos2').jscroll({
+      loadingHtml: '<div class="row"><div class="col-md-12 col-sm-12"><div id="loading"><img src="{{ asset('public/images/loading.gif') }}" alt="Loader"></div></div></div>',
+      nextSelector: '.last2 a'
+
+    });
+    $('.bxslider').bxSlider({
+      pagerCustom: '#bx-pager'
+    });
+            /*
+             $("#price-hover").hover(function(){
+             $(".price-big").css("opacity", "1.0");
+             }, function(){
+             $(".price-big").css("opacity", "0.0");
+           });  */
+
+           $('[data-toggle="tooltip"]').tooltip();
+         })
+
+       </script>
+       <!-- BxSlider JS -->
+       <script src="{{ asset('public/js/jquery.bxslider.js') }}"></script>
+
+       {% set sellingpoint= deal.planning.defaultannexe.protocol.user.sellingpoint %}
+       {% if sellingpoint|length>0 %}
+
+       <script type="text/javascript">
+
+
+        function initialize() {
+          {% if sellingpoint[0].visible %}
+          var myLatlng = new google.maps.LatLng({{ sellingpoint[0].latVisibleAdress }}, {{ sellingpoint[0].lonVisibleAdress }});
+          {% else %}
+          var myLatlng = new google.maps.LatLng({{ sellingpoint[0].latitude }}, {{ sellingpoint[0].longitude }});
+          {% endif %}
+          var mapOptions = {
+            {% if sellingpoint[0].visible %}
+            center: {
+              lat:{{ sellingpoint[0].latVisibleAdress }},
+              lng: {{ sellingpoint[0].lonVisibleAdress }}
+            }, {% else %}
+            center: {
+              lat:{{ sellingpoint[0].latitude }},
+              lng: {{ sellingpoint[0].longitude }}
+            }, {% endif %}
+            zoom: 16
+          }
+          ;
+          var map = new google.maps.Map(document.getElementById('map-canvas'),
+            mapOptions);
+          {% for item in sellingpoint %}
+          {% if item.visible %}
+          var mypoint{{ item.id }} = new google.maps.LatLng({{ item.latVisibleAdress }}, {{ item.lonVisibleAdress }});
+          {% else %}
+          var mypoint{{ item.id }} = new google.maps.LatLng({{ item.latitude }}, {{ item.longitude }});
+          {% endif %}
+          var marker = new google.maps.Marker({
+            position: mypoint{{ item.id }},
+            map: map,
+            title: '{% if deal.planning.defaultannexe.protocol.user.sellingpoint[0].visible == 1 %}{{deal.planning.defaultannexe.protocol.user.sellingpoint[0].visibleAdress}}{% else %}{{ deal.planning.defaultannexe.protocol.user }}{% endif %}'
+          });
+          {% endfor %}
+        }
+
+        google.maps.event.addDomListener(window, 'load', initialize);</script>
+        {% endif %}
+
+
+
+        <script src="{{ asset('bundles/dcsrating/js/rating.js') }}"></script>
+        <script src="{{ asset('public/js/jquery.countdown.js') }}" type="text/javascript" charset="utf-8"></script>
+
+        <script type="text/javascript">
+          var ts = new Date({{ deal.planning.endDate|date("Y") }}, {{ deal.planning.endDate|date("m") }}-1, {{ deal.planning.endDate|date("d") }}, {{ deal.planning.endDate|date("H") }}, {{ deal.planning.endDate|date("i") }}, {{ deal.planning.endDate|date("s") }});</script>
+          <script src="{{ asset('public/js/scriptcounter.js') }}" type="text/javascript"></script>
+          {% javascripts '@MainFrontBundle/Resources/public/js/bootstrap-rating-input.min.js' %}
+          <script type="text/javascript" src="{{ asset_url }}"></script>
+          {% endjavascripts %}
+          <script>
+            $(document).ready(function () {
+              $('#back_dealbundle_comment_value').rating();
+              $('.starss').rating("refresh", {disabled: true, showClear: false});
+            });
+          </script>
+          <script>
+            var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+            if (w > 767) {
+              document.write('<script type="text/javascript" src="{{ asset('public/css/enjoyhint/enjoyhint.min.js') }}"><\/script>');
+            }
+            if (w > 767) {
+              document.write('<script type="text/javascript" src="{{ asset('public/css/enjoyhint/main2.js') }}"><\/script>');
+            }
+
+          </script>   
+
+
+          {% endblock %}
+
+
+          {% block body %}
+          {% if deal.seoTitle %}
+          {% set permelink = deal.seoTitle %}
+          {% else %}
+          {% set permelink = deal.title %}
+          {%endif%}
+          {% set urlFacebook = app.request.schemeAndHttpHost ~ path('deal_detail',  {'region':(deal.planning.regionId|getAlias),'categorie':(deal.planning.categoryId|getAlias), 'id': deal.id ,'name':(permelink|getAlias)}) %}
+          {% if curentUser %}
+
+          {% set urlFacebook= app.request.schemeAndHttpHost ~ path('deal_detail',  {'region':(deal.planning.regionId|getAlias),'categorie':(deal.planning.categoryId|getAlias), 'id': deal.id ,'name':(permelink|getAlias)}) ~ "?user=" ~ curentUser %}
+
+          {% endif %}
+          {#% set urlClient = ""  %#}
+          {#% if app.user.id %#}
+          {#% set urlClient = "?user=" ~ app.user.id  %#}
+          {#% endif %#}
+          {% set ref=deal.planning.defaultannexe.reference %}
+          {% set reservation = ref[0].annexe.booking %}
+          {% set CouponConsomer = deal.id|listCouponConsomer %}
+          {% set indexref=0 %}
+          {% set i=0 %}
+          {% for key,item in ref %}
+
+          {% if i!=0 %}
+          {% if item.bigdealPrice<ref[0].bigdealPrice %}
+          {% set indexref=key %}
+          {% endif %}
+          {% endif %}
+          {% set i=i+1 %}
+          {% endfor %}
+
+          <div class="row" itemscope itemtype="http://schema.org/Product">
+            <div class="col-md-12 entry" itemprop="name"><h1>{{ deal.title }}</h1></div>
+          </div>
+
+          <!-- Shows -->
+          <div id="offre" class="row">
+
+            <div class="col-md-9 col-sm-12 product pull-right">
+              <ul class="bxslider">
+                {% if deal.image1!="" %}
+                <li><img
+                  src="{{ asset(deal.image1| imagine_filter('sliddetaildeal')) }}"
+                  id="image1"></li>{% endif %}
+                  {% if deal.image2!="" %}
+                  <li><img
+                    src="{{ asset(deal.image2| imagine_filter('sliddetaildeal')) }}"
+                    id="image2"></li>{% endif %}
+                    {% if deal.image3!="" %}
+                    <li><img
+                      src="{{ asset(deal.image3| imagine_filter('sliddetaildeal')) }}"
+                      id="image3"></li>{% endif %}
+                    </ul>
+
+                    <ul class="row" id="bx-pager">
+                      <div class="col-md-offset-2 col-md-10 col-sm-12">
+                        <div class="row">
+                          {% if deal.image1!="" %}
+                          <li class="col-xs-4 col-md-3">
+                            <a data-slide-index="0" href=""><img
+                              src="{{ asset(deal.image1| imagine_filter('thumbdetaildeal')) }}"
+                              class="img-responsive "></a></li>{% endif %}
+
+                              {% if deal.image2!="" %}
+                              <li class="col-xs-4 col-md-3"><a data-slide-index="1"
+                               href=""><img
+                               src="{{ asset(deal.image2| imagine_filter('thumbdetaildeal')) }}"
+                               class="img-responsive "></a></li>{% endif %}
+                               {% if deal.image3!="" %}
+                               <li class="col-xs-4 col-md-3"><a data-slide-index="2"
+                                 href=""><img
+                                 src="{{ asset(deal.image3| imagine_filter('thumbdetaildeal')) }}"
+                                 class="img-responsive "></a></li>{% endif %}
+                               </div>
+                             </div>
+                           </ul>
+                         </div>
+
+                         <div class="col-md-3 col-sm-12 product-det">
+                          <div class="detailPrice">
+                            <div class="row">
+                              <div class="col-sm-12">{% if ref|length >1 %}<p class="dark-gray bold">Dès</p>{% endif %}</div>
+                              <div class="col-md-9 col-sm-9 col-xs-12 text-center">
+                                {# <div class="price-big">
+                                <b></b>
+                                <p class="dark-gray bold">{{ ref[indexref].bigdealPrice|getBigfid }} <img
+                                  src="{{ asset('public/images/btn.png') }}" alt="price" width="24"/></p><p class="teal">IGFid</p>
+                                </div>#}
+                              </div>
+                            </div>
+                            <div class="row price">
+                              <div class="col-sm-12 text-center" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+                                <strong id="price-hover" data-html="true"
+                                data-toggle="tooltip"
+                                title="<p class='dark-gray bold'>{{ ref[indexref].bigdealPrice|getBigfid }} <i class='flaticon-computerchip'></i></p><p class='teal'>IGFid</p>"  itemprop="price">{{ ref[indexref].bigdealPrice }}
+                                <sup>DT</sup></strong>
+                              </div>
+                            </div>
+                            <div class="row details">
+                              <div class="col-md-4 col-sm-4 col-xs-4 valeur">
+                                <p class="dark-gray ">Valeur</p>
+                                <strong class="dark-gray ">{{ ref[indexref].shopPrice }}
+                                  <sup>DT</sup></strong>
+                                </div>
+                                <div class="col-md-4 col-sm-4 col-xs-4 remise">
+                                  <p class="dark-gray ">Remise</p>
+                                  <strong class="dark-gray bold">{{ ref[indexref].shopPrice|getPourcentage(ref[indexref].bigdealPrice) }}
+                                    %</strong>
+                                  </div>
+                                  <div class="col-md-4 col-sm-4 col-xs-4 economie">
+                                    <p class="dark-gray ">économie</p>
+                                    <strong class="dark-gray bold">{{ ref[indexref].shopPrice-ref[indexref].bigdealPrice }}
+                                      <sup>DT</sup></strong>
+                                    </div>
+
+                                  </div>
+                                </div>
+                                <div class="row buy">
+                                  <div class="col-md-12">
+                                    {% if nbcoupon<deal.maxCouponUser %}
+                                    {% if deal.id|verifExpire %}
+                                    <p class="hidden-xs">
+                                      <a href="javascript:void();"
+                                      class="btn btn-teal no-bg"><i
+                                      class="fa fa-exclamation-triangle pr-30"></i>Expiré</a>
+                                      <!-- script get response popup deal passé -->
+                                      <script type="text/javascript" src="https://app.getresponse.com/view_webform_v2.js?u=BLRed&webforms_id=3462403"></script>
+                                      {% else %}
+
+                                      {% if ref|length >1 %}
+                                      <p class="hidden-xs"><a href="#" data-toggle="modal"
+                                        data-target=".add-modal"
+                                        class="btn btn-teal"><i
+                                        class="flaticon-buy10"></i>J'achete</a>
+                                      </p>
+                                      <!-- Script GetResponse detail deal en cours 1-->
+                                      <script type="text/javascript" src="https://app.getresponse.com/view_webform_v2.js?u=BLRed&webforms_id=3460903"></script>
+                                      {% else %}
+                                      {% if ref[indexref].maxCoupon ==0 %}
+                                      <p class="hidden-xs">
+                                        <a href="{{ path('jachetelist',{'deal':deal.id ,'id':ref[indexref].id}) }}"
+                                        class="btn btn-teal"><i
+                                        class="flaticon-buy10"></i>J'achete</a>
+                                      </p>
+                                      <!-- Script GetResponse detail deal en cours 2-->
+                                      <script type="text/javascript" src="https://app.getresponse.com/view_webform_v2.js?u=BLRed&webforms_id=3460903"></script>
+                                      {% elseif ref[indexref].maxCoupon > deal.id|nombreAcheteurs %}
+                                      <p class="hidden-xs">
+                                        <a  href="{{ path('jachetelist',{'deal':deal.id ,'id':ref[indexref].id}) }}"
+                                        class="btn btn-teal"><i
+                                        class="flaticon-buy10"></i>J'achete</a>
+                                      </p>
+                                      <!-- Script GetResponse detail deal en cours 3-->
+                                      <script type="text/javascript" src="https://app.getresponse.com/view_webform_v2.js?u=BLRed&webforms_id=3460903"></script>
+                                      {% else %}
+                                      <p class="hidden-xs">
+                                        <a href="javascript:void();"
+                                        class="btn btn-teal no-bg"><i
+                                        class="fa fa-cart-arrow-down"></i>Epuisé</a>
+                                      </p>
+
+                                      <p>
+                                        {% endif %}
+                                        {% endif %}
+                                        {% endif %}
+                                        {% if deal.id|verifExpire %}
+                                        {% else %}
+
+                                        <div class="dispoCount">
+                                          <p class="dark-gray dispo">Disponible pour un temps
+                                            limité ! </p>
+
+                                            <p class="teal"><i
+                                              class="flaticon-clock96"></i> <span
+                                              id="countdown"></span></p>
+                                            </div>
+                                            {% endif %}
+                                            {% elseif deal.maxCouponUser==0 and deal.id|verifExpire != 1 %}
+                                            {% if ref|length >1 %}
+                                            <p class="hidden-xs"><a href="#" data-toggle="modal"
+                                              data-target=".add-modal"
+                                              class="btn btn-teal"><i
+                                              class="flaticon-buy10"></i>J'achete</a>
+                                            </p>
+                                            <!-- Script GetResponse detail deal en cours 4-->
+                                            <script type="text/javascript" src="https://app.getresponse.com/view_webform_v2.js?u=BLRed&webforms_id=3460903"></script>
+                                            {% else %}
+                                            {% if ref[indexref].maxCoupon ==0 %}
+                                            <p class="hidden-xs">
+                                              <a href="{{ path('jachetelist',{'deal':deal.id ,'id':ref[indexref].id}) }}"
+                                              class="btn btn-teal"><i
+                                              class="flaticon-buy10"></i>J'achete</a>
+                                            </p>
+                                            <!-- Script GetResponse detail deal en cours 5-->
+                                            <script type="text/javascript" src="https://app.getresponse.com/view_webform_v2.js?u=BLRed&webforms_id=3460903"></script>
+
+                                            {% elseif ref[indexref].maxCoupon > deal.id|nombreAcheteurs %}
+                                            <p class="hidden-xs">
+                                              <a href="{{ path('jachetelist',{'deal':deal.id ,'id':ref[indexref].id}) }}"
+                                              class="btn btn-teal"><i
+                                              class="flaticon-buy10"></i>J'achete</a>
+                                            </p>
+                                            <!-- Script GetResponse detail deal en cours 6--> 
+                                            <script type="text/javascript" src="https://app.getresponse.com/view_webform_v2.js?u=BLRed&webforms_id=3460903"></script>
+                                            {% else %}
+                                            <p class="hidden-xs">
+                                              <a href="javascript:void();"
+                                              class="btn btn-teal no-bg"><i
+                                              class="fa fa-cart-arrow-down"></i>Epuisé</a>
+                                            </p>
+
+
+                                            {% endif %}
+                                            {% endif %}
+                                            <div class="dispoCount">
+                                              <p class="dark-gray dispo">Disponible pour un temps
+                                                limité !</p>
+
+                                                <p class="teal"><i class="flaticon-clock96"></i> <span
+                                                  id="countdown"></span></p>
+                                                </div>
+                                                {% else %}
+                                                <p class="hidden-xs">
+                                                  <a href="javascript:void();"
+                                                  class="btn btn-teal no-bg"><i
+                                                  class="fa fa-exclamation-triangle pr-30"></i>Expiré</a>
+                                                </p>
+                                                {% endif %}
+                                                {% if deal.id|verifExpire %}
+                                                <p class="dark-gray buyers">
+                                                  <i class="flaticon-group2"></i>
+                                                  {{ deal.id|nombreAcheteurs }} Acheteurs</p>
+                                                  {% else %}
+                                                  {% if deal.id|nombreAcheteurs >= deal.planning.defaultannexe.mincoupon %}
+                                                  <p class="dark-gray buyers">
+
+                                                    <i class="flaticon-group2"></i>
+                                                    {{ deal.id|nombreAcheteurs }} Acheteurs
+                                                  </p>
+                                                  {% else %}
+                                                  <!-- small box -->
+                                                  <p class="dark-gray buyers">
+                                                    <i class="flaticon-group2 teal"></i>
+                                                    Encore {{ deal.planning.defaultannexe.mincoupon - deal.id|nombreAcheteurs }}
+                                                    Participant(s) pour VALIDER LE DEAL
+                                                  </p>
+                                                  {% endif %}
+                                                  {% endif %}
+                                                  <p>
+                                                   <a href="https://www.facebook.com/dialog/feed?app_id=831428680266309&link={{ urlFacebook }}&name={{ deal.title|replace({'&': 'et'}) }}&caption=bigdeal.tn&picture={{ asset(deal.image1| imagine_filter('sliddetaildeal'))|e('html_attr') }}
+                                                   &redirect_uri={{ app.request.schemeAndHttpHost ~ path('deal_detail',  {'region':(deal.planning.regionId|getAlias),'categorie':(deal.planning.categoryId|getAlias), 'id': deal.id ,'name':(permelink|getAlias)}) }}&display=popup"
+                                                   class="btn btn-facebook"><i class="fa fa-facebook"></i>Partagez
+                                                   & Gagnez 20 BIGfid</a></p>
+                                                   {% if reservation ==1 %}
+                                                   <p><a target="_blank"
+                                                    href="{{ path('disponibilite',{'id':deal.id}) }}"
+                                                    class="btn blue-btn text-center">Disponibilités</a>
+                                                  </p>
+
+                                                  <p><a target="_blank"
+                                                    href="{{ path('front_booking_step1') }}"
+                                                    class="btn green-btn text-center">Réserver</a></p>
+                                                    {% endif %}
+                                                  </div>
+                                                </div>
+                                              </div>
+                                              <div class="clearfix"></div>
+                                              <div class="offre">
+                                                <div class="row">
+                                                  <div class="col-md-8 col-sm-12 offre-det">
+                                                    {{ deal.description|raw }}
+
+
+
+                                                    {% if deal.deal !='' %}
+
+                                                    <h3 class="titleOffreDet">Le Deal :</h3>
+                                                    <p itemprop="description" itemtype="http://schema.org/Product"> {{ deal.deal|raw }} </p><br/><br/>
+                                                    {% endif %}
+
+                                                    {% if deal.bigdeallike  !='' %}
+                                                    <h3>BigDeal.tn aime :</h3>
+                                                    {{ deal.bigdeallike|raw }}<br/><br/>
+                                                    {% endif %}
+                                                    {% if deal.youLike  !='' %}
+
+                                                    <h3>Vous allez adorer :</h3>
+                                                    {{ deal.youLike|raw }}<br/><br/>
+                                                    {% endif %}
+                                                    {% if deal.toBeClear  !='' %}
+
+                                                    <h3>Conditions du deal :</h3>
+                                                    {{ deal.toBeClear|raw }}<br/><br/>
+                                                    {% endif %}
+
+
+
+                                                    <h3>
+                                                      {% set pointVente=deal.planning.defaultannexe.protocol.user.sellingpoint %}
+                                                      {% if pointVente|length != 0 %}
+
+                                                      {% if pointVente[0].visible == 0   %}
+                                                      {% for item in pointVente %}
+                                                      {{ item.name }} :<br/>
+                                                      {% endfor %}
+                                                      
+                                                      {% endif %}
+                                                      {% endif %}
+                                                      {#{ deal.planning.defaultannexe.protocol.user :}#} 
+                                                    </h3>
+                                                    {% set pointVente=deal.planning.defaultannexe.protocol.user.sellingpoint %}
+                                                    {% set categ=deal.planning.defaultannexe.protocol.user.category %}
+                                                    {% if pointVente|length != 0 %}
+
+                                                    {% if pointVente[0].visible == 0   %}
+                                                    {% for item in pointVente %}
+
+                                                    {{ item.name }} est proposé dans la catégorie deal {{categ.name}} à {% if item.localite %} {{ item.localite.name }} {% endif %} </br></br>
+                                                    {{ item.name }} est un marchand exclusif de BIGDeal</br>
+                                                    {% endfor %}
+
+                                                    {% endif %}
+                                                    {% endif %}</br>
+
+
+                                                    {#{ deal.planning.defaultannexe.protocol.user }#} 
+
+
+
+                                                    {{ deal.strongpoint|raw }}
+
+
+
+                                                    <!-- bloc adsense -->
+                                                        <!-- <div class="top hidden-xs"> 
+                                                            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+                                                            
+                                                            <ins class="adsbygoogle"
+                                                                 style="display:inline-block;width:468px;height:60px"
+                                                                 data-ad-client="ca-pub-4502360515267224"
+                                                                 data-ad-slot="1040065191"></ins>
+                                                            <script>
+                                                            (adsbygoogle = window.adsbygoogle || []).push({});
+                                                            </script>
+                                                            
+                                                          </div> -->
+                                                          <!-- end bloc adsense -->
+                                                        </div>
+                                                        <div class="col-md-4 offre-location" itemprop="brand" itemscope itemtype="http://schema.org/Organization">
+                                                          <h2 itemprop="name">
+                                                           {% set pointVente=deal.planning.defaultannexe.protocol.user.sellingpoint %}
+                                                           {% if pointVente|length != 0 %}
+
+                                                           {% if pointVente[0].visible == 0   %}
+                                                           {% for item in pointVente %}
+                                                           {{ item.name }}<br/>
+                                                           {% endfor %}
+                                                           {% else %}
+                                                           {{ pointVente[0].visibleAdress }}
+                                                           {% endif %}
+                                                           {% endif %}
+                                                           {#{ deal.planning.defaultannexe.protocol.user }#}
+
+                                                         </h2>
+                                                         {% if deal.planning.defaultannexe.protocol.user.webSite!="" %}
+                                                         <a target="_blank"
+                                                         href="{{ deal.planning.defaultannexe.protocol.user.webSite }}"
+                                                         title=""
+                                                         class="website"><i class="fa fa-globe"></i></a>
+                                                         {% endif %}
+                                                         {% if deal.planning.defaultannexe.protocol.user.fbpage!="" %}
+                                                         <a target="_blank"
+                                                         href="{{ deal.planning.defaultannexe.protocol.user.fbpage }}"
+                                                         title=""
+                                                         class="social"><i class="fa fa-facebook"></i></a>
+                                                         {% endif %}                    
+                                                         {% set sellingpoint=deal.planning.defaultannexe.protocol.user.sellingpoint %}
+                                                         {% if sellingpoint|length != 0 %}
+
+                                                         {% set latitude = sellingpoint[0].latitude %}
+                                                         {% set longitude = sellingpoint[0].longitude %}
+                                                         {% if sellingpoint[0].visible == false %}
+                                                         <a  target="_blank" href="https://www.google.fr/maps/dir//{{ latitude }},{{ longitude }}" title="Iténiraire" class="social social2"><i
+                                                          class="fa fa-map-marker teal"></i></a>
+                                                          {% endif %}
+                                                          {% endif %}
+                                                          <p class="address">
+                                                            <strong>Adresse: </strong>
+                                                            {% if sellingpoint|length != 0 %}
+
+                                                            {% if sellingpoint[0].visible == 0 %}
+                                                            {% for item in sellingpoint %}
+                                                            {{ item.adress }} {% if item.localite %}- {{ item.localite.name }}- {{ item.localite.cp }} {% endif %}
+                                                            <br/>
+                                                            <strong>Horaires:</strong>
+                                                            <table border="0" width="100%">
+                                                              {% if sellingpoint[0].schedule[0] is defined %}
+                                                              <tr>
+                                                                <td><strong>{{ sellingpoint[0].schedule[0].day }}</strong></td>
+                                                                <td>
+                                                                  {% if  sellingpoint[0].schedule[0].openTimeMorning|date('H:i') != sellingpoint[0].schedule[0].closeTimeMorning|date('H:i') %}
+                                                                  {{ sellingpoint[0].schedule[0].openTimeMorning|date('H:i') }}
+                                                                  à {{ sellingpoint[0].schedule[0].closeTimeMorning|date('H:i') }}
+                                                                  {% endif %}
+                                                                </td>
+                                                                <td>
+                                                                  {% if  sellingpoint[0].schedule[0].openTimeAfternoon|date('H:i') != sellingpoint[0].schedule[0].closeTimeAfternoon|date('H:i') %}
+                                                                  {{ sellingpoint[0].schedule[0].openTimeAfternoon|date('H:i') }}
+                                                                  à {{ sellingpoint[0].schedule[0].closeTimeAfternoon|date('H:i') }}
+                                                                  {% endif %}
+                                                                </td>
+                                                              </tr>{% endif %}
+                                                              {% if sellingpoint[0].schedule[1] is defined %}
+                                                              <tr>
+                                                                <td><strong>{{ sellingpoint[0].schedule[1].day }}</strong></td>
+                                                                <td>
+                                                                  {% if sellingpoint[0].schedule[1].openTimeMorning|date('H:i') !=  sellingpoint[0].schedule[1].closeTimeMorning|date('H:i') %}
+                                                                  {{ sellingpoint[0].schedule[1].openTimeMorning|date('H:i') }}
+                                                                  à {{ sellingpoint[0].schedule[1].closeTimeMorning|date('H:i') }}
+                                                                  {% endif %}
+                                                                </td>
+                                                                <td>
+                                                                  {% if sellingpoint[0].schedule[1].openTimeAfternoon|date('H:i') !=  sellingpoint[0].schedule[1].closeTimeAfternoon|date('H:i') %}
+
+                                                                  {{ sellingpoint[0].schedule[1].openTimeAfternoon|date('H:i') }}
+                                                                  à {{ sellingpoint[0].schedule[1].closeTimeAfternoon|date('H:i') }}
+                                                                  {% endif %}
+                                                                </td>
+                                                              </tr>{% endif %}
+                                                              {% if sellingpoint[0].schedule[2] is defined %}
+                                                              <tr>
+                                                                <td><strong>{{ sellingpoint[0].schedule[2].day }}</strong></td>
+                                                                <td>
+                                                                  {% if sellingpoint[0].schedule[2].openTimeMorning|date('H:i') !=  sellingpoint[0].schedule[2].closeTimeMorning|date('H:i') %}
+
+                                                                  {{ sellingpoint[0].schedule[2].openTimeMorning|date('H:i') }}
+                                                                  à {{ sellingpoint[0].schedule[2].closeTimeMorning|date('H:i') }}
+                                                                  {% endif %}
+                                                                </td>
+                                                                <td>
+                                                                  {% if sellingpoint[0].schedule[2].openTimeAfternoon|date('H:i') !=  sellingpoint[0].schedule[2].closeTimeAfternoon|date('H:i') %}
+
+                                                                  {{ sellingpoint[0].schedule[2].openTimeAfternoon|date('H:i') }}
+                                                                  à {{ sellingpoint[0].schedule[2].closeTimeAfternoon|date('H:i') }}
+                                                                  {% endif %}
+                                                                </td>
+                                                              </tr>{% endif %}
+                                                              {% if sellingpoint[0].schedule[3] is defined %}
+                                                              <tr>
+                                                                <td><strong>{{ sellingpoint[0].schedule[3].day }}</strong></td>
+                                                                <td>
+                                                                  {% if sellingpoint[0].schedule[3].openTimeMorning|date('H:i') != sellingpoint[0].schedule[3].closeTimeMorning|date('H:i') %}
+                                                                  {{ sellingpoint[0].schedule[3].openTimeMorning|date('H:i') }}
+                                                                  à {{ sellingpoint[0].schedule[3].closeTimeMorning|date('H:i') }}
+                                                                  {% endif %}
+                                                                </td>
+                                                                <td>
+                                                                  {% if sellingpoint[0].schedule[3].openTimeAfternoon|date('H:i') != sellingpoint[0].schedule[3].closeTimeAfternoon|date('H:i') %}
+                                                                  {{ sellingpoint[0].schedule[3].openTimeAfternoon|date('H:i') }}
+                                                                  à {{ sellingpoint[0].schedule[3].closeTimeAfternoon|date('H:i') }}
+                                                                  {% endif %}
+                                                                </td>
+                                                              </tr>{% endif %}
+                                                              {% if sellingpoint[0].schedule[4] is defined %}
+                                                              <tr>
+                                                                <td><strong>{{ sellingpoint[0].schedule[4].day }}</strong></td>
+                                                                <td>
+                                                                  {% if sellingpoint[0].schedule[4].openTimeMorning|date('H:i') != sellingpoint[0].schedule[4].closeTimeMorning|date('H:i') %}
+                                                                  {{ sellingpoint[0].schedule[4].openTimeMorning|date('H:i') }}
+                                                                  à {{ sellingpoint[0].schedule[4].closeTimeMorning|date('H:i') }}
+                                                                  {% endif %}
+                                                                </td>
+                                                                <td>
+                                                                  {% if sellingpoint[0].schedule[4].openTimeAfternoon|date('H:i') != sellingpoint[0].schedule[4].closeTimeAfternoon|date('H:i') %}
+                                                                  {{ sellingpoint[0].schedule[4].openTimeAfternoon|date('H:i') }}
+                                                                  à {{ sellingpoint[0].schedule[4].closeTimeAfternoon|date('H:i') }}
+                                                                  {% endif %}
+                                                                </td>
+                                                              </tr>{% endif %}
+                                                              {% if sellingpoint[0].schedule[5] is defined %}
+                                                              <tr>
+                                                                <td><strong>{{ sellingpoint[0].schedule[5].day }}</strong></td>
+                                                                <td>
+                                                                  {% if sellingpoint[0].schedule[5].openTimeMorning|date('H:i') != sellingpoint[0].schedule[5].closeTimeMorning|date('H:i') %}
+
+                                                                  {{ sellingpoint[0].schedule[5].openTimeMorning|date('H:i') }}
+                                                                  à {{ sellingpoint[0].schedule[5].closeTimeMorning|date('H:i') }}
+                                                                  {% endif %}
+                                                                </td>
+                                                                <td>
+                                                                  {% if sellingpoint[0].schedule[5].openTimeAfternoon|date('H:i') != sellingpoint[0].schedule[5].closeTimeAfternoon|date('H:i') %}
+                                                                  {{ sellingpoint[0].schedule[5].openTimeAfternoon|date('H:i') }}
+                                                                  à {{ sellingpoint[0].schedule[5].closeTimeAfternoon|date('H:i') }}
+                                                                  {% endif %}
+                                                                </td>
+                                                              </tr>{% endif %}
+                                                              {% if sellingpoint[0].schedule[6] is defined %}
+                                                              <tr>
+                                                                <td><strong>{{ sellingpoint[0].schedule[6].day }}</strong></td>
+                                                                <td>
+                                                                  {% if sellingpoint[0].schedule[6].openTimeMorning|date('H:i') != sellingpoint[0].schedule[6].closeTimeMorning|date('H:i') %}
+                                                                  {{ sellingpoint[0].schedule[6].openTimeMorning|date('H:i') }}
+                                                                  à {{ sellingpoint[0].schedule[6].closeTimeMorning|date('H:i') }}
+                                                                  {% endif %}
+                                                                </td>
+                                                                <td>
+                                                                  {% if sellingpoint[0].schedule[6].openTimeAfternoon|date('H:i') != sellingpoint[0].schedule[6].closeTimeAfternoon|date('H:i') %}
+                                                                  {{ sellingpoint[0].schedule[6].openTimeAfternoon|date('H:i') }}
+                                                                  à {{ sellingpoint[0].schedule[6].closeTimeAfternoon|date('H:i') }}
+                                                                  {% endif %}
+
+                                                                </td>
+                                                              </tr>{% endif %}
+                                                            </table>
+                                                            {% endfor %}<br>
+                                                            {% else %}
+                                                            {{ sellingpoint[0].visibleAdress }}<br>
+                                                            <table border="0" width="100%">
+                                                              {% if sellingpoint[0].schedule[0] is defined %}
+                                                              <tr>
+                                                                <td><strong>{{ sellingpoint[0].schedule[0].day }}</strong></td>
+                                                                <td>
+                                                                  {% if  sellingpoint[0].schedule[0].openTimeMorning|date('H:i') != sellingpoint[0].schedule[0].closeTimeMorning|date('H:i') %}
+                                                                  {{ sellingpoint[0].schedule[0].openTimeMorning|date('H:i') }}
+                                                                  à {{ sellingpoint[0].schedule[0].closeTimeMorning|date('H:i') }}
+                                                                  {% endif %}
+                                                                </td>
+                                                                <td>
+                                                                  {% if  sellingpoint[0].schedule[0].openTimeAfternoon|date('H:i') != sellingpoint[0].schedule[0].closeTimeAfternoon|date('H:i') %}
+                                                                  {{ sellingpoint[0].schedule[0].openTimeAfternoon|date('H:i') }}
+                                                                  à {{ sellingpoint[0].schedule[0].closeTimeAfternoon|date('H:i') }}
+                                                                  {% endif %}
+                                                                </td>
+                                                              </tr>{% endif %}
+                                                              {% if sellingpoint[0].schedule[1] is defined %}
+                                                              <tr>
+                                                                <td><strong>{{ sellingpoint[0].schedule[1].day }}</strong></td>
+                                                                <td>
+                                                                  {% if sellingpoint[0].schedule[1].openTimeMorning|date('H:i') !=  sellingpoint[0].schedule[1].closeTimeMorning|date('H:i') %}
+                                                                  {{ sellingpoint[0].schedule[1].openTimeMorning|date('H:i') }}
+                                                                  à {{ sellingpoint[0].schedule[1].closeTimeMorning|date('H:i') }}
+                                                                  {% endif %}
+                                                                </td>
+                                                                <td>
+                                                                  {% if sellingpoint[0].schedule[1].openTimeAfternoon|date('H:i') !=  sellingpoint[0].schedule[1].closeTimeAfternoon|date('H:i') %}
+
+                                                                  {{ sellingpoint[0].schedule[1].openTimeAfternoon|date('H:i') }}
+                                                                  à {{ sellingpoint[0].schedule[1].closeTimeAfternoon|date('H:i') }}
+                                                                  {% endif %}
+                                                                </td>
+                                                              </tr>{% endif %}
+                                                              {% if sellingpoint[0].schedule[2] is defined %}
+                                                              <tr>
+                                                                <td><strong>{{ sellingpoint[0].schedule[2].day }}</strong></td>
+                                                                <td>
+                                                                  {% if sellingpoint[0].schedule[2].openTimeMorning|date('H:i') !=  sellingpoint[0].schedule[2].closeTimeMorning|date('H:i') %}
+
+                                                                  {{ sellingpoint[0].schedule[2].openTimeMorning|date('H:i') }}
+                                                                  à {{ sellingpoint[0].schedule[2].closeTimeMorning|date('H:i') }}
+                                                                  {% endif %}
+                                                                </td>
+                                                                <td>
+                                                                  {% if sellingpoint[0].schedule[2].openTimeAfternoon|date('H:i') !=  sellingpoint[0].schedule[2].closeTimeAfternoon|date('H:i') %}
+
+                                                                  {{ sellingpoint[0].schedule[2].openTimeAfternoon|date('H:i') }}
+                                                                  à {{ sellingpoint[0].schedule[2].closeTimeAfternoon|date('H:i') }}
+                                                                  {% endif %}
+                                                                </td>
+                                                              </tr>{% endif %}
+                                                              {% if sellingpoint[0].schedule[3] is defined %}
+                                                              <tr>
+                                                                <td><strong>{{ sellingpoint[0].schedule[3].day }}</strong></td>
+                                                                <td>
+                                                                  {% if sellingpoint[0].schedule[3].openTimeMorning|date('H:i') != sellingpoint[0].schedule[3].closeTimeMorning|date('H:i') %}
+                                                                  {{ sellingpoint[0].schedule[3].openTimeMorning|date('H:i') }}
+                                                                  à {{ sellingpoint[0].schedule[3].closeTimeMorning|date('H:i') }}
+                                                                  {% endif %}
+                                                                </td>
+                                                                <td>
+                                                                  {% if sellingpoint[0].schedule[3].openTimeAfternoon|date('H:i') != sellingpoint[0].schedule[3].closeTimeAfternoon|date('H:i') %}
+                                                                  {{ sellingpoint[0].schedule[3].openTimeAfternoon|date('H:i') }}
+                                                                  à {{ sellingpoint[0].schedule[3].closeTimeAfternoon|date('H:i') }}
+                                                                  {% endif %}
+                                                                </td>
+                                                              </tr>{% endif %}
+                                                              {% if sellingpoint[0].schedule[4] is defined %}
+                                                              <tr>
+                                                                <td><strong>{{ sellingpoint[0].schedule[4].day }}</strong></td>
+                                                                <td>
+                                                                  {% if sellingpoint[0].schedule[4].openTimeMorning|date('H:i') != sellingpoint[0].schedule[4].closeTimeMorning|date('H:i') %}
+                                                                  {{ sellingpoint[0].schedule[4].openTimeMorning|date('H:i') }}
+                                                                  à {{ sellingpoint[0].schedule[4].closeTimeMorning|date('H:i') }}
+                                                                  {% endif %}
+                                                                </td>
+                                                                <td>
+                                                                  {% if sellingpoint[0].schedule[4].openTimeAfternoon|date('H:i') != sellingpoint[0].schedule[4].closeTimeAfternoon|date('H:i') %}
+                                                                  {{ sellingpoint[0].schedule[4].openTimeAfternoon|date('H:i') }}
+                                                                  à {{ sellingpoint[0].schedule[4].closeTimeAfternoon|date('H:i') }}
+                                                                  {% endif %}
+                                                                </td>
+                                                              </tr>{% endif %}
+                                                              {% if sellingpoint[0].schedule[5] is defined %}
+                                                              <tr>
+                                                                <td><strong>{{ sellingpoint[0].schedule[5].day }}</strong></td>
+                                                                <td>
+                                                                  {% if sellingpoint[0].schedule[5].openTimeMorning|date('H:i') != sellingpoint[0].schedule[5].closeTimeMorning|date('H:i') %}
+
+                                                                  {{ sellingpoint[0].schedule[5].openTimeMorning|date('H:i') }}
+                                                                  à {{ sellingpoint[0].schedule[5].closeTimeMorning|date('H:i') }}
+                                                                  {% endif %}
+                                                                </td>
+                                                                <td>
+                                                                  {% if sellingpoint[0].schedule[5].openTimeAfternoon|date('H:i') != sellingpoint[0].schedule[5].closeTimeAfternoon|date('H:i') %}
+                                                                  {{ sellingpoint[0].schedule[5].openTimeAfternoon|date('H:i') }}
+                                                                  à {{ sellingpoint[0].schedule[5].closeTimeAfternoon|date('H:i') }}
+                                                                  {% endif %}
+                                                                </td>
+                                                              </tr>{% endif %}
+                                                              {% if sellingpoint[0].schedule[6] is defined %}
+                                                              <tr>
+                                                                <td><strong>{{ sellingpoint[0].schedule[6].day }}</strong></td>
+                                                                <td>
+                                                                  {% if sellingpoint[0].schedule[6].openTimeMorning|date('H:i') != sellingpoint[0].schedule[6].closeTimeMorning|date('H:i') %}
+                                                                  {{ sellingpoint[0].schedule[6].openTimeMorning|date('H:i') }}
+                                                                  à {{ sellingpoint[0].schedule[6].closeTimeMorning|date('H:i') }}
+                                                                  {% endif %}
+                                                                </td>
+                                                                <td>
+                                                                  {% if sellingpoint[0].schedule[6].openTimeAfternoon|date('H:i') != sellingpoint[0].schedule[6].closeTimeAfternoon|date('H:i') %}
+                                                                  {{ sellingpoint[0].schedule[6].openTimeAfternoon|date('H:i') }}
+                                                                  à {{ sellingpoint[0].schedule[6].closeTimeAfternoon|date('H:i') }}
+                                                                  {% endif %}
+
+                                                                </td>
+                                                              </tr>{% endif %}
+                                                            </table>
+                                                            {% endif %}
+                                                            {% endif %}
+                                                            
+                                                            <br>
+
+                                                          </p>
+                                                          <div class="map">
+                                                            <div id="map-canvas"
+                                                            style="width: 100%; height: 250px;"></div>
+                                                          </div>
+
+                                                          <div class="popularometre" >
+                                                            <h3>Popularomètre <span>BIGDeal</span></h3>
+
+                                                            <p>Note: <span>{# include 'DCSRatingBundle:Rating:rating.html.twig' with {'id' : deal.id} #}
+                                                              {% include 'MainRatingclientBundle:Rating:control.html.twig' with {'id' : deal.id, 'role' : 'ROLE_CLIENT'} %}</span>
+                                                              <span> <a href="#mon_ancre"
+                                                                class="dark-gray"> {{ nbvote }}Avis</a></span>
+                                                              </p>
+                                                              <ul>
+
+                                                                <li>
+                                                                  <label class="label gray-label">{{ "%05d"|format(CouponConsomer) }}</label><span>membres ont <strong>visité</strong> ce Partenaire </span>
+                                                                </li>
+                                                                <li>
+                                                                  <label class="label gray-label">{{ "%05d"|format(nbvote3) }}</label><span>membres sont <strong>satisfait </strong>
+
+                                                                </span>
+                                                              </li>
+                                                              <li>
+                                                                <a href="#"
+                                                                data-toggle="modal"
+                                                                data-target=".commentpartner"
+                                                                class="dark-gray">Voir tout les avis sur ce marchand</a>
+                                                              </li>
+                                                            </ul>
+                                                          </div>
+                                                          <!-- bloc femme de tunisie -->
+                                                          <div>
+                                                            <iframe width="250" height="250" frameborder="0" scrolling="no" src="https://femmesdetunisie.com/site-2/"></iframe>
+                                                          </div>
+
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                    <div id="comment" class="offre-comments">
+                                                      {% for type, flashMessages in app.session.flashbag.all() %}
+                                                      {% for flashMessage in flashMessages %}
+                                                      <br/>
+                                                      <div class="alert {{ type }}">
+                                                        <button data-dismiss="alert" class="close" type="button">×
+                                                        </button>
+                                                        {{ flashMessage|trans }}
+                                                      </div>
+                                                      {% endfor %}
+                                                      {% endfor %}
+                                                      <div class="row">
+                                                        <div class="col-md-12 col-sm-12 title">
+                                                          <h3 id="mon_ancre">Commentaires</h3>
+                                                        </div>
+                                                      </div>
+
+
+                                                      {% for item in commentaire %}
+                                                      <div class="row comments">
+                                                        <div class="col-md-1 col-sm-1 col-xs-3 text-left">
+                                                          {% if item.voter.fbid!="" %}
+                                                          <img src="https://graph.facebook.com/v2.3/{{ item.voter.fbid }}/picture?width=80&height=80"
+                                                          alt="">
+                                                          {% else %}
+                                                          <img src="{{ asset('public/images/profile-no-picture.png') }}"
+                                                          alt="">
+                                                          {% endif %}
+                                                        </div>
+                                                        <div class="col-md-11 col-sm-11 col-xs-9">
+                                                          <div class="row">
+                                                            <div class="col-sm-12 col-xs-12">
+                                                              <strong>{{ item.voter }}</strong>
+                                                            </div>
+                                                            <div class="col-sm-12 col-xs-12">
+                                                              <strong>Avis</strong>
+                                                              {% for i in 1..5 %}
+                                                              {% set style = 'fa fa-star-o' %}
+                                                              {% if i <= item.value %}
+                                                              {% set style = 'fa fa-star' %}
+                                                              {% else %}
+                                                              {% set style = item.value|isHalfStar(i) ? 'fa fa-star-half-o' %}
+                                                              {% endif %}
+                                                              {% if style == '' %}
+                                                              {% set style = 'fa fa-star-o' %}
+                                                              {% endif %}
+                                                              <span class="{{ style }}"></span>
+                                                              {% endfor %}
+                                                            </div>
+                                                            <div class="col-sm-12 col-xs-12">{{ item.dcr|date('d/m/Y') }}</div>
+                                                          </div>
+
+                                                          <p>{{ item.comment|raw }}</p>
+                                                        </div>
+                                                      </div>
+
+                                                      {% if pagercomment==1 %}
+                                                      <div class="last"><a
+                                                        href="{{ path('pager_deal_comment',{'id':deal.id,'page':2}) }}"
+                                                        style="display: none;">next</a></div>
+                                                        {% endif %}
+                                                        {% endfor %}
+                                                        {% if testfrm==1 %}
+                                                        {{ form_start(form, {'method': 'POST','attr': {'class': 'validatedForm'}}) }}
+
+                                                        <div class="row comments">
+                                                          <div class="col-md-1 col-sm-1 col-xs-3 text-left">
+
+                                                            {% if app.user.fbid!="" %}
+                                                            <img src="https://graph.facebook.com/v2.3/{{ app.user.fbid }}/picture?width=80&height=80"
+                                                            alt="">
+                                                            {% else %}
+                                                            <img src="{{ asset('public/images/profile-no-picture.png') }}"
+                                                            alt="">
+                                                            {% endif %}
+                                                          </div>
+                                                          <div class="col-md-11 col-sm-11 col-xs-9">
+                                                            <div class="row">
+                                                              <div class="col-sm-12"><strong>{{ app.user }}</strong>
+                                                              </div>
+                                                            </div>
+
+                                                            <div class="row">
+                                                              <div class="col-sm-12 col-xs-12">
+                                                                {{ form_widget(form.comment, { 'attr': {'class': "form-control"} }) }}
+                                                                {{ form_widget(form.value, { 'attr': {'class': "form-control",
+                                                                "data-max":5,
+                                                                "data-min":1,
+                                                                "data-icon-lib":"fa" ,
+                                                                "data-active-icon":"fa-star" ,
+                                                                "data-inactive-icon":"fa-star-o" ,
+                                                                "data-clearable-icon":"fa-trash-o"
+
+                                                              } }) }}
+                                                            </div>
+                                                          </div>
+                                                          <div class="col-sm-12 col-xs-12 text-right">
+                                                            {% if testfrm==1 %}
+                                                            <input class="btn btn-comment" type="submit"
+                                                            value="Commenter">
+                                                            {% endif %}
+                                                          </div>
+                                                        </div>
+                                                      </div>
+
+                                                      {{ form_widget(form._token) }}
+                                                      {{ form_end(form) }}
+                                                      {% else %}
+                                                      <div class="alert alert-danger">Vous devez passer une commande pour
+                                                        pouvoir laisser un commentaire
+                                                      </div>
+                                                      {% endif %}
+                                                    </div>
+                                                    <!-- Fixed Mobile Buy button -->
+                                                    <div class="fixed-buy product-det mobile-visible">
+                                                      <div class="col-sm-12 buy">
+                                                        {% if nbcoupon<deal.maxCouponUser %}
+                                                        {% if deal.id|verifExpire %}
+                                                        <p>
+                                                          <a href="javascript:void();"
+                                                          class="btn btn-teal no-bg"><i
+                                                          class="fa fa-exclamation-triangle pr-30"></i>Expiré</a>
+                                                          {% else %}
+                                                          {% if ref|length >1 %}
+                                                          <p><a href="#" data-toggle="modal"
+                                                            data-target=".add-modal" class="btn btn-teal"><i
+                                                            class="flaticon-buy10"></i>J'achete</a>
+                                                          </p>
+                                                          {% else %}
+                                                          {% if ref[indexref].maxCoupon ==0 %}
+                                                          <p>
+                                                           <a href="{{ path('jachetelist',{'deal':deal.id ,'id':ref[indexref].id}) }}"
+                                                           class="btn btn-teal"><i
+                                                           class="flaticon-buy10"></i>J'achete</a>
+                                                         </p>
+
+                                                         {% elseif ref[indexref].maxCoupon > deal.id|nombreAcheteurs %}
+                                                         <p>
+                                                           <a href="{{ path('jachetelist',{'deal':deal.id ,'id':ref[indexref].id}) }}"
+                                                           class="btn btn-teal"><i
+                                                           class="flaticon-buy10"></i>J'achete</a>
+                                                         </p>
+                                                         {% else %}
+                                                         <p>
+                                                          <a href="javascript:void();"
+                                                          class="btn btn-teal no-bg"><i
+                                                          class="fa fa-cart-arrow-down"></i>Epuisé</a>
+                                                        </p>
+
+                                                        <p>
+                                                          {% endif %}
+                                                          {% endif %}
+                                                          {% endif %}
+                                                          {% if deal.id|verifExpire %}
+                                                          {% else %}
+
+
+
+                                                          {% endif %}
+                                                          {% elseif deal.maxCouponUser==0  and deal.id|verifExpire != 1  %}
+                                                          {% if ref|length >1 %}
+                                                          <p><a href="#" data-toggle="modal" data-target=".add-modal"
+                                                            class="btn btn-teal"><i class="flaticon-buy10"></i>J'achete</a>
+                                                          </p>
+                                                          {% else %}
+                                                          {% if ref[indexref].maxCoupon ==0 %}
+                                                          <p>
+                                                            <a href="{{ path('jachetelist',{'deal':deal.id ,'id':ref[indexref].id}) }}"
+                                                            class="btn btn-teal"><i
+                                                            class="flaticon-buy10"></i>J'achete</a>
+                                                          </p>
+
+                                                          {% elseif ref[indexref].maxCoupon > deal.id|nombreAcheteurs %}
+                                                          <p>
+                                                            <a href="{{ path('jachetelist',{'deal':deal.id ,'id':ref[indexref].id}) }}"
+                                                            class="btn btn-teal"><i
+                                                            class="flaticon-buy10"></i>J'achete</a>
+                                                          </p>
+                                                          {% else %}
+                                                          <p>
+                                                            <a href="javascript:void();"
+                                                            class="btn btn-teal no-bg"><i
+                                                            class="fa fa-cart-arrow-down"></i>Epuisé</a>
+                                                          </p>
+
+                                                          <p>
+                                                            {% endif %}
+                                                            {% endif %}
+
+
+                                                            {% else %}
+                                                            <p><a href="javascript:void();"
+                                                             class="btn btn-teal no-bg"><i
+                                                             class="fa fa-cart-arrow-down"></i>Epuisé</a></p>
+                                                             {% endif %}
+                                                           </div>
+                                                         </div>
+                                                         <!-- End Fixed Mobile Buy button -->
+                                                       </div>
+                                                       <!-- modal -->
+
+                                                       <div class="modal fade commentpartner" tabindex="-1" role="dialog"
+                                                       aria-labelledby="myModalLabel" aria-hidden="true">
+                                                       <div class="modal-dialog" style="width:60%">
+                                                        <div class="modal-content">
+                                                          <div class="modal-header">
+                                                            <button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Close"><span
+                                                            aria-hidden="true"><i
+                                                            class="fa fa-close"></i></span></button>
+                                                            <h4 class="modal-title">Les commentaires du
+                                                              partenaire {{ deal.planning.defaultannexe.protocol.user }}</h4>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                              <iframe src="{{ path('pager_deal_allcomment',{'id':deal.id}) }}"
+                                                              style="zoom:0.60" width="100%" height="500"
+                                                              frameborder="0"></iframe>
+
+
+                                                            </div>
+
+                                                          </div>
+                                                        </div>
+                                                      </div>
+
+                                                      <div class="modal fade add-modal" tabindex="-1" role="dialog"
+                                                      aria-labelledby="myModalLabel" aria-hidden="true">
+                                                      <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                          <div class="modal-header">
+                                                            <button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Close"><span
+                                                            aria-hidden="true"><i
+                                                            class="fa fa-close"></i></span></button>
+                                                            <h4 class="modal-title">Choisir une offre</h4>
+                                                          </div>
+                                                          <div class="modal-body">
+
+
+                                                            <div class="">
+                                                              <table class="table table-striped">
+                                                                <thead>
+                                                                  <tr>
+                                                                    <th>Offres</th>
+                                                                    <th>Prix</th>
+                                                                    <th></th>
+                                                                  </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                  {% for item in ref %}
+                                                                  <tr>
+                                                                    <td>{{ item.title }}</td>
+
+                                                                    <td>{{ item.bigdealPrice }} <sup>TND</sup></td>
+
+                                                                    <td>
+                                                                      {% if item.maxCoupon ==0 %}
+                                                                      <a href="{{ path('jachetelist',{'deal':deal.id ,'id':item.id}) }}"
+                                                                      title="J’ACHETE"
+                                                                      class="btn btn-buy pull-right">J’ACHETE</a>
+                                                                      {% elseif item.maxCoupon > item.id|nombreAcheteursReference %}
+
+                                                                      <a href="{{ path('jachetelist',{'deal':deal.id ,'id':item.id}) }}"
+                                                                      title="J’ACHETE"
+                                                                      class="btn btn-buy pull-right">J’ACHETE</a>
+                                                                      {% else %}
+                                                                      <a href="javascript:void();"
+                                                                      title="Epuisé"
+                                                                      class="btn btn-primary no-bg pull-right"><i
+                                                                      class="fa fa-cart-arrow-down pr-10"></i>Epuisé</a>
+                                                                      {% endif %}
+                                                                    </td>
+
+                                                                  </tr>
+                                                                  {% endfor %}
+                                                                </tbody>
+                                                              </table>
+                                                            </div>
+
+
+                                                          </div>
+                                                          <div class="modal-footer">
+                                                            <a type="button" class="btn btn-default" data-dismiss="modal">Annuler</a>
+
+                                                          </div>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+
+                                                    {% endblock %}

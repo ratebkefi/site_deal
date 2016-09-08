@@ -1,0 +1,174 @@
+<html>
+<body>
+{% set contactPrincipale = getContactPrincipale(protocol.user.id) %}
+{% set posteContactPrincipale = getPosteContactPrincipale(protocol.user.id) %}
+<div style="width: 100%;">
+    <h2 style="text-align: center;">PROTOCOLE D’ACCORD</h2>
+    <table width="100%" cellspacing="5" cellpadding="5">
+        <tr>
+            <td colspan="2"><u><b>Entre les soussignés :</b></u></td>
+        </tr>
+        <tr>
+            <td width="120px">Société :</td>
+            <td><p  style="border-bottom: 1px dashed #000;
+          text-decoration: none;text-align: center;font-weight:bold ">{{ protocol.user.name }}</p></td>
+        </tr>
+        <tr>
+            <td>Code TVA :</td>
+            <td><p  style="border-bottom: 1px dashed #000;
+          text-decoration: none;text-align: center;font-weight:bold ">{{ protocol.user.tva }}</p></td>
+        </tr>
+        {% if protocol.user.sellingpoint|length >0 %}
+        <tr>
+            <td>Nom commercial :</td>
+            <td><p  style="border-bottom: 1px dashed #000;
+          text-decoration: none;text-align: center;font-weight:bold ">
+          
+                {{ protocol.user.sellingpoint[0].name }} 
+          </p></td>
+        </tr>
+        {% endif %}
+        <tr>
+            <td>RIB :</td>
+            <td><p  style="  border-bottom: 1px dashed #000;
+          text-decoration: none;text-align: center;font-weight:bold ">{{ protocol.user.rib }}</p></td>
+        </tr>
+        <tr>
+            <td>Banque :</td>
+            <td><p  style="  border-bottom: 1px dashed #000;
+          text-decoration: none;text-align: center;font-weight:bold ">{{ protocol.user.bank }}</p></td>
+        </tr>
+        <tr>
+            <td>Agence :</td>
+            <td><p  style="  border-bottom: 1px dashed #000;
+          text-decoration: none;text-align: center;font-weight:bold ">{{ protocol.user.agency }}</p></td>
+        </tr>
+        <tr>
+            <td>Téléphone du contact :</td>
+            <td><p  style="  border-bottom: 1px dashed #000;
+          text-decoration: none;text-align: center;font-weight:bold ">{{ protocol.user.phone }}</p></td>
+        </tr>
+        <tr>
+            <td>E-mail :</td>
+            <td><p  style="  border-bottom: 1px dashed #000;
+          text-decoration: none;text-align: center;font-weight:bold ">{{ protocol.user.email }}</p></td>
+        </tr>
+        <tr>
+            <td>Site web :</td>
+            <td><p  style="  border-bottom: 1px dashed #000;
+          text-decoration: none;text-align: center;font-weight:bold ">{{ protocol.user.webSite }}</p></td>
+        </tr>
+        <tr>
+            <td>Page facebook :</td>
+            <td><p  style="border-bottom: 1px dashed #000;
+          text-decoration: none;text-align: center;font-weight:bold ">{{ protocol.user.fbpage }}</p></td>
+        </tr>
+        <tr>
+            <td nowrap>Dument représenté par :</td>
+            <td><p  style="border-bottom: 1px dashed #000;
+          text-decoration: none;text-align: center;font-weight:bold ">{{ contactPrincipale }}</p></td>
+        </tr>
+        <tr>
+            <td>en qualité de :</td>
+            <td><p  style="border-bottom: 1px dashed #000;
+          text-decoration: none;text-align: center;font-weight:bold ">{{ posteContactPrincipale }}</p></td>
+        </tr>
+    </table>
+    <p align="right"><b><i>
+                <small>Désigné le marchand D’une part Et,</small>
+            </i></b></p>
+    <p style="text-align: justify;font-size: 10px;font-family: Calibri;">La société {{ protocol.entreprise.libelle }}, sous le matricule fiscale {{ protocol.entreprise.mf }}, est un service de vente
+        promotionnelle géolocalisée offrant à ses marchands une plateforme de webmarketing, dument représenté par son
+        gérant {{ protocol.entreprise.gerant }}, domiciliée {{ protocol.entreprise.adresse }}. Tél :
+        {{ protocol.entreprise.tel }}, Email : {{ protocol.entreprise.email }}</p>
+<br/><br/><br/><br/>
+    <p align="right"><b><i>
+                <small>D’autre part,</small>
+            </i></b></p>
+            <p><b><i><u>Préambule :</u></i></b></p>
+            <p>Le marchand souhaite communiquer sur ses prestations via leurs publications sur le site <i>www.bigdeal.tn</i></p>
+              <p>Le marchand est un tiers, indépendant de {{ protocol.entreprise.libelle }}, qui est seul responsable de la vente ou de la fourniture de son Offre. {{ protocol.entreprise.libelle }} ne vend, ni ne fournit l’Offre du Marchand. {{ protocol.entreprise.libelle }} ne commercialise via le site <i>www.bigdeal.tn</i> que le Coupon au nom et pour le compte du Marchand. {{ protocol.entreprise.libelle }} assure la publication, la communication et l’encaissement des achats  moyennant une commission.</p>
+<p>{{ protocol.entreprise.libelle }} accepte de collaborer avec le marchand conformément aux articles cités ci-dessous et selon les détails précisés dans le ou les annexes de ce protocole.</p> 
+
+    <p><b><i><u>Il été arrêté et convenu ce qui suit : </u></i></b></p>
+
+    <p><b><i><u>Article 1 : </u></i></b></p>
+
+    <p>Ce présent protocole d’accord a une validité de 3 mois et prend effet dès la date de sa signature.<br>
+Durant cette période, le marchand accepte la parution d’une ou plusieurs offres sur le site www.bigdeal.tn. {{ protocol.entreprise.libelle }} se réserve le droit de publier et/ou de dé-publier les offres selon ces besoins de production. 
+</p>
+
+
+    <p><b><i><u>Article 2 : </u></i></b></p>
+
+    <p>Le marchand s’engage pendant toute la durée de sa relation commerciale avec {{ protocol.entreprise.libelle }} à s’abstenir de toutes relations commerciales avec des sociétés
+        développant le système d’achat groupé et n’avoir aucun rapport de quelques natures que ce soit avec des sites de
+        ventes en ligne.</p>
+        <p>En cas de non-respect de la clause d’exclusivité par le marchand, celui-ci devra verser une indemnité d’un
+        montant égal à dix mille dinars.
+    </p>
+
+    <p><b><i><u>Article 3 : </u></i></b></p>
+
+    <p>Le paiement se fera  par virement bancaire sur le RIB mentionné en haut du présent protocole d’accord suite à une demande effectué depuis l’application marchand ou l’interface professionnelle fournie par {{ protocol.entreprise.libelle }}.
+</p>
+
+    <p><b><i><u>Article 4 : Les engagements de {{ protocol.entreprise.libelle }} :</u></i></b></p>
+
+    <p>- {{ protocol.entreprise.libelle }} s’engage à mettre en œuvre toute son expertise pour la promotion de l’offre de son marchand.<br>
+- {{ protocol.entreprise.libelle }} fournit à la demande du marchand un rapport détaillant les actions de communication effectuées.<br>
+- {{ protocol.entreprise.libelle }} s’engage à informer le marchand de toute réclamation relative aux prestations publiées qui nécessite des explications de sa part et / ou une décision de remboursement.<br>
+- {{ protocol.entreprise.libelle }} effectue à la demande du marchand une enquête de satisfaction et lui fournit les résultats.<br>
+- {{ protocol.entreprise.libelle }} assure le règlement de son marchand ; après avoir effectué toute la prestation à tous les bénéficiant de l’offre concernée ; dans un délai de 10 jours ouvrables depuis la date de la réception de la demande faite via l’application Marchand fournie par {{ protocol.entreprise.libelle }}.<br>
+</p>
+
+    <p><b><i><u>Article 5 : Les engagements du marchand :</u></i></b></p>
+    <p><b>Affiliation :</b></p>
+
+    <p>-Le marchand s’interdit pendant la période de la publication du deal et durant la période de la validité du coupon de proposer à ces clients des offres spécifiques, des remises ou des promotions de ces prestations.</p>
+
+    <p>Le marchand  s’engage pendant la période de validité de l’offre à n’accepter aucun paiement d’un client se
+        présentant suite à l’offre de {{ protocol.entreprise.libelle }}.</p>
+
+    <p>Tout client désireux de bénéficier du service objet de l’offre devra obligatoirement présenter au marchand le coupon.</p>
+
+    <p>Le marchand s’engage de ce faite de diriger tout client ayant eu connaissance de l’offre à travers le site www.bigdeal.tn vers ledit site. En cas de non-respect de cette clause le partenaire accepte sans aucune réserve que {{ protocol.entreprise.libelle }} perçoit la totalité des revenus de vente du deal en question.</p>
+
+<p><b>Qualité de prestation :</b></p>
+<p>Le marchand s’engage à accepter tous les clients du site www.bigdeal.tn, et à les traiter de la même manière que les autres clients et cela pendant toute la période de validité du coupon.<br>
+Les deux parties reconnaissent que la qualité des prestations est un élément déterminant de leur engagement.<br>
+Le marchand s’engage à faire tout ce qui est possible pour résoudre les litiges et à apporter une réponse et/ou une solution à tout motif d’insatisfaction lui incombant notifié par le client à {{ protocol.entreprise.libelle }}.<br>
+Le marchand accepte de déléguer au  service-après-vente de {{ protocol.entreprise.libelle }} d’attester du caractère sérieux de toutes réclamations  et de décider de leur résolution.<br>
+Le marchand accepte que la société {{ protocol.entreprise.libelle }} rembourse directement tous les clients ayant effectué une réclamation que le service-après-vente de {{ protocol.entreprise.libelle }} considère comme justifiée. Le marchand permet à la société {{ protocol.entreprise.libelle }} de déduire ledit remboursement du montant de son règlement final (hors commission).<br>
+En cas de refus injustifié de recevoir un client ayant un coupon de la part de {{ protocol.entreprise.libelle }}, le marchand accepte sans aucune réserve que BIGDeal perçoit la totalité des revenus de vente du deal en question.
+</p>
+    <p><b><i><u>Article 6 :</u></i></b></p>
+
+    <p>La responsabilité de {{ protocol.entreprise.libelle }}, en tant que site spécialisé dans la promotion sur internet ne serait en aucun cas être recherchée en cas de préjudice causé par le client au marchand ou par le marchand au client.</p>
+
+    <p><b><i><u>Article 7 :</u></i></b></p>
+
+    <p>En cas de manquement par l’une des parties à l’une quelconque des obligations qui lui incombent en vertu du contrat, ce dernier pourra être résilié de plein droit sur l’initiative de la partie victime et sans préjudice de tous droits à indemnités à son profit 15(quinze) jours  après une mise en demeure adressée à la partie défaillante par courrier  recommandé avec  accusé de réception et restée  sans effet.</p>
+
+    <p>La résiliation sera notifiée par l’envoi d’un nouveau courrier recommandé avec demande d’avis de réception et prendra effet à la date de sa première présentation, le cachet de la poste faisant  foi.</p>
+
+    <p>Dans l’hypothèse d’une résiliation de plein droit par {{ protocol.entreprise.libelle }}, {{ protocol.entreprise.libelle }} remboursera tous les clients  sans  préjudice de tous droits à indemnités à son profit.</p>
+
+    <p>Le présent contrat, ses éventuels annexes ou avenants, sont soumis au droit tunisien. Tout litige susceptible de survenir portant, entre autres, sur la validité, l’interprétation, l’exécution ou l’inexécution du présent contrat  sera de la compétence exclusive du Tribunaux de Tunis.</p>
+
+    <p>Les parties élisent  domicile respectivement chacune au lieu de siège social.</p>
+    <p>Fait à Tunis, <span style="border-bottom: 1px dashed #000;
+                           text-decoration: none;text-align: center;font-weight:bold ">{#{ 'now'|date('d-m-Y') }#}{{ protocol.datep|date('d-m-Y') }}</span> </p>
+    <br/>
+    <br/>
+    <table width="100%" cellpadding="5" cellspacing="5">
+        <tr>
+            <td><p align="left" style="width: 50%;float: left;"><b>BIGDEAL</b></p>
+            </td>
+            <td><p align="right" style="width: 50%;float: left;"><b>{{ protocol.user.name }}</b></p>
+            </td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>

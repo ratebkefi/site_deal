@@ -1,0 +1,17 @@
+<nav class="navbar nav-compte">
+    <ul class="nav navbar-nav">
+        <li{% if get_action_name()=="adresse" or get_action_name()=="compte" %} class="active"{% endif %}><a href="{{ path('mon_compte') }}"><i class="fa fa-user pr-10"></i>Mon
+                profil</a></li>
+        <li {% if get_action_name()=="bigfid" %} class="active"{% endif %}><a href="{{ path('mes_bigfid') }}"><i class="flaticon-computerchip pr-10"></i>BigFid</a></li>
+        <li{% if get_action_name()=="commande" or get_action_name()=="detcommande" %} class="active"{% endif %}><a href="{{ path('my_command') }}"><i class="flaticon-buy10 pr-10"></i>Commandes</a></li>
+        <li{% if get_action_name()=="ticket" or get_action_name()=="detail" or get_action_name()=="add" %} class="active"{% endif %}><a href="{{ path('ticket_manager') }}"><i class="fa fa-ticket pr-10"></i>Tickets</a></li>
+    </ul>
+</nav>
+{# get_action_name()#}
+{% if app.user.adresses|length==0 %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="alert alert-danger alert-address">Vous devez ajouter une adresse à votre compte utilisateur. Cliquer sur ce <a href="{{ path('mes_adresse') }}" class="teal bold"> lien</a> pour en ajouter</div>
+	</div>
+</div>
+{% endif %}

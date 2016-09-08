@@ -1,0 +1,377 @@
+{% extends '::baseBack.html.twig' %}
+
+{% block body %}
+    <style type="text/css">
+        label { display: none; }
+        #back_dealbundle_compagne_namecompagne,#back_dealbundle_compagne_dealcompagne,#back_dealbundle_compagne_dealfeatued { display: none; }
+
+
+    </style>
+    <!-- ==================== PAGE CONTENT ==================== -->
+    <div class="content">
+        <!-- ==================== END OF BREADCRUMBS / DATETIME ==================== -->
+        <!-- ==================== WIDGETS CONTAINER ==================== -->
+        <div class="container-fluid">
+            <!-- ==================== CALENDAR ROW ==================== -->
+            <div class="row-fluid">
+                <!-- ==================== CALENDAR CONTAINER ==================== -->
+                <div class="span12">
+                    <h2>Emailing {{edit_form.vars.value.namecompagne}}</h2>
+
+                    <!-- ==================== CALENDAR HEADLINE ==================== -->
+                    <button data-clipboard-action="copy" data-clipboard-target="#foo" class="btn btn-danger btncopy">
+                        <i class="icon-user" style="opacity: 1;"> Copier le Contenu</i>
+                    </button>
+                    <div class="floatingBox table">
+                        <div class="container-fluid">
+                            <div class="span6">
+                                <h2>Code HTML</h2>
+                                <textarea id="foo" type="text" class="span12" style="min-height: 500px;">
+      <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head>
+                                    <title></title>
+                                    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+                                    <meta name="robots" content="noindex,nofollow" />
+                                    <meta property="og:title" content="My First Campaign" />
+                                </head>
+                                <!--[if mso]>
+                                <body >
+                                <![endif]-->
+                                <!--[if !mso]><!-->
+                                <body class="full-padding" style="margin: 0;padding: 0;min-width: 100%;">
+                                <!--<![endif]-->
+                                <center class="wrapper" style="display: table;table-layout: fixed;width: 100%;min-width: 620px;-webkit-text-size-adjust: 100%;-ms-text-size-adjust: 100%;background-color: #212a32;">
+
+                                    <table class="one-col-bg" style="border-collapse: collapse;border-spacing: 0;width: 100%;">
+                                        <tbody><tr>
+                                            <td style="padding: 0;vertical-align: top;" align="center">
+                                                <table class="one-col centered column-bg" style="border-collapse: collapse;border-spacing: 0;Margin-left: auto;Margin-right: auto;background-color: #212a32;width: 600px;table-layout: fixed;" emb-background-style>
+                                                    <tbody><tr>
+                                                        <td class="column" style="padding: 0;vertical-align: top;text-align: left;">
+
+                                                            <div class="image" style='font-size: 12px;mso-line-height-rule: at-least;font-style: normal;font-weight: 400;Margin-bottom: 0;Margin-top: 0;font-family: "Open Sans",sans-serif;color: #bdbdbd;' align="center">
+                                                                <img class="gnd-corner-image gnd-corner-image-center gnd-corner-image-top" style="border: 0;-ms-interpolation-mode: bicubic;display: block;max-width: 825px;" src="{{ asset('.'~edit_form.vars.value.dealcompagne.getImage1()) }}" alt="" width="600" height="400" />
+                                                            </div>
+
+                                                            <table class="contents" style="border-collapse: collapse;border-spacing: 0;table-layout: fixed;width: 100%;">
+                                                                <tbody><tr>
+                                                                    <td class="padded" style="padding: 0;vertical-align: top;padding-left: 32px;padding-right: 32px;word-break: break-word;word-wrap: break-word;text-align: left;">
+
+                                                                        <h1 style="font-style: normal;font-weight: 400;Margin-bottom: 0;Margin-top: 32px;font-size: 30px;line-height: 40px;font-family: Avenir,sans-serif;color: #fff;text-align: center;">{{edit_form.vars.value.dealcompagne}}</h1><p style='font-style: normal;font-weight: 400;Margin-bottom: 32px;Margin-top: 16px;font-size: 14px;line-height: 22px;font-family: "Open Sans",sans-serif;color: #bdbdbd;text-align: center;'>  <a href="{{ path('show_deal_manager', { 'id':  edit_form.vars.value.dealcompagne.getId() }) }}" target="_blank">Read more </a></p>
+
+                                                                    </td>
+                                                                </tr>
+                                                                </tbody></table>
+
+
+
+
+
+                                                        </td>
+                                                    </tr>
+                                                    </tbody></table>
+                                            </td>
+                                        </tr>
+                                        </tbody></table>
+
+
+                                    <table class="two-col-bg" style="border-collapse: collapse;border-spacing: 0;width: 100%;">
+                                        <tbody><tr>
+                                            <td style="padding: 0;vertical-align: top;" align="center">
+                                                <table class="two-col centered" style="border-collapse: collapse;border-spacing: 0;Margin-left: auto;Margin-right: auto;width: 600px;table-layout: fixed;">
+                                                    <tbody><tr>
+
+                                                        {% for tag in edit_form.vars.value.dealfeatued %}
+
+
+
+
+
+
+
+
+
+
+                                                            <td class="column" style="padding: 0;vertical-align: top;text-align: left;width: 290px;">
+                                                                <table class="column-bg" style="border-collapse: collapse;border-spacing: 0;width: 100%;background-color: #212a32;" emb-background-style>
+                                                                    <tbody><tr>
+                                                                        <td style="padding: 0;vertical-align: top;">
+                                                                            <div><div class="column-top" style="font-size: 32px;line-height: 32px;transition-timing-function: cubic-bezier(0, 0, 0.2, 1);transition-duration: 150ms;transition-property: all;">&nbsp;</div></div>
+
+                                                                            <table class="contents" style="border-collapse: collapse;border-spacing: 0;table-layout: fixed;width: 100%;">
+                                                                                <tbody><tr>
+                                                                                    <td class="padded" style="padding: 0;vertical-align: top;padding-left: 32px;padding-right: 32px;word-break: break-word;word-wrap: break-word;text-align: left;">
+
+                                                                                        <div class="image" style='font-size: 12px;mso-line-height-rule: at-least;font-style: normal;font-weight: 400;Margin-bottom: 32px;Margin-top: 0;font-family: "Open Sans",sans-serif;color: #bdbdbd;' align="center">
+                                                                                            <img style="border: 0;-ms-interpolation-mode: bicubic;display: block;max-width: 480px;" src="{{ asset('.'~tag.getImage1()) }}" alt="" width="226" height="151" />
+                                                                                        </div>
+
+                                                                                    </td>
+                                                                                </tr>
+                                                                                </tbody></table>
+
+
+                                                                            <table class="contents" style="border-collapse: collapse;border-spacing: 0;table-layout: fixed;width: 100%;">
+                                                                                <tbody><tr>
+                                                                                    <td class="padded" style="padding: 0;vertical-align: top;padding-left: 32px;padding-right: 32px;word-break: break-word;word-wrap: break-word;text-align: left;">
+
+                                                                                        <h2 style="font-style: normal;font-weight: 400;Margin-bottom: 0;Margin-top: 0;font-size: 20px;line-height: 28px;font-family: Avenir,sans-serif;color: #bdbdbd;">{{ tag }}</h2>
+                                                                                        <a href="{{ path('show_deal_manager', { 'id':  tag.getId() }) }}" target="_blank">Read more </a>
+
+                                                                                    </td>
+                                                                                </tr>
+                                                                                </tbody></table>
+
+
+
+
+                                                                            <div class="column-bottom" style="font-size: 32px;line-height: 32px;transition-timing-function: cubic-bezier(0, 0, 0.2, 1);transition-duration: 150ms;transition-property: all;">&nbsp;</div>
+                                                                        </td>
+                                                                    </tr>
+                                                                    </tbody></table>
+                                                            </td>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                        {% endfor %}
+
+
+
+
+
+
+
+                                                    </tr>
+                                                    </tbody></table>
+                                            </td>
+                                        </tr>
+                                        </tbody></table>
+
+                                    <div class="separator" style="font-size: 20px;line-height: 20px;">&nbsp;</div>
+
+                                    <table class="footer centered" style="border-collapse: collapse;border-spacing: 0;Margin-left: auto;Margin-right: auto;width: 100%;">
+
+                                    </table>
+                                </center>
+
+                                </body></html>
+                            </textarea >
+<div class="span12">
+
+    <div class="span2">
+        {{ form(edit_form) }}
+    </div>
+    <div class="span2">
+        <a href="{{ path('compagne_edit', { 'id': edit_form.vars.value.getId() }) }}" class="btn btn-danger">Modifier</a>
+    </div>
+</div>
+
+                            </div>
+                            <div class="span6">
+                                <h2>Apercu</h2>
+                                <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head>
+                                    <title></title>
+                                    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+                                    <meta name="robots" content="noindex,nofollow" />
+                                    <meta property="og:title" content="My First Campaign" />
+                                </head>
+                                <!--[if mso]>
+                                <body >
+                                <![endif]-->
+                                <!--[if !mso]><!-->
+                                <body class="full-padding" style="margin: 0;padding: 0;min-width: 100%;">
+                                <!--<![endif]-->
+                                <center class="wrapper" style="display: table;table-layout: fixed;width: 100%;min-width: 620px;-webkit-text-size-adjust: 100%;-ms-text-size-adjust: 100%;background-color: #212a32;">
+
+                                      <table class="one-col-bg" style="border-collapse: collapse;border-spacing: 0;width: 100%;">
+                                        <tbody><tr>
+                                            <td style="padding: 0;vertical-align: top;" align="center">
+                                                <table class="one-col centered column-bg" style="border-collapse: collapse;border-spacing: 0;Margin-left: auto;Margin-right: auto;background-color: #212a32;width: 600px;table-layout: fixed;" emb-background-style>
+                                                    <tbody><tr>
+                                                        <td class="column" style="padding: 0;vertical-align: top;text-align: left;">
+
+                                                            <div class="image" style='font-size: 12px;mso-line-height-rule: at-least;font-style: normal;font-weight: 400;Margin-bottom: 0;Margin-top: 0;font-family: "Open Sans",sans-serif;color: #bdbdbd;' align="center">
+                                                                <img class="gnd-corner-image gnd-corner-image-center gnd-corner-image-top" style="border: 0;-ms-interpolation-mode: bicubic;display: block;max-width: 825px;" src="{{ asset('.'~edit_form.vars.value.dealcompagne.getImage1()) }}" alt="" width="600" height="400" />
+                                                            </div>
+
+                                                            <table class="contents" style="border-collapse: collapse;border-spacing: 0;table-layout: fixed;width: 100%;">
+                                                                <tbody><tr>
+                                                                    <td class="padded" style="padding: 0;vertical-align: top;padding-left: 32px;padding-right: 32px;word-break: break-word;word-wrap: break-word;text-align: left;">
+
+                                                                        <h1 style="font-style: normal;font-weight: 400;Margin-bottom: 0;Margin-top: 32px;font-size: 30px;line-height: 40px;font-family: Avenir,sans-serif;color: #fff;text-align: center;">{{edit_form.vars.value.dealcompagne}}</h1><p style='font-style: normal;font-weight: 400;Margin-bottom: 32px;Margin-top: 16px;font-size: 14px;line-height: 22px;font-family: "Open Sans",sans-serif;color: #bdbdbd;text-align: center;'>  <a href="{{ path('show_deal_manager', { 'id':  edit_form.vars.value.dealcompagne.getId() }) }}" target="_blank">Read more </a></p>
+
+                                                                    </td>
+                                                                </tr>
+                                                                </tbody></table>
+
+
+
+
+
+                                                             </td>
+                                                    </tr>
+                                                    </tbody></table>
+                                            </td>
+                                        </tr>
+                                        </tbody></table>
+
+
+                                    <table class="two-col-bg" style="border-collapse: collapse;border-spacing: 0;width: 100%;">
+                                        <tbody><tr>
+                                            <td style="padding: 0;vertical-align: top;" align="center">
+                                                <table class="two-col centered" style="border-collapse: collapse;border-spacing: 0;Margin-left: auto;Margin-right: auto;width: 600px;table-layout: fixed;">
+                                                    <tbody><tr>
+
+                                                        {% for tag in edit_form.vars.value.dealfeatued %}
+
+
+
+
+
+
+
+
+
+
+                                                            <td class="column" style="padding: 0;vertical-align: top;text-align: left;width: 290px;">
+                                                                <table class="column-bg" style="border-collapse: collapse;border-spacing: 0;width: 100%;background-color: #212a32;" emb-background-style>
+                                                                    <tbody><tr>
+                                                                        <td style="padding: 0;vertical-align: top;">
+                                                                            <div><div class="column-top" style="font-size: 32px;line-height: 32px;transition-timing-function: cubic-bezier(0, 0, 0.2, 1);transition-duration: 150ms;transition-property: all;">&nbsp;</div></div>
+
+                                                                            <table class="contents" style="border-collapse: collapse;border-spacing: 0;table-layout: fixed;width: 100%;">
+                                                                                <tbody><tr>
+                                                                                    <td class="padded" style="padding: 0;vertical-align: top;padding-left: 32px;padding-right: 32px;word-break: break-word;word-wrap: break-word;text-align: left;">
+
+                                                                                        <div class="image" style='font-size: 12px;mso-line-height-rule: at-least;font-style: normal;font-weight: 400;Margin-bottom: 32px;Margin-top: 0;font-family: "Open Sans",sans-serif;color: #bdbdbd;' align="center">
+                                                                                            <img style="border: 0;-ms-interpolation-mode: bicubic;display: block;max-width: 480px;" src="{{ asset('.'~tag.getImage1()) }}" alt="" width="226" height="151" />
+                                                                                        </div>
+
+                                                                                    </td>
+                                                                                </tr>
+                                                                                </tbody></table>
+
+
+                                                                            <table class="contents" style="border-collapse: collapse;border-spacing: 0;table-layout: fixed;width: 100%;">
+                                                                                <tbody><tr>
+                                                                                    <td class="padded" style="padding: 0;vertical-align: top;padding-left: 32px;padding-right: 32px;word-break: break-word;word-wrap: break-word;text-align: left;">
+
+                                                                                        <h2 style="font-style: normal;font-weight: 400;Margin-bottom: 0;Margin-top: 0;font-size: 20px;line-height: 28px;font-family: Avenir,sans-serif;color: #bdbdbd;">{{ tag }}</h2>
+                                                                                        <a href="{{ path('show_deal_manager', { 'id':  tag.getId() }) }}" target="_blank">Read more </a>
+
+                                                                                    </td>
+                                                                                </tr>
+                                                                                </tbody></table>
+
+
+
+
+                                                                            <div class="column-bottom" style="font-size: 32px;line-height: 32px;transition-timing-function: cubic-bezier(0, 0, 0.2, 1);transition-duration: 150ms;transition-property: all;">&nbsp;</div>
+                                                                        </td>
+                                                                    </tr>
+                                                                    </tbody></table>
+                                                            </td>
+
+                                                        {% endfor %}
+
+                                                    </tr>
+                                                    </tbody></table>
+                                            </td>
+                                        </tr>
+                                        </tbody></table>
+
+                                    <div class="separator" style="font-size: 20px;line-height: 20px;">&nbsp;</div>
+
+                                    <table class="footer centered" style="border-collapse: collapse;border-spacing: 0;Margin-left: auto;Margin-right: auto;width: 100%;">
+
+                                    </table>
+                                </center>
+
+                                </body></html>
+
+                            </div>
+
+
+
+                        </div>
+                    </div>
+
+
+                    <!-- ==================== END OF CALENDAR FLOATING BOX ==================== -->
+                </div>
+                <!-- ==================== END OF CALENDAR CONTAINER ==================== -->
+
+                <!-- ==================== EVENTS CONTAINER ==================== -->
+
+                <!-- ==================== END OF EVENTS CONTAINER ==================== -->
+
+            </div>
+            <!-- ==================== END OF CALENDAR ROW ==================== -->
+
+        </div>
+    </div><!-- ==================== END OF PAGE CONTENT ==================== -->
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="{{ asset('public/js/clipboard.min.js') }}"></script>
+    <script type="text/javascript">
+        var clipboard = new Clipboard('.btncopy');
+
+        clipboard.on('success', function(e) {
+            console.log(e);
+        });
+
+        clipboard.on('error', function(e) {
+            console.log(e);
+        });
+    </script>
+{% endblock %}
+
+{% block javascripts %}
+
+
+{% endblock %}
+
+
+
+
+{% block stylesheets %}
+
+    <link href="{{ asset('RessourcesBack/css/bootstrap-datetimepicker.css') }}" type="text/css" rel="stylesheet"/>
+    <link href="{{ asset('RessourcesBack/css/fullcalendar/fullcalendar.css') }}" type="text/css" rel="stylesheet"/>
+    <link href="{{ asset('RessourcesBack/css/fullcalendar/fullcalendar.print.css') }}" media='print' type="text/css" rel="stylesheet"/>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

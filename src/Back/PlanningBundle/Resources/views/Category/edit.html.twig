@@ -1,0 +1,121 @@
+{% extends '::baseBack.html.twig' %}
+
+{% block body -%}
+<div class="content">
+    <div class="container-fluid">
+
+        <!-- ==================== COMMON ELEMENTS ROW ==================== -->
+        <div class="row-fluid">
+            <div class="span12">
+                <!-- ==================== TEXT INPUTS HEADLINE ==================== -->
+                <div class="containerHeadline">
+                    <i class="icon-edit"></i><h2>Ajouter/Modifier une catégorie</h2>
+                    <div class="controlButton pull-right"><i class="icon-remove removeElement"></i></div>
+                    <div class="controlButton pull-right"><i class="icon-caret-down minimizeElement"></i></div>
+                </div>
+                <!-- ==================== END OF TEXT INPUTS HEADLINE ==================== -->
+
+                <!-- ==================== TEXT INPUTS FLOATING BOX ==================== -->
+                <div class="floatingBox">
+                    <div class="container-fluid">
+                        <h2>Catégorie {{ category.name }}</h2>
+                        <div class="container-fluid">
+                                {% if id is not defined %}
+                            <form class="form-horizontal contentForm" method="POST"
+                                  action="{{ path('add_category_manager') }}">
+                                    {% else %}
+                                <form class="form-horizontal contentForm" method="POST"
+                                      action="{{ path('update_category_manager',{'id' : id}) }}">
+                                    {% endif %}
+
+                                    <div class="control-group">
+                                        <label class="control-label">Nom</label>
+                                        <div class="controls">
+                                            {{ form_widget(form.name) }}
+                                        </div>
+                                    </div>
+
+                                    <div class="control-group" style="width:1073px !important">
+                                        <label class="control-label">Couleur</label>
+                                        <div class="controls">
+                                            {{ form_widget(form.color) }}
+                                        </div>
+                                    </div>
+
+                                    <div class="control-group" style="width:1073px !important">
+                                        <label class="control-label">Catégorie Nationale</label>
+                                        <div class="controls">
+                                            {{ form_widget(form.national) }}
+                                        </div>
+                                    </div>
+
+                                    <div class="control-group">
+                                        <label class="control-label">Catégorie Parente</label>
+                                        <div class="controls">
+                                            {{ form_widget(form.parent) }}
+                                        </div>
+                                    </div>
+                                    <div class="formFooter">
+                                        <button type="submit" class="btn btn-success"><i class="icon-ok"> </i> Valider</button>
+                                        <button type="reset" class="btn btn-danger"><i class="icon-remove"> </i> Effacer</button>
+                                        <a href="{{ path('back_category') }}"><button class="btn btn-inverse" type="button"><i class="icon-list"></i> Liste</button></a>
+                                        {{ form_widget(form._token) }}
+                                    </div>
+                                </form>
+                        </div>
+
+                    </div>
+                </div>
+                <!-- ==================== END OF TEXT INPUTS FLOATING BOX ==================== -->
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block stylesheets %}
+
+<link rel="stylesheet" href="{{ asset('RessourcesBack/css/pick-a-color-1.2.3.min.css') }}">
+
+<style type="text/css">
+
+
+    .pick-a-color
+    {
+        height: 34px !important;
+    }
+
+</style>
+{% endblock %}
+{% block javascripts %}
+
+<script src="{{ asset('RessourcesBack/js/vendor/bootstrap-colorpicker.js') }}"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#back_planningbundle_category_name").attr({
+            'data-validation': 'required'
+        });
+        $("#back_planningbundle_category_color").attr({
+            'data-validation': 'required'
+        });
+        $.validate();
+    });
+    $(document).ready(function() {
+        $('#back_planningbundle_category_color').colorpicker();
+        /*$("#back_planningbundle_category_color").pickAColor({
+            showSpectrum: true,
+            showSavedColors: false,
+            saveColorsPerElement: true,
+            fadeMenuToggle: true,
+            showAdvanced: false,
+            showBasicColors: true,
+            showHexInput: true,
+            allowBlank: true,
+            inlineDropdown: true
+        });*/
+
+    });
+
+</script>
+        {% endblock %}
+

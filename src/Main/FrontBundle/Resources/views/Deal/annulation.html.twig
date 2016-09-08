@@ -1,0 +1,39 @@
+{% extends '::base.html.twig' %}
+{% block stylesheets %}
+{% endblock %}
+{% block title %} :Problém commande{% endblock %}
+
+{% block body %}
+    <div class="details_deal_jour">
+        <div class="row">
+            <div class="col-md-12">
+                <h2 class="title">Problém commande</h2>
+                <br>
+                <br>
+
+            </div>
+            <div class="text-center">
+                <a href="{{ path('main_front_homepage') }}" class="btn btn-danger"><i class="fa fa-reply pr-10"></i>Retour à la page d'accueil</a>
+            </div>
+        </div>
+    </div>
+{% block javascripts %}
+<!-- Facebook Conversion Code for Paiements en ligne échoué -->
+<script>(function() {
+var _fbq = window._fbq || (window._fbq = []);
+if (!_fbq.loaded) {
+var fbds = document.createElement('script');
+fbds.async = true;
+fbds.src = '//connect.facebook.net/en_US/fbds.js';
+var s = document.getElementsByTagName('script')[0];
+s.parentNode.insertBefore(fbds, s);
+_fbq.loaded = true;
+}
+})();
+window._fbq = window._fbq || [];
+window._fbq.push(['track', '6033362945486', {'value':'0.00','currency':'EUR'}]);
+</script>
+<noscript><img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/tr?ev=6033362945486&amp;cd[value]=0.00&amp;cd[currency]=EUR&amp;noscript=1" /></noscript>
+	
+{% endblock %}
+{% endblock %}

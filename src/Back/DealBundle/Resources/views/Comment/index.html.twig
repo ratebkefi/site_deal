@@ -1,0 +1,128 @@
+{% extends '::baseBack.html.twig' %}
+{% block body -%}
+    <!-- ==================== PAGE CONTENT ==================== -->
+    <div class="content">
+        <!-- ==================== WIDGETS CONTAINER ==================== -->
+        <div class="container-fluid">
+            <!-- ==================== END OF ROW ==================== -->
+            <div class="row-fluid">
+                <div class="span12">
+                    <div class="containerHeadline">
+                        <i class="icon-zoom-in"></i>
+
+                        <h2>Filtre de recherche</h2>
+
+                        <div class="controlButton pull-right"><i class="icon-caret-down minimizeElement"></i></div>
+                    </div>
+                    <div class="floatingBox table ">
+                        {{ form_start(form, {'method': 'GET','attr': {'class': 'form-horizontal contentForm','style':'padding:0; margin:0'}}) }}
+                        <div class="container-fluid" style="padding: 3px 10px">
+                            <div class="span4">
+                                <label>Deal</label>
+                                {{ form_widget(form.deal,{'attr':{'class':'span12 selectpicker','data-live-search':'true'}}) }}
+                            </div>
+                            <div class="span4">
+                                <label>Partenaire</label>
+                                {{  form_widget(form.partenar,{'attr':{'class':'span10 selectpicker','data-live-search':'true'}}) }}
+                            </div>
+
+
+                            <!--<div class="span3">
+                                <label>Deal</label>
+                                {# form_widget(form.deal,{'attr':{'class':'span12 selectpicker','data-live-search':'true'}}) #}
+
+                            </div>-->
+                            <div class="span4">
+                                <label>&nbsp;</label>
+                                <input type="submit" value="Rechecher" class="btn btn-success"/>
+
+                            </div>
+                        </div>
+
+
+                        {{ form_end(form) }}
+
+                    </div>
+                    <!-- ==================== DEFAULT TABLE HEADLINE ==================== -->
+                    <div class="containerHeadline">
+                        <i class="icon-table"></i>
+
+                        <h2>Liste Commentaires</h2>
+                    </div>
+                    <!-- ==================== END OF DEFAULT TABLE HEADLINE ==================== -->
+
+                    <!-- ==================== DEFAULT TABLE FLOATING BOX ==================== -->
+                    <div class="floatingBox table">
+                        <div class="container-fluid">
+                            <table class="tablesorter centerFirstLast" >
+                                <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Date</th>
+                                    <th>Client</th>
+                                    <th>Deal</th>
+                                    <th>Commentaire</th>
+                                    <th>Vote</th>
+
+                                    <th class="actions">Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                              {% for entity in pagination %}
+
+                                    <tr{% if entity.act==0 %} class="error"{% endif %}>
+                                        <td>{{ entity.id }}</td>
+                                        <td>{{ entity.createdAt|date('d-m-Y h:i:s') }}</td>
+                                        <td>{{ entity.voter }}</td>
+                                        <td>{{ entity.rating.id|getdeal }}</td>
+                                        <td>{{ entity.comment }}</td>
+                                        <td>{{ entity.value }} /5</td>
+
+                                        <td>
+                                            <div class="btn-toolbar" style="margin: 0;">
+                                                <div class="btn-group pull-right">
+
+                                                    <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                                        Action <span
+                                                                class="caret"></span></button>
+                                                    <ul class="dropdown-menu pull-right">
+												{% if app.user.roles[0]!='SERVICECLIENT'   %}
+
+                                                        <li>
+                                                            <a href="{{ path('activate_deal_manager', { 'id': entity.id }) }}">{% if entity.act==1 %}Désapprouver{% else %}Approuver{% endif %}</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="javascript:confirmdeletbox('{{ path('delete_deal_manager', { 'id': entity.id }) }}')">Supprimer</a>
+                                                        </li>
+														{% endif %}
+                                                    </ul>
+													
+
+                                                </div>
+                                            </div>
+
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                            {# display navigation #}
+                            <div class="pagination pagination-large" style="text-align: center">
+                                {{ knp_pagination_render(pagination) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ==================== END OF WIDGETS CONTAINER ==================== -->
+    </div>
+
+    <!-- ==================== END OF PAGE CONTENT ==================== -->
+    <link rel="stylesheet" type="text/css" href="{{ asset('RessourcesBack/css/bootstrap-select.css') }}">
+
+{% endblock %}
+  {% block javascripts %}
+      <script src="{{ asset('RessourcesBack/js/bootstrap-select.js') }}"></script>
+  {% endblock %}
+

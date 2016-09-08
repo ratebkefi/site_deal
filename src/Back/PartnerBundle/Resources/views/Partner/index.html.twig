@@ -1,0 +1,188 @@
+{% extends '::baseBack.html.twig' %}
+{% block body -%}
+
+    <!-- ==================== PAGE CONTENT ==================== -->
+    <div class="content">
+
+        <!-- ==================== WIDGETS CONTAINER ==================== -->
+        <div class="container-fluid">
+
+
+            <!-- ==================== END OF ROW ==================== -->
+            <div class="row-fluid">
+                <div class="span12">
+                    <div class="containerHeadline">
+                        <i class="icon-zoom-in"></i>
+
+                        <h2>Filtre de recherche</h2>
+
+                        <div class="controlButton pull-right"><i class="icon-caret-down minimizeElement"></i></div>
+                    </div>
+                    <div class="floatingBox  ">
+                        <div class="container-fluid" style="padding: 10px">
+                            {{ form_start(form, {'method': 'GET','attr': {'class': 'form-horizontal contentForm','style':'padding:0; margin:0'}}) }}
+                            <div class="span5">
+                                <label>Nom</label>
+                                {{ form_widget(form.name,{'attr':{'class':'span10 selectpicker','data-live-search':'true'}}) }}
+                            </div>
+                            <div class="span5">
+                                <label>E-mail</label>
+                                {{ form_widget(form.email,{'attr':{'class':'span10 selectpicker','data-live-search':'true'}}) }}
+                            </div>
+                        </div>
+                        <div class="container-fluid" style="padding: 10px">
+                            <div class="span5">
+                                <label>Catégorie</label>
+                                {{ form_widget(form.category,{'attr':{'class':'span10 selectpicker','data-live-search':'true'}}) }}
+                            </div>
+                            <div class="span5">
+                                <label>Région</label>
+                                {{ form_widget(form.region,{'attr':{'class':'span10 selectpicker','data-live-search':'true'}}) }}
+                            </div>
+							<div class="span5">
+                                <label>Point de vente</label>
+                                {{ form_widget(form.sellingpoint,{'attr':{'class':'span10'}}) }}
+                            </div>
+                            <div class="span2">
+                                <label>&nbsp;</label>
+                                <input type="submit" value="Rechercher" class="btn btn-success"/>
+                            </div>
+
+                            {{ form_end(form) }}
+                        </div>
+
+                    </div>
+                    <!-- ==================== END OF DEFAULT TABLE HEADLINE ==================== -->
+                    {% for type, flashMessages in app.session.flashbag.all() %}
+                        {% for flashMessage in flashMessages %}
+                            <br/>
+                            <div class="alert {{ type }}">
+                                <button data-dismiss="alert" class="close" type="button">×</button>
+                                {{ flashMessage|trans }}
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
+                    {% if app.user.roles[0]!='SERVICECLIENT'  and app.user.roles[0]!='CHEFRED'  and app.user.roles[0]!='REDACTEUR' and app.user.roles[0]!='CHEFSERVICECLI' and app.user.roles[0]!= 'DAF' and app.user.roles[0]!= 'FINANCIER' %}
+                    <a href="{{ path('dash_partner_add') }}" class="btn btn-danger">
+                        <i class="icon-user" style="opacity: 1;"></i> Ajouter un partenaire
+                    </a>
+                    {% endif %}
+                    <!-- ==================== DEFAULT TABLE HEADLINE ==================== -->
+                    <div class="containerHeadline">
+                        <i class="icon-table"></i>
+
+                        <h2>Liste partenaire</h2>
+                    </div>
+
+                    <!-- ==================== DEFAULT TABLE FLOATING BOX ==================== -->
+                    <div class="floatingBox table">
+                        <div class="container-fluid">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>Titre</th>
+                                    <th>Banque</th>
+                                    <th>Agence</th>
+                                    <th>RIB</th>
+                                    <th>Adresse</th>
+                                    <th>Téléphone</th>
+                                    <th>Site web</th>
+                                    <th>Page facebook</th>
+                                    <th>Note</th>
+                                    <th>Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for entity in pagination %}
+                                    <tr>
+                                        <td>
+                                            <a href="{{ path('dash_partner_show', { 'id': entity.id }) }}">{{ entity.name }}</a>
+                                        </td>
+                                        <td>{{ entity.bank }}</td>
+                                        <td>{{ entity.agency }}</td>
+                                        <td>{{ entity.rib }}</td>
+                                        <td>{{ entity.address }}</td>
+                                        <td>{{ entity.phone }}</td>
+                                        <td>{{ entity.webSite }}</td>
+                                        <td>{{ entity.fbPage }}</td>
+                                        <td>{{ entity.id|calculateRatePartner }} / 5</td>
+
+                                        <td>
+                                            <div class="btn-toolbar" style="margin: 0;">
+                                                <div class="btn-group">
+                                                    <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                                        Action <span
+                                                                class="caret"></span></button>
+                                                    <ul class="dropdown-menu pull-right">
+
+                                                        <li>
+                                                            <a href="{{ path('dash_partner_show', {'id': entity.id}) }}">Afficher </a>
+                                                        </li>
+
+                                                        {% if app.user.roles[0]!='SERVICECLIENT' and app.user.roles[0]!='CHEFRED' and app.user.roles[0]!='REDACTEUR' and app.user.roles[0]!='CHEFSERVICECLI' and app.user.roles[0]!='DAF' %}
+                                                        <li>
+                                                            <a href="{{ path('dash_partner_update', {'id': entity.id}) }}">Modifier</a>
+                                                        </li>
+
+                                                        <li>
+                                                            <a href="{{ path('add_protocol_manager_partner', { 'id': entity.id }) }}">Ajouter
+                                                                protocole</a>
+                                                        </li>
+                                                        {% endif %}
+                                                        {% if  app.user.roles[0]!='CHEFRED' and app.user.roles[0]!='REDACTEUR' %}
+
+                                                        <li>
+                                                            <a href="{{ path('back_contact_partner', { 'partid': entity.id }) }}">Contacts
+                                                                Partenaire</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="{{ path('back_sellingpoint', { 'partid': entity.id }) }}">Points
+                                                                de vente</a>
+                                                        </li>
+                                                        {% endif %}
+														<li>
+                                                            <a href="{{ path('back_partner_password', { 'id': entity.id }) }}">Générer mot de passe</a>
+                                                        </li>
+
+                                                    </ul>
+                                                </div>
+                                            </div>
+
+
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                            {# display navigation #}
+                            <div class="pagination pagination-large" style="text-align: center">
+                                {{ knp_pagination_render(pagination) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ==================== END OF WIDGETS CONTAINER ==================== -->
+    </div>
+
+    <!-- ==================== END OF PAGE CONTENT ==================== -->
+    <!-- ==================== END OF PAGE CONTENT ==================== -->
+
+    {% block stylesheets %}
+        <link rel="stylesheet" type="text/css" href="{{ asset('RessourcesBack/css/bootstrap-select.css') }}">
+    {% endblock %}
+{% endblock %}
+    {% block javascripts %}
+        <script src="{{ asset('RessourcesBack/js/bootstrap-select.js') }}"></script>
+
+        <script>
+
+            $(document).ready(function () {
+                $('.alert-error').delay(5000).fadeOut();
+            });
+
+
+
+        </script>
+    {% endblock %}

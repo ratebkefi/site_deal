@@ -1,0 +1,90 @@
+{% extends '::baseBack.html.twig' %}
+{% form_theme form 'form_table_layout.html.twig' %}
+{% block body -%}
+    <div class="content">
+        <div class="container-fluid">
+
+            <!-- ==================== COMMON ELEMENTS ROW ==================== -->
+            <div class="row-fluid">
+                <div class="span12">
+                    <!-- ==================== TEXT INPUTS HEADLINE ==================== -->
+                    <div class="containerHeadline">
+                        <i class="icon-edit"></i>
+
+                        <h2>Modifier un Contact partnaire</h2>
+
+                        <div class="controlButton pull-right"><i class="icon-remove removeElement"></i></div>
+                        <div class="controlButton pull-right"><i class="icon-caret-down minimizeElement"></i></div>
+                    </div>
+                    <!-- ==================== END OF TEXT INPUTS HEADLINE ==================== -->
+
+                    <!-- ==================== TEXT INPUTS FLOATING BOX ==================== -->
+                    <div class="floatingBox">
+                        <div class="container-fluid">
+                            {% if id is defined %}
+                                <h2>Contact : {{ partner.firstname }} {{ partner.lastname }}</h2>
+                            {% endif %}
+                            <div class="container-fluid">
+                                {% if id is not defined %}
+                                <form class="form-horizontal contentForm" method="POST"
+                                      action="{{ path('dash_contact_partner_add',{'partid' : partid}) }}">
+                                    {% else %}
+                                    <form class="form-horizontal contentForm" method="POST"
+                                          action="{{ path('dash_contact_partner_update',{'id' : id,'partid':partid}) }}">
+                                    {% endif %}
+                                            {{ form_row(form.firstname) }}
+                                            {{ form_row(form.lastname) }}
+                                        {% if verifprincipale ==0 %}
+                                            {{ form_row(form.principale) }}
+                                        {% endif %}
+                                            {{ form_row(form.phone) }}
+                                            {{ form_row(form.mail) }}
+                                            {{ form_row(form.job) }}
+                                    <div class="formFooter">
+                                        <button type="submit" class="btn btn-success"><i class="icon-ok"> </i> Valider
+                                        </button>
+                                        <button type="reset" class="btn btn-danger"><i class="icon-remove"> </i>
+                                            Effacer
+                                        </button>
+                                        <a href="{{ path('dash_partner_show',{'id' : partid}) }}">
+                                            <button class="btn btn-inverse" type="button"><i class="icon-list"></i>
+                                                Liste des contacts
+                                            </button>
+                                        </a>
+                                        {{ form_widget(form._token) }}
+                                    </div>
+                                </form>
+                            </div>
+
+                        </div>
+                    </div>
+                    <!-- ==================== END OF TEXT INPUTS FLOATING BOX ==================== -->
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+ {% block javascripts %}
+     <script>
+
+         $(document).ready(function () {
+             $("#back_partnerbundle_contactpartner_firstname").attr({
+                 'data-validation': 'length',
+                 'data-validation-length': 'min3'
+             });
+             $("#back_partnerbundle_contactpartner_lastname").attr({
+                 'data-validation': 'length',
+                 'data-validation-length': 'min3'
+             });
+             $("#back_partnerbundle_contactpartner_phone").attr({'data-validation': 'length number', 'data-validation-length': '8-8'});
+             $("#back_partnerbundle_contactpartner_mail").attr({
+                 'data-validation': 'email'
+             });
+             $("#back_partnerbundle_contactpartner_job").attr({
+                 'data-validation': 'length',
+                 'data-validation-length': 'min4'
+             });
+             $.validate();
+         });
+     </script>
+ {% endblock %}

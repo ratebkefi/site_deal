@@ -1,0 +1,193 @@
+{% extends '::baseBack.html.twig' %}
+{% form_theme form 'form_table_layout.html.twig' %}
+{% block body -%}
+    <div class="content">
+        <div class="container-fluid">
+
+            <!-- ==================== COMMON ELEMENTS ROW ==================== -->
+            <div class="row-fluid">
+                <div class="span12">
+                    <!-- ==================== TEXT INPUTS HEADLINE ==================== -->
+                    <div class="containerHeadline">
+                        <i class="icon-edit"></i>
+						<h2>Ajouter / Modifier une référence</h2>
+
+                        <div class="controlButton pull-right"><i class="icon-remove removeElement"></i></div>
+                        <div class="controlButton pull-right"><i class="icon-caret-down minimizeElement"></i></div>
+                    </div>
+                    <!-- ==================== END OF TEXT INPUTS HEADLINE ==================== -->
+
+                    <!-- ==================== TEXT INPUTS FLOATING BOX ==================== -->
+                    <div class="floatingBox">
+                        <div class="container-fluid">
+
+                            <div class="container-fluid">
+                                {{ form_start(form, {'method': 'POST','attr': {'class': 'form-horizontal contentForm'}}) }}
+                                {{ form_row(form.title) }}
+                                {{ form_row(form.shopPrice) }}
+                                {{ form_row(form.bigdealPrice) }}
+                                {{ form_row(form.maxCoupon, {'attr': {'min': '0'}}) }}
+                                {{ form_row(form.description,{'attr':{'class':'tinymce'}}) }}
+                                {{ form_row(form.shipping) }}
+					
+                                <div class="livraison" {% if(shipping==1) %}  style="display: block;" {% else %}  style="display: none;" {% endif %} >
+                                    {{ form_row(form.weight, {'attr': {'onblur': 'calculateliv()'}}) }}
+                                    {{ form_row(form.length, {'attr': {'onblur': 'calculateliv()'}}) }}
+                                    {{ form_row(form.width, {'attr': {'onblur': 'calculateliv()'}}) }}
+                                    {{ form_row(form.height, {'attr': {'onblur': 'calculateliv()'}}) }}
+                                    {{ form_row(form.price) }}
+                                </div>
+								{% if id is not defined %}
+
+								<div class="control-group ">
+									<label for="back_contractbundle_reference_maxCoupon" class="control-label required">Dupliquer dans ces annexe</label>
+								{% for item in autreAnnexe %}
+								<div class="controls">
+								{% if item.id != annexe_id %}
+									<input type="checkbox" value="{{ item.id }}"  name="autre_annexe[]" > {{ item.object }} - {{ item.releaseDate|date("d-m-Y") }}
+								{% endif %}	
+								</div>
+								{% endfor %}
+
+    </div>
+									{% endif %}	
+
+                                <div class="formFooter">
+                                    <button type="submit" class="btn btn-success"><i class="icon-ok"> </i>
+                                        Valider
+                                    </button>
+                                    <button type="reset" class="btn btn-danger"><i class="icon-remove"> </i>
+                                        Effacer
+                                    </button>
+                                    <a href="{{ path('dash_partner_show', { 'id': partner }) }}">
+                                        <button class="btn btn-inverse" type="button"><i class="icon-list"></i>
+                                            Fiche Partenaire
+                                        </button>
+                                    </a>
+                                    {{ form_widget(form._token) }}
+                                </div>
+                                </form>
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <!-- ==================== END OF TEXT INPUTS FLOATING BOX ==================== -->
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    <script src="{{ asset('tinymce/tinymce.min.js') }}"></script>
+
+    <script>
+	 tinymce.init({
+            selector: '.tinymce',
+            plugins: [
+                "advlist autolink lists link image charmap print preview anchor",
+                "searchreplace visualblocks code fullscreen ",
+                "insertdatetime media table contextmenu paste moxiemanager responsivefilemanager filemanager importcss textcolor "
+            ],
+            toolbar: "insertfile undo redo | styleselect | forecolor fontselect fontsizeselect | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | forecolor backcolor table",
+            autosave_ask_before_unload: false,
+            theme_advanced_fonts: "Arial=arial,helvetica,sans-serif;Arial Black=arial black;Courier New=courier new,courier,monospace;Times New Roman=times new roman;Georgia=georgia;Comic Sans MS=comic sans ms;Book Antiqua=book antiqua;Tahoma=tahoma;Trebuchet MS=trebuchet ms;",
+            max_height: 600,
+            min_height: 160,
+            height: 180
+        });
+            $(document).ready(function () {
+                $("#back_contractbundle_reference_maxCoupon").attr({
+                    'data-validation': 'number',
+                    'data-validation-length': 'min-0'
+                });
+            $("#back_contractbundle_reference_title").attr({
+                'data-validation': 'length',
+                'data-validation-length': 'min4'
+            });
+
+            $("#back_contractbundle_reference_shopPrice").attr({
+                'data-validation': 'number',
+                'data-validation-allowing': 'float,positive'
+            });
+            $("#back_contractbundle_reference_bigdealPrice").attr({
+                'data-validation': 'number',
+                'data-validation-allowing': 'float,positive'
+            });
+            $("#back_contractbundle_reference_maxCoupon").attr({
+                'data-validation': 'float',
+                'data-validation-allowing': 'float,positive'
+            });
+
+            $.validate();
+        });
+
+
+        $("#back_contractbundle_reference_shipping").click(function () {
+            if ($('#back_contractbundle_reference_shipping').is(':checked')) {
+                $('.livraison').show();
+                $("#back_contractbundle_reference_length").attr({
+                    'data-validation': 'number',
+                    'data-validation-allowing': 'float,positive'
+                });
+                $("#back_contractbundle_reference_width").attr({
+                    'data-validation': 'number',
+                    'data-validation-allowing': 'float,positive'
+                });
+                $("#back_contractbundle_reference_height").attr({
+                    'data-validation': 'number',
+                    'data-validation-allowing': 'float,positive'
+                });
+                $("#back_contractbundle_reference_weight").attr({
+                    'data-validation': 'number',
+                    'data-validation-allowing': 'float,positive'
+                });
+            } else {
+                $('#back_contractbundle_reference_length').removeAttr('data-validation');
+                $('#back_contractbundle_reference_length').removeAttr('data-validation-allowing');
+
+                $('#back_contractbundle_reference_width').removeAttr('data-validation');
+                $('#back_contractbundle_reference_width').removeAttr('data-validation-allowing');
+
+                $('#back_contractbundle_reference_height').removeAttr('data-validation');
+                $('#back_contractbundle_reference_height').removeAttr('data-validation-allowing');
+
+                $('#back_contractbundle_reference_weight').removeAttr('data-validation');
+                $('#back_contractbundle_reference_weight').removeAttr('data-validation-allowing');
+
+                $('.livraison').hide();
+            }
+ if ($('#back_contractbundle_reference_shipping').not(':checked')) {
+           $("#back_contractbundle_reference_weight").val('');
+            $("#back_contractbundle_reference_length").val('');
+             $("#back_contractbundle_reference_width").val('');
+             $("#back_contractbundle_reference_height").val('');
+             $("#back_contractbundle_reference_price").val('');
+ }
+        });
+        function calculateliv() {
+            weight = $("#back_contractbundle_reference_weight").val();
+            length = $("#back_contractbundle_reference_length").val();
+            width = $("#back_contractbundle_reference_width").val();
+            height = $("#back_contractbundle_reference_height").val();
+            if (
+                    $.isNumeric(weight) &&
+                    $.isNumeric(length) &&
+                    $.isNumeric(width) &&
+                    $.isNumeric(height)
+            ) {
+                total=(length*width*height)/5000;
+                if(total>0 && total<=15){
+                    poid=total;
+                    prix=7
+                }else{
+                    poid=weight;
+                    prix=((poid-15)/2)+7
+                }
+
+                //console.log(poid)
+                $("#back_contractbundle_reference_price").val(Math.round(prix * 1000) / 1000);
+            }
+        }
+    </script>
+{% endblock %}

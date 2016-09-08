@@ -1,0 +1,77 @@
+{% if tst==1 %}
+    <link href="{{ asset('RessourcesBack/css/bootstrap-responsive.min.css') }}" type="text/css" rel="stylesheet"/>
+    <link href="{{ asset('RessourcesBack/css/styles.css') }}" type="text/css" rel="stylesheet"/>
+	<link href="{{ asset('RessourcesBack/css/fancy-style.css') }}" type="text/css" rel="stylesheet"/>
+
+
+    <!-- ==================== COMMON ELEMENTS ROW ==================== -->
+
+    <div class="span12 floatingBoxPlanning">
+        <!-- ==================== TEXT INPUTS HEADLINE ==================== -->
+        <div class="containerHeadline">
+            <i class="icon-edit"></i>
+
+            <h2>Affichage du planning</h2>
+
+            <div class="controlButton pull-right"><i class="icon-remove removeElement"></i></div>
+            <div class="controlButton pull-right"><i class="icon-caret-down minimizeElement"></i></div>
+        </div>
+        <!-- ==================== END OF TEXT INPUTS HEADLINE ==================== -->
+
+        <!-- ==================== TEXT INPUTS FLOATING BOX ==================== -->
+        <div class="floatingBox">
+            <div class="container-fluid">
+                <div class="row-fluid">
+                    <div class="span3 headline"><h3>Etat</h3></div>
+                    <div class="span9 headline"><span>{% if planning.state == 0 %}Pré-planifié{% endif %}
+                                {% if planning.state == 1 %}Planifié{% endif %}
+                                {% if planning.state == 2 %}Rédigé{% endif %}
+                                {% if planning.state == 3 %}Publié{% endif %}</span>
+                    </div>
+                </div>
+                <div class="row-fluid">
+                    <div class="span3 headline"><h3>Objet</h3></div>
+                    <div class="span9 headline"> <span>{{ planning.object }}</span> </div>
+                </div>
+                <div class="row-fluid">
+                    <div class="span3 headline"><h3>Tarif</h3></div>
+                    <div class="span9 headline"> <span>{{ planning.tariff }}</span> </div>
+                </div>
+                <div class="row-fluid">
+                    <div class="span3 headline"><h3>Objectif Chiffre d'affaire</h3></div>
+                    <div class="span9 headline"> <span>{{ planning.ca }}</span> </div>
+                </div>
+                <div class="row-fluid">
+                    <div class="span3 headline"><h3>Description</h3></div>
+                    <div class="span9 headline"><span>{{ planning.description }}</span></div>
+                </div>
+                <div class="row-fluid">
+                    <div class="span3 headline"><h3>Date de début</h3></div>
+                    <div class="span9 headline"><span>{{ planning.startDate|date('d-m-Y') }}</span></div>
+                </div>
+                <div class="row-fluid">
+                    <div class="span3 headline"><h3>Date de fin</h3></div>
+                    <div class="span9 headline"><span>{{ planning.endDate|date('d-m-Y') }}</span></div>
+                </div>
+                <div class="row-fluid">
+                    <div class="span3 headline"><h3>Remarques</h3></div>
+                    <div class="span9 headline"><span>{{ planning.remarks }}</span></div>
+                </div>
+                <div class="row-fluid">
+                    <div class="span3 headline"><h3>Catégorie</h3></div>
+                    <div class="span9 headline"><span>{{ planning.categoryId }}</span></div>
+                </div>
+                <div class="row-fluid">
+                    <div class="span3 headline"><h3>Région</h3></div>
+                    <div class="span9 headline"><span>{{ planning.regionId }}</span></div>
+                </div>    
+
+            </div>
+        </div>
+
+
+        <!-- ==================== END OF TEXT INPUTS FLOATING BOX ==================== -->
+    </div>
+
+
+{% endif %}

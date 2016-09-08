@@ -1,0 +1,201 @@
+{% extends '::baseBack.html.twig' %}
+
+{% block body %}
+    <!-- ==================== PAGE CONTENT ==================== -->
+    <div class="content content-part">
+
+
+        <!-- ==================== END OF BREADCRUMBS / DATETIME ==================== -->
+
+        <!-- ==================== WIDGETS CONTAINER ==================== -->
+        <div class="container-fluid">
+
+            <!-- ==================== CALENDAR ROW ==================== -->
+            <div class="row-fluid">
+
+                <!-- ==================== CALENDAR CONTAINER ==================== -->
+                <div class="span12">
+                    <!-- ==================== CALENDAR HEADLINE ==================== -->
+                    <div class="containerHeadline">
+                        <i class="icon-calendar"></i>
+
+                        <h2>Deal</h2>
+                    </div>
+                    <!-- ==================== END OF CALENDAR HEADLINE ==================== -->
+
+                    <!-- ==================== CALENDAR FLOATING BOX ==================== -->
+                    <div class="floatingBox">
+                        <div class="container-fluid">
+
+                            <div id="calendar" class='calandar calendar-partner fc fc-ltr'>
+                                <div class='container-fluid'>
+                                    <div id='calendar' class='fc fc-ltr'>
+                                        <div class='row-fluid fc-header'>
+                                            <div class='span9'><h2>Deal : {{ nom_deal }}</h2></div>
+                                            <div class='span3'>
+                                                <div class='row'>
+                                                    <div class='span12'>
+
+                                                        <span class='fc-header-title'>
+                                                            <h2 style="text-align: center"><span class="spacer-gouche fc-button fc-button-prev fc-corner-left"
+                                                                                                 unselectable="on">
+                                                                    <span class="fc-text-arrow"><a
+                                                                            href="{{ path('dash_partner_booking',{'deal':deal, 'month':prev_month, 'year':prev_year}) }}">‹</a></span></span>
+                                                                        {{ monthName }} {{ year }} 
+                                                                <span class="spacer-droite fc-button fc-button-next fc-corner-right"
+                                                                      unselectable="on" style="-moz-user-select: none;">
+                                                                    <span class="fc-text-arrow"><a
+                                                                            href="{{ path('dash_partner_booking',{'deal':deal, 'month':next_month, 'year':next_year}) }}">›</a></span></span>
+                                                            </h2>
+
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row-fluid">
+                                            <div class="span12">
+                                                <div class="">
+                                                    <table class="table-condensed table-bordered table-striped">
+                                                        <thead>
+                                                            <tr class='fc-first fc-last'>
+                                                                {% for day1 in daysOfWeek %}
+                                                                    {% if loop.first %}
+                                                                        <th class='fc-day-header fc-widget-header fc-first'
+                                                                            style="width: 130px;">{{ day1 }}</th>
+                                                                        {% elseif loop.last %}
+                                                                        <th class='fc-day-header fc-widget-header fc-last'
+                                                                            style="width: 130px;">{{ day1 }}</th>
+                                                                        {% else %}
+                                                                        <th class='fc-day-header fc-widget-header'
+                                                                            style="width: 130px;">{{ day1 }}</th>
+                                                                        {% endif %}
+                                                                    {% endfor %}
+                                                                    {% set  currentDay = 1 %}
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr class='fc-week  fc-first'>
+                                                                {% if  dayOfWeek > 0 %}
+                                                                    {% set currentDayRel = currentDayRel(currentDay) %}
+                                                                    {% set date1 =  year~"-"~month~"-"~currentDayRel %}
+                                                                    {% set listReservation = listeBooking(date1,deal) %}
+                                                                    {% if listReservation|length >0 %}
+                                                                        <td style="border: 1px solid #ddd"
+                                                                            class='fc-day fc-mon fc-widget-content fc-other-month fc-first res'
+                                                                            colspan='{{ dayOfWeek }}'>&nbsp;</td>
+                                                                    {% else %}
+                                                                        <td style="border: 1px solid #ddd"
+                                                                            class='fc-day fc-mon fc-widget-content fc-other-month fc-first nonres'
+                                                                            colspan='{{ dayOfWeek }}'>&nbsp;</td>
+                                                                    {% endif %}
+                                                                {% endif %}
+                                                                {% set month = afficherLeMonth(month) %}
+                                                                {% for key,currentDay in currentDay..numberDays %}
+                                                                    {% if currentDay <= numberDays %}
+                                                                        {% if dayOfWeek == 7 %}
+                                                                            {% set dayOfWeek = 0 %}
+                                                                        </tr>
+
+                                                                        <tr class="fc-week">
+                                                                        {% endif %}
+                                                                        {% set currentDayRel = currentDayRel(currentDay) %}
+                                                                        {% set date1 =  year~"-"~month~"-"~currentDayRel %}
+                                                                        {% set dispoHoraire = dispo(date1,deal) %}
+                                                                        {% set dispoDate = dispoDate(deal,date1) %}
+                                                                        {% set listReservation = listeBooking(date1,deal) %}
+
+                                                                        {% if dayOfWeek ==6 %}
+                                                                            {% if listReservation|length >0 %}
+                                                                                <td class='fc-day fc-thu fc-widget-content fc-last res'
+                                                                                    rel='{{ date1 }}'
+                                                                                    style="width: 130px;border: 1px solid #ddd">
+                                                                                {% else %}
+                                                                                <td class='fc-day fc-thu fc-widget-content fc-last nonres'
+                                                                                    rel='{{ date1 }}'
+                                                                                    style="width: 130px;border: 1px solid #ddd">
+                                                                                {% endif %}
+
+                                                                            {% else %}
+                                                                                {% if listReservation|length >0 %}
+                                                                                <td class='fc-day fc-thu fc-widget-content res' rel='{{ date1 }}'
+                                                                                    style="width: 130px;border: 1px solid #ddd">
+                                                                                {% else %}
+                                                                                <td class='fc-day fc-thu fc-widget-content nonres' rel='{{ date1 }}'
+                                                                                    style="width: 130px;border: 1px solid #ddd">
+                                                                                {% endif %}
+
+                                                                            {% endif %}
+                                                                            <div style="min-height: 114px;position:relative">
+                                                                                <div class="fc-day-number">
+                                                                                    {% if listReservation|length >0 %}
+                                                                                        {{ currentDay }}
+                                                                                        <a class="reservation" href="{{ path('dash_partner_book_detail',{'deal':deal,'date':date1}) }}"><span class="res-length">{{ listReservation|length}} </span></a>
+                                                                                    {% else %}
+                                                                                        {{ currentDay }}
+                                                                                    {% endif %}
+                                                                                </div>
+                                                                                <div class='fc-day-content'>
+                                                                                    <div style='position: relative; height: 0px;'>
+
+
+
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </td>
+                                                                        {% set dayOfWeek = dayOfWeek +1 %}
+                                                                    {% endif %}
+                                                                {% endfor %}
+                                                                {% if  dayOfWeek != 7 %}
+                                                                    {% set remainingDays = 7 - dayOfWeek %}
+                                                                {% set currentDayRel = currentDayRel(currentDay) %}
+                                                                {% set date1 =  year~"-"~month~"-"~currentDayRel %}
+                                                                {% set listReservation = listeBooking(date1,deal) %}
+    
+                                                                    {% if listReservation|length >0 %}
+                                                                        <td colspan='{{ remainingDays }}'
+                                                                            class="fc-day fc-thu fc-widget-content fc-last res"
+                                                                            style="border: 1px solid #ddd">&nbsp;</td>
+                                                                    {% else %}
+                                                                        <td colspan='{{ remainingDays }}'
+                                                                            class="fc-day fc-thu fc-widget-content fc-last nonres"
+                                                                            style="border: 1px solid #ddd">&nbsp;</td>    
+                                                                    {% endif %}
+                                                                {% endif %}
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+
+
+    <script>
+        $(function () {
+
+            // fancybox
+
+            $('.reservation').fancybox({
+                'width': 500,
+                'height': 400,
+                'type': 'iframe',
+                'autoScale': false
+            });
+
+        })
+
+
+    </script>
+{% endblock %}

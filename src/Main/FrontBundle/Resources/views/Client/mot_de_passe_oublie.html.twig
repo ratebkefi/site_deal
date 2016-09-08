@@ -1,0 +1,112 @@
+{% extends '::base.html.twig' %}
+    {% block stylesheets %}
+    {% endblock %}
+    {% block body %}
+
+
+        <div class="authen">
+			<div class="clearfix">
+				<div class="col-md-12 title">
+					<h1 class="bold">Mot de passe perdu </h1>
+				</div>
+			</div>
+            {% for type, flashMessages in app.session.flashbag.all() %}
+                {% for flashMessage in flashMessages %}
+                    <br/>
+                    <div class="alert {{ type }} alert-subscribe">
+                        <button data-dismiss="alert" class="close" type="button">×</button>
+                        {{ flashMessage|trans }}
+                    </div>
+                {% endfor %}
+            {% endfor %}
+            {{ form_start(form, {'method': 'POST','class':'form-horizontal form'}) }}
+
+			
+			
+			
+			<div class="row login">
+				<div class="col-md-5 text-center signin">
+					<h3 class="bold">Récuperer votre mot de passe via Email</h3>
+
+					<div class="form-group">
+							<label for="email" class="col-sm-3 control-label hidden-xs">E-mail</label>
+							<div class="col-sm-9">
+								{{ form_widget(form.email, { 'attr': {'class': "form-control",
+							'placeholder': "Enter votre adresse e-mail"} }) }}
+							</div>
+					</div>
+					<div class="form-group hidden-xs">
+                <div class="col-sm-10">
+                  <br />
+                </div>
+            </div>
+					<div class="form-group">
+							<div class="col-sm-offset-3 col-sm-9">
+								<input type="submit" value="Envoyer" class="btn btn-infos reset_pwd pull-right mb10">
+							</div>
+						</div>
+					{{ form_widget(form._token) }}
+					{{ form_end(form) }}
+				</div>
+				<div class="vertical-spacer  hidden-xs">
+				  <span>ou</span>
+				</div>
+				<div class="horizontal-spacer hidden-md hidden-sm">
+				  <span>ou</span>
+				</div>
+				<form action="" method="post" >
+				<div class="col-md-offset-1 col-md-6">
+				<h3 class="bold">Récuperer votre mot de passe via Téléphone</h3>
+					<div class="form-group">
+							<label for="email2" class="col-sm-3 control-label hidden-xs text-right " >E-mail</label>
+							<div class="col-sm-9">
+								<input type="email" name="email2" id="email2" placeholder="Enter votre adresse e-mail" class="form-control required">
+							</div>
+					</div>
+					<div class="form-group hidden-xs">
+                <div class="col-sm-10">
+                  <br />
+                </div>
+            </div>
+					<div class="form-group">
+							<label for="tel" class="col-sm-3 control-label hidden-xs text-right ">Tél</label>
+							<div class="col-sm-9">
+							<input type="number" name="tel" id="tel"   maxlength="8" placeholder="Enter votre numéro de téléphone" class="form-control required">
+								
+							</div>
+					</div>
+					<div class="form-group hidden-xs">
+                <div class="col-sm-10">
+                  <br />
+                </div>
+            </div>
+					<div class="form-group">
+							<div class="col-sm-offset-3 col-sm-9">
+								<input type="submit" value="Envoyer" name="bouton_tel" class="btn btn-infos reset_pwd pull-right mb10">
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+			
+			
+			
+        </div>
+
+    {% endblock %}
+    {% block javascripts %}
+        <script language="javascript" type="text/javascript">
+            <!--
+            function popitup(url, title, w, h) {
+                var left = (screen.width / 2) - (w / 2);
+                var top = (screen.height / 2) - (h / 2);
+                return window.open(url, title, 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=' + w + ', height=' + h + ', top=' + top + ', left=' + left);
+            }
+
+            // -->
+			
+			$(document).ready(function () {
+				$('.alert-subscribe').delay(5000).fadeOut();
+			});
+        </script>
+    {% endblock %}

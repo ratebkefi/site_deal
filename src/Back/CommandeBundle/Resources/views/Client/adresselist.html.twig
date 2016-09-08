@@ -1,0 +1,78 @@
+{% extends '::baseBack.html.twig' %}
+{% block body -%}
+
+
+    <!-- ==================== PAGE CONTENT ==================== -->
+    <div class="content">
+        <!-- ==================== WIDGETS CONTAINER ==================== -->
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span12">
+                    <!-- ==================== END OF ROW ==================== -->
+                    <div class="row-fluid">
+                        <div class="span12">
+                            <!-- ==================== DEFAULT TABLE HEADLINE ==================== -->
+                            <div class="containerHeadline">
+                                <i class="icon-table"></i>
+                                <h2>Liste des adresse clients</h2>
+                            </div>
+                            <!-- ==================== END OF DEFAULT TABLE HEADLINE ==================== -->
+                            <!-- ==================== DEFAULT TABLE FLOATING BOX ==================== -->
+                            <div class="floatingBox table">
+                                <div class="container-fluid">
+                                    <table class="table">
+                                        <thead>
+                                        <tr>
+                                            <th>Adresse</th>
+                                            <th>Ville</th>
+                                            <th>CP</th>
+                                            <th>Indication</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for entity in pagination %}
+                                            <tr>
+                                                <td>{{ entity.adress }} </td>
+                                                <td>{% if entity.localite %} {{ entity.localite }} {% endif %}</td>
+                                                <td>{% if entity.localite %}{{ entity.localite.cp }}{% endif %}</td>
+                                                <td>{{ entity.indcation }}</td>
+
+                                                <td>
+                                                    <div class="btn-toolbar" style="margin: 0;">
+                                                        <div class="btn-group">
+                                                            <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                                                Action <span
+                                                                        class="caret"></span></button>
+                                                            <ul class="dropdown-menu pull-right">
+                                                                <li>
+	<a href="{{ path('back_client_adresse_modifier', { 'id': entity.id ,'client':client }) }}">Modifier</a>
+                                                                    </li>                                                                
+
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                    {# display navigation #}
+                                    <div class="pagination pagination-large" style="text-align: center">
+                                        {{ knp_pagination_render(pagination) }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- ==================== END OF WIDGETS CONTAINER ==================== -->
+            </div>
+        </div>
+    </div>
+    <link rel="stylesheet" type="text/css" href="{{ asset('RessourcesBack/css/bootstrap-select.css') }}">
+
+{% endblock %}
+    {% block javascripts %}
+        <script src="{{ asset('RessourcesBack/js/bootstrap-select.js') }}"></script>
+    {% endblock %}

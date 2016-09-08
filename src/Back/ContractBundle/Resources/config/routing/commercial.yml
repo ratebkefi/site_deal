@@ -1,0 +1,34 @@
+list_commercial:
+    path:     /
+    defaults: { _controller: BackContractBundle:Commercial:index }
+
+
+update_commercial_manager:
+    path:     /update/{id}
+    defaults: { _controller: BackContractBundle:Commercial:edit}
+    requirements:
+        id: \d+
+view_commercial_manager:
+    path:     /view/{id}
+    defaults: { _controller: BackContractBundle:Commercial:view}
+    requirements:
+        id: \d+
+add_commercial_manager:
+    path:     /add
+    defaults: { _controller: BackContractBundle:Commercial:add}
+
+activate_commercial_manager:
+    path:     /act/{id}
+    defaults: { _controller: BackContractBundle:Commercial:activate}
+    requirements:
+        id: \d+
+unactivate_commercial_manager:
+    path:     /unact/{id}
+    defaults: { _controller: BackContractBundle:Commercial:unactivate}
+    requirements:
+        id: \d+
+delete_commercial_manager:
+    path:     /unact/{id}
+    defaults: { _controller: BackContractBundle:Commercial:unactivate}
+    requirements:
+        id: \d+

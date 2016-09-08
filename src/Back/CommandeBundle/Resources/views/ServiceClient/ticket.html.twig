@@ -1,0 +1,173 @@
+{% extends '::baseBack.html.twig' %}
+{% block body -%}
+    <!-- ==================== PAGE CONTENT ==================== -->
+    <div class="content">
+        <!-- ==================== WIDGETS CONTAINER ==================== -->
+        <div class="container-fluid">
+            <!-- ==================== END OF ROW ==================== -->
+            <div class="row-fluid">
+                <div class="span12">
+                    <div class="containerHeadline">
+                        <i class="icon-zoom-in"></i>
+
+                        <h2>Filtre de recherche</h2>
+                        <div class="controlButton pull-right"><i class="icon-caret-down minimizeElement"></i></div>
+                    </div>
+                    <div class="floatingBox  ">
+                        <div class="container-fluid" style="padding: 10px">
+                            {{ form_start(form, {'method': 'GET','attr': {'class': 'form-horizontal contentForm','style':'padding:0; margin:0'}}) }}
+                            <div class="span3">
+                                <label>Client</label>
+                                {{ form_widget(form.pnamec,{'attr':{'autocomplete':'off','class':'span10 selectpicker','data-live-search':'true'}}) }}
+                            </div>
+                            <div class="span3">
+                                <label>Commande</label>
+                                {{ form_widget(form.commande,{'attr':{'class':'span10 selectpicker','data-live-search':'true'}}) }}
+                            </div>
+
+                            <div class="span3" {% if not is_granted("ROLE_SUPER_ADMIN") %} style="display: none" {% endif %}>
+                                <label>Assigné à</label>
+                                {{ form_widget(form.user,{'attr':{'class':'span10 selectpicker','data-live-search':'true'}}) }}
+                            </div>
+</div>
+                        <div class="container-fluid" style="padding: 10px">
+
+                            <div class="span3">
+                                <label>Priorité</label>
+                                {{ form_widget(form.priorite,{'attr':{'class':'span10'}}) }}
+                            </div>
+                            <div class="span3">
+                                <label>Deal</label>
+                                {{ form_widget(form.deal,{'attr':{'class':'span10 selectpicker','data-live-search':'true'}}) }}
+                            </div>
+                            <div class="span3">
+                                <label>Status</label>
+                                {{ form_widget(form.status,{'attr':{'class':'span10 selectpicker'}}) }}
+                            </div>
+                            <div class="span3">
+                                <label>&nbsp;</label>
+                                <input type="submit" value="Rechercher" class="btn btn-success" />
+                            </div>
+                            {{ form_end(form) }}
+                        </div>
+
+                    </div>
+                    {% if  app.user.roles[0]!= 'DAF'  and app.user.roles[0]!= 'FINANCIER' %}
+
+                    <a href="{{ path('add_ticket') }}">
+                        <button class="btn btn-danger" type="button">Ajouter</button>
+                    </a><br>
+                    {% endif %}
+                    <div class="containerHeadline">
+                        <i class="icon-flag"></i>
+                        <h2>Légende</h2>
+
+                        <div class="controlButton pull-right"><i class="icon-caret-down minimizeElement"></i></div>
+                    </div>
+                    <div class="floatingBox table ">
+                        <div class="container-fluid">
+                            <div class="span4">
+                                <div class="alert alert-success">
+                                    <strong>En cours</strong>
+                                </div>
+                            </div>
+
+                            <div class="span4">
+                                <div class="alert alert-warning">
+                                    <strong>Ouvert</strong>
+                                </div>
+                            </div>
+                            <div class="span4">
+                                <div class="alert alert-error">
+                                    <strong>Cloturé</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ==================== DEFAULT TABLE HEADLINE ==================== -->
+                    <div class="containerHeadline">
+
+                        <i class="icon-table"></i>
+                        <h2>Liste des tickets</h2>
+                    </div>
+                    <!-- ==================== END OF DEFAULT TABLE HEADLINE ==================== -->
+                    <!-- ==================== DEFAULT TABLE FLOATING BOX ==================== -->
+                    <div class="floatingBox table">
+                        <div class="container-fluid">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>Code Subject</th>
+                                    <th>Date</th>
+                                    <th>Dernière réponse</th>
+                                    <th>Client</th>
+                                    <th>Status</th>
+                                    <th>Priorité</th>
+                                    <th> Assigné à </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for item in pagination %}
+                                    {% set lastReply = getLastReply( item.id ) %}
+                                    {% set nombreMessage = getNumberReply( item.id ) %}
+                                    <tr {% if item.status==1 %} class="alert alert-warning" {% elseif item.status ==2 %} class="alert alert-success" {% else %} class="alert alert-error" {% endif %}>
+                                        <td><a href="{{ path('view_ticket',{'id':item.id}) }}"> {{ item.code }} - {{ item.object  }}</a></td>
+                                        <td>{{ item.dcr|date('d-m-Y H:i:s') }}  </td>
+                                        <td> {% if nombreMessage !=1 %}{{ lastReply|date('d-m-Y H:i:s') }} {% else %} N.A {% endif %}</td>
+                                        <td>{%if item.commande %} {{ item.commande.client }} {% endif %}</td>
+                                        <td>{% if item.status ==1 %} Ouvert {% elseif  item.status ==2 %}En cours {% else %} Cloturé {% endif %}</td>
+                                        <td>{% if item.priorite ==1 %} normal {% elseif  item.priorite ==2 %}Urgent {% else %} Très urgent {% endif %}
+                                        </td>
+                                        <td>{{ item.user.name }}</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                            {# display navigation #}
+                            <div class="pagination pagination-large" style="text-align: center">
+                                {{ knp_pagination_render(pagination) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ==================== END OF WIDGETS CONTAINER ==================== -->
+    </div>
+    <link rel="stylesheet" type="text/css" href="{{ asset('RessourcesBack/css/bootstrap-select.css') }}">
+
+    <!-- ==================== END OF PAGE CONTENT ==================== -->
+{% endblock %}
+{% block javascripts %}
+    {% javascripts '@MainFrontBundle/Resources/public/js/bootstrap-typeahead.min.js' %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    <script src="{{ asset('RessourcesBack/js/bootstrap-select.js') }}"></script>
+
+    <script>
+        $('#back_commandebundle_ticketfilter_pnamec').typeahead({
+
+            ajax: {
+                url: '{{ path('list_client_par_nom') }}',
+                triggerLength: 1,
+                items: 10
+            },
+            afterSelect: function (item) {
+                //save the id value into the hidden field
+
+            },
+            displayField: 'full_name'
+
+        })
+        $(document).ready(function () {
+            $("#back_commandebundle_ticketfilter_pnamec").removeAttr("required");
+            $("#back_commandebundle_ticketfilter_commande").removeAttr("required");
+            $("#back_commandebundle_ticketfilter_deal").removeAttr("required");
+            $("#back_commandebundle_ticketfilter_user").removeAttr("required");
+            $("#back_commandebundle_ticketfilter_priorite").removeAttr("required");
+
+            //$('.alert-success').delay(5000).fadeOut();
+        });
+
+    </script>
+{% endblock %}

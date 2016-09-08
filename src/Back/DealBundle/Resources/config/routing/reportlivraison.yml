@@ -1,0 +1,8 @@
+#deal
+back_reportlivraison:
+    path:     /
+    defaults: { _controller: BackDealBundle:ReportLivraison:index }
+
+back_reportlivraisoncsv:
+    path:     /export
+    defaults: { _controller: BackDealBundle:ReportLivraison:export }

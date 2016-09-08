@@ -1,0 +1,55 @@
+{% extends '::base.html.twig' %}
+{% block stylesheets %}
+    <style>
+        .fa{
+            color:#E10079;
+            font-size: 1.5em;
+            cursor: pointer;
+        }
+    </style>
+{% endblock %}
+
+{% block javascripts %}
+
+<script src="{{ asset('public/js/jquery-ias.min.js') }}"></script>
+<!-- infinite scroll script -->
+<script>
+
+
+	{% for item in region %}
+	
+	 $(".ddcontainer{{ item.id }}").ready(function () {
+
+		var ias = $.ias({
+		  container:  ".ddcontainer{{ item.id }}",
+		  item:       ".dditem{{ item.id }}",
+		  pagination: ".pagination{{ item.id }}",
+		  next:       " .pagination{{ item.id }} .pagination{{ item.id }}.next a",
+		  delay:      1250  
+		});
+
+		//ias.extension(new IASSpinnerExtension());            // shows a spinner (a.k.a. loader)
+		ias.extension(new IASSpinnerExtension({src: '/public/images/loading.gif' }));
+		//ias.extension(new IASTriggerExtension({})); // shows a trigger after page 3
+		ias.extension(new IASTriggerExtension({html: '<div class="ias-trigger ias-trigger-next" style="text-align: center; cursor: pointer;"><a class="btn btn-primary">Afficher plus</a></div>', offset: 4})); // override text show more
+		/*
+		ias.extension(new IASNoneLeftExtension({
+		  text: 'Plus aucun deal à afficher'      // override text when no pages left
+		}));*/
+
+	});
+	{% endfor %}
+		
+	</script>
+{% endblock %}
+
+{% block body %}
+	
+
+{% for item in region %}
+
+<h2>{{ item.name }}</h2>
+{{ render(controller('MainFrontBundle:Deal:dealparregion', { 'id': item.id })) }}
+{%endfor%}
+	
+{% endblock %}

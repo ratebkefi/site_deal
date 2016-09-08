@@ -1,0 +1,45 @@
+<html>
+<body>
+<div style="width: 100%;">
+    <table width="100%" cellpadding="5" cellspacing="5">
+        <tr>
+            <td style="border: 1px solid #000">
+                <h2 style="text-align: center;">Liste réservation deal : {{ titre }}</h2></td>
+        </tr>
+        {% for entity in booking %}
+            {% set listReservation = listeBooking(entity.booking,deal) %}
+            {% set ListeHour = ListeHour(entity.booking,deal) %}
+            <tr>
+                <td><h2>{{ entity.booking|date('d-m-Y') }}</h2></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <table>
+                        {% for entity2 in ListeHour %}
+                            {% set date = entity.booking~' '~entity2.booking1~':00:00' %}
+
+                            {% set ListeBook = listeBookingPerHoure(date,deal) %}
+
+                            <tr>
+                                <td><h3>{{ entity2.booking1 }}h</h3></td>
+                            </tr>
+                            {% for list in ListeBook %}
+                                <tr>
+                                    <td>
+                                        {{ list.coupon.client }} - {{ list.coupon.command.client.phone }}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+
+                        {% endfor %}
+                    </table>
+
+                </td>
+            </tr>
+
+        {% endfor %}
+    </table>
+
+</div>
+</body>
+</html>

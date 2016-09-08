@@ -1,0 +1,35 @@
+<form action="https://www.gpgcheckout.com/Paiement/Validation_paiement.php" method="POST" name="paiment">
+    <input type="hidden" name="NumSite" value="MAR369">
+<input type="hidden" name="Password" value="{{ str }}">
+<input type="hidden" name="orderID" value="{{ commande.id }}">
+<input type="hidden" name="Amount" value="{{ Amount }}">
+<input type="hidden" name="Currency" value="TND">
+<input type="hidden" name="Language" value="fr">
+<input type="hidden" name="EMAIL" value="{{ commande.client.email }}">
+<input type="hidden" name="CustLastName" value="{{ commande.client.name }}">
+<input type="hidden" name="CustFirstName" value="{{ commande.client.fname }}">
+<input type="hidden" name="CustAddress" value="{{ addresse }}">
+<input type="hidden" name="CustZIP" value="{{ cp }}">
+<input type="hidden" name="CustCity" value="ariana">
+<input type="hidden" name="CustCountry" value="tunisie">
+<input type="hidden" name="CustTel" value="{{ commande.client.phone }}">
+<input type="hidden" name="PayementType" value="1">
+<input type="hidden" name="MerchandSession" value="{{ bigfid }}">
+<input type="hidden" name="orderProducts" value="{{ commande.deal.title }}">
+<input type="hidden" name="signature" value="{{ signature }}">
+    <input type="hidden" name="AmountSecond" value="">
+    <input type="hidden" name="vad" value="697800003">
+    <input type="hidden" name="Terminal" value="001">
+    <input type="hidden" name="TauxConversion" value=" ">
+    <input type="hidden" name="BatchNumber" value=" ">
+    <input type="hidden" name="MerchantReference" value="">
+    <input type="hidden" name="Reccu_Num" value="">
+    <input type="hidden" name="Reccu_ExpiryDate" value="">
+    <input type="hidden" name="Reccu_Frecuency" value=" ">
+    <INPUT TYPE="hidden" NAME="currency_code" value="788">
+</form>
+{% block javascripts %}
+<script>
+   document.paiment.submit();
+</script>
+{% endblock %}

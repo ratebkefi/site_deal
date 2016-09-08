@@ -1,0 +1,265 @@
+<link href="{{ asset('RessourcesBack/css/bootstrap-responsive.min.css') }}" type="text/css" rel="stylesheet"/>
+<link href="{{ asset('RessourcesBack/css/styles.css') }}" type="text/css" rel="stylesheet"/>
+<link href="{{ asset('RessourcesBack/css/fancy-style.css') }}" type="text/css" rel="stylesheet"/>
+<!-- ==================== COMMON ELEMENTS ROW ==================== -->
+{% block body -%}
+
+<div class="row-fluid">
+	<div class="span12">
+	    <!-- ==================== TEXT INPUTS HEADLINE ==================== -->
+	    <div class="containerHeadline">
+	        <i class="icon-dollar"></i>
+	
+	        <h2>Paiement de la commande N° {{ idCommand }} </h2>
+            <div class="controlButton pull-right"><strong> Total :{{ totalcommande }} <sup>TND</sup></strong></div>
+
+	    </div>
+	    <!-- ==================== END OF TEXT INPUTS HEADLINE ==================== -->
+	
+	    <!-- ==================== TEXT INPUTS FLOATING BOX ==================== -->
+	    <div class="floatingBox">
+	        <!-- ==================== WIDGETS CONTAINER ==================== -->
+	        <div class="pay-command">
+	            <!-- ==================== DEFAULT TABLE HEADLINE ==================== -->
+	
+	            <!-- ==================== END OF DEFAULT TABLE HEADLINE ==================== -->
+	            <!-- ==================== DEFAULT TABLE FLOATING BOX ==================== -->
+	
+	
+	            <form target="_parent" action="{{ path('paye_commande_manager' , { 'id': idCommand }) }}" class="form-horizontal contentForm" method="POST" id="form">
+	                <div class="container-fluid">
+		                <div class="row-fluid">
+		                    <div class="span12">
+		                        <h3>Sélectionner le type de paiement</h3>
+		                        
+		                        <div class="inlineSelect inline danger">
+		                            <div class="">
+		                                <div class="control-group">
+		                                    <div class="controls">
+		                                        {% for payement in  modepayement %}
+		
+		                                        <label id="check{{ payement.id }}" class="checkbox {% if payement.id ==1 %} checked {% endif %}" style="width: 48%">
+		                                            <input class="spann{{ payement.id }} css-checkbox" id="payement{{ payement.id }}" type="checkbox" name="mode[]" onclick="afficherModePayement({{ payement.id }})" value="{{ payement.id }}" {% if payement.id ==1 %} checked="checked" {% endif %} >
+		                                            <span class="css-label">{{ payement.name }}</span>
+		                                        </label>
+		                                        {% endfor %}
+		                                    </div>
+		                                </div>
+		                            </div>
+		                        </div>
+		                    </div>
+	                    </div>
+	                </div>
+	                <div class="container-fluid" id="espece">
+	                    <div class="row-fluid">
+	                        <div class="span12">
+	                            <h3>Espèce</h3>
+	                             <div class="control-group">
+                                        <label class="control-label">Montant</label>
+
+                                        <div class="controls">
+                                            <input type="text" class="span4" value="{{ totalcommande }}" id="mont-espece" name="espece" data-validation="number">
+                                        </div>
+                                 </div>
+	                		</div>
+	                     </div>
+	                </div>
+	                <div class="container-fluid" id="cheque" style="display: none;">
+	                    <div class="row-fluid">
+	                        <div class="span12">
+	                            <h3>Chèque</h3>
+	                            <div class="table-responsive">
+		                            <table class="table table-bordered" id="deal_container">
+		                                <tr>
+		                                    <td></td>
+		                                    <td style="border: none !important;">
+		                                    	<div class="control-group">
+				                                        <label class="control-label">Numéro</label>
+				
+				                                        <div class="controls">
+				                                            <input type="text" class="span12 spann2" id="numero" name="num_cheque[]">
+				                                        </div>
+				                                 </div>
+		                                    </td>
+		                                    <td style="border: none !important;">
+		                                    	<div class="control-group">
+				                                        <label class="control-label">Titulaire</label>
+				
+				                                        <div class="controls">
+				                                            <input type="text" class="span12 spann2" id="titulaire" name="titulaire_cheque[]">
+				                                        </div>
+				                                 </div>
+		                                    </td>
+		                                    <td style="border: none !important;">
+		                                    <div class="control-group">
+                                                        <label class="control-label">Montant<Br><SUB>minimum autorisé 50TND</SUB></label>
+			
+			                                        <div class="controls">
+			                                            <input type="text" class="span12 spann2 montant_cheque" id="montant" name="montant_cheque[]">
+			                                        </div>
+			                                 </div>
+		                                        
+		                                    </td>
+		                                </tr>
+		                                <a class="add_Item btn btn-primary" style="vertical-align:middle;"
+		                                           href="#"><strong>+</strong> Ajouter un autre chèque</a>
+		                            </table>
+								</div>
+	                        </div>
+	                    </div>
+	                </div>
+	                <div class="formFooter">
+	                    <button type="submit" class="btn btn-success submit" id="submit"><i class="icon-ok"> </i> Valider
+	                    </button>
+	                    {{ form_widget(form._token) }}
+	                </div>
+	            </form>
+	
+	
+	        </div>
+	        <!-- ==================== END OF WIDGETS CONTAINER ==================== -->
+	    </div>
+</div>
+</div>
+    <!-- ==================== END OF PAGE CONTENT ==================== -->
+
+    {% block javascripts %}
+        <script src="{{ asset('RessourcesBack/js/jquery.js') }}"></script>                   <!-- bootstrap slider plugin -->
+		{% javascripts '@BackPlanningBundle/Resources/public/js/jquery.form-validator.js' %}
+		<script type="text/javascript" src="{{ asset_url }}"></script>
+		{% endjavascripts %}
+        <script>
+
+
+        $("#form").submit(function(){
+            var checked = $("#form input:checked").length > 0;
+            if (!checked){
+                alert("S'il vous plaît vérifier au moins un type de payement");
+
+                return false;
+            }
+            else
+            {
+                sum = 0;
+                //iterate through each textboxes and add the values
+                $(".montant_cheque").each(function() {
+
+                    //add only if the value is number
+                    if(!isNaN(this.value) && this.value.length!=0) {
+                        sum += parseFloat(this.value);
+                    }
+
+                });
+                if($('#payement1').is(':checked'))
+                {
+                    var espece = $("#mont-espece").val();
+
+                }
+                else
+                    espece = 0;
+                sum = sum + parseFloat(espece);
+                //.toFixed() method will roundoff the final sum to 2 decimal places
+                //$("#sum").html(sum.toFixed(2));
+                if(sum !={{ totalcommande }})
+                {
+                    alert("Montant saisie doit étre egal a total commande ");
+                    //add stuff here
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+        });
+
+        function afficherModePayement(valeur) {
+                if (valeur == 1) {
+                    if( $('.spann'+valeur).is(':checked') ) {
+                        $("#espece").show();
+                        $("#mont-espece").attr('data-validation', 'number');
+                        $("#mont-espece").attr('data-validation-allowing', 'float'); 
+		 				$("#mont-espece").attr('data-validation-decimal-separator', ',');
+
+                    }
+                    else
+                    {
+                        $("#espece").hide();
+						$('#mont-espece').val('');
+
+                        $("#mont-espece").removeAttr("data-validation");
+                        $("#mont-espece").removeAttr("data-validation-allowing");
+                        $("#mont-espece").removeAttr("data-validation-decimal-separator");
+                    }
+
+
+
+                   // $("#cheque").hide();
+
+                }
+                if (valeur == 2) {
+                    if( $('.spann'+valeur).is(':checked') ) {
+                        $("#cheque").show();
+                        $("#numero").attr('data-validation', 'number length');
+                        $("#numero").attr('data-validation-length', '7-7');
+                        $("#titulaire").attr('data-validation', 'required');
+                        $("#montant").attr('data-validation', 'number');
+                        $("#montant").attr('data-validation-allowing', 'range[50;99999999999999]');
+                    }
+                    else
+                    {
+                        $("#cheque").hide();
+                        $('.spann'+valeur).removeAttr("data-validation");
+						$('.spann'+valeur).removeAttr("data-validation-length");
+						$('.spann'+valeur).val('');
+						
+
+                    }
+
+                }
+
+
+            }
+        $('.inlineSelect :radio, .inlineSelect :checkbox').change(function() {
+            $(this).parent().toggleClass("checked", this.checked);
+        });
+            var i = 0;
+            var itemdelete = ' <a href="#" class="delete_Item"><i class="icon-trash"></i></a>';
+            jQuery(document).ready(function () {
+                jQuery('.delete_Item').live('click', function () {
+                    jQuery(this).parent().parent().remove();
+                    i=i-1;
+                    return false;
+                });
+
+                jQuery('.add_Item').click(function () {
+
+                    var ___id___ = Math.floor((Math.random() * 1000000) + 1);
+                    var content = jQuery('.deal_init_values').html();
+                    $content = $("#deal_container").find('tr').eq(0);
+                    //$($content).find('td').eq(5).find('a').remove();
+                    html = $($content).html();
+
+                    //content = content.replace(/___id___/g, ___id___);
+                    jQuery('#deal_container').append("<tr>" + html + "</tr>");
+                    i++;
+                    $("#deal_container").find('tr').eq(i).find('td').eq(6).find('a').remove();
+                    $("#deal_container").find('tr').eq(i).find('td').eq(0).html(itemdelete);
+                    //alert(content);
+                    return false;
+                });
+            });
+
+
+
+        </script>
+         <script>
+
+         $(document).ready(function () {
+
+             $.validate();
+             
+         });
+     </script>
+    {% endblock %}
+    {% endblock %}

@@ -1,0 +1,193 @@
+{% extends '::baseBack.html.twig' %}
+
+{% block body -%}
+    <div class="content">
+        <div class="container-fluid">
+
+            {% if app.user.roles[0]!='SERVICECLIENT' and app.user.roles[0]!='REDACTEUR' and app.user.roles[0]!='CHEFSERVICECLI'   and app.user.roles[0]!='DAF'  and app.user.roles[0]!= 'FINANCIER' %}
+            <a href="{{ path('dash_sellingpoint_update', { 'id': entry.id, 'partid': entry.user.id  }) }}"
+               class="btn btn-info"><i class="icon-pencil"></i> Modifier</a>
+            {% endif %}
+            {% if app.user.roles[0]=='ROLE_SUPER_ADMIN' %}
+
+                <a href="javascript:confirmdeletbox('{{ path('dash_sellingpoint_delete', { 'id': entry.id, 'partid': entry.user.id  }) }}')"
+                   class="btn btn-danger"><i class="icon-trash"></i> Supprimer</a>
+            {% endif %}
+
+            {% if app.user.roles[0]!='SERVICECLIENT' and app.user.roles[0]!='REDACTEUR' and app.user.roles[0]!='CHEFSERVICECLI' %}
+            <a href="{{ path('dash_partner_show', { 'id': entry.user.id }) }}">
+                <button class="btn btn-inverse pull-right" type="button" id="form_submit"><i class="icon-list"></i>
+                    Liste
+                </button>
+            </a>
+{% endif %}
+            <!-- ==================== COMMON ELEMENTS ROW ==================== -->
+            <div class="row-fluid">
+                <div class="span4">
+                    <!-- ==================== TEXT INPUTS HEADLINE ==================== -->
+                    <div class="containerHeadline">
+                        <i class="icon-zoom-in"></i>
+
+                        <h2>Point de vente du partenaire {{ entry.user.name }}</h2>
+
+                        <div class="controlButton pull-right"><i class="icon-remove removeElement"></i></div>
+                        <div class="controlButton pull-right"><i class="icon-caret-down minimizeElement"></i></div>
+                    </div>
+                    <!-- ==================== END OF TEXT INPUTS HEADLINE ==================== -->
+
+                    <!-- ==================== TEXT INPUTS FLOATING BOX ==================== -->
+                    <div class="floatingBox table">
+                        <div class="container-fluid">
+
+                            <table class="table table-bordered">
+                                <tbody>
+
+                                <tr>
+                                    <th width="30%">Point de vente :</th>
+                                    <td>{{ entry.name }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Adresse :</th>
+                                    <td>{{ entry.adress }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Latitude :</th>
+                                    <td>{{ entry.latitude }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Longitude :</th>
+                                    <td>{{ entry.longitude }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Téléphone :</th>
+                                    <td>{{ entry.phone }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Visible :</th>
+                                    <td>{% if entry.visible == 1 %} Oui {% else %} Non {% endif %}</td>
+                                </tr>
+                                {% if entry.visibleAdress|length>0 %}
+                                <tr>
+                                    <th>Adresse Visible :</th>
+                                    <td>{{ entry.visibleAdress }}</td>
+                                </tr>
+                                {% endif %}
+                                {% if entry.latVisibleAdress|length>0 %}
+                                <tr>
+                                    <th>latVisibleAdress :</th>
+                                    <td>{{ entry.latVisibleAdress }}</td>
+                                </tr>
+                                {% endif %}
+                                {% if entry.lonVisibleAdress|length>0 %}
+                                <tr>
+                                    <th>lonVisibleAdress :</th>
+                                    <td>{{ entry.lonVisibleAdress }}</td>
+                                </tr>
+                                {% endif %}
+                                <tr>
+                                    <th>Nombre des employees :</th>
+                                    <td>{{ entry.nbrEmployee }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Capacité par heure :</th>
+                                    <td>{{ entry.capacityPerHour }}</td>
+                                </tr>
+
+                                </tbody>
+                            </table>
+
+
+                        </div>
+                    </div>
+                    <!-- ==================== END OF TEXT INPUTS FLOATING BOX ==================== -->
+                </div>
+
+                <div class="span8">
+                    <!-- ==================== TEXT INPUTS HEADLINE ==================== -->
+                    <div class="containerHeadline">
+                        <i class="icon-calendar"></i>
+
+                        <h2>Emploi de temps</h2>
+
+                        <div class="controlButton pull-right"><i class="icon-remove removeElement"></i></div>
+                        <div class="controlButton pull-right"><i class="icon-caret-down minimizeElement"></i></div>
+                    </div>
+                    <!-- ==================== END OF TEXT INPUTS HEADLINE ==================== -->
+
+                    <!-- ==================== TEXT INPUTS FLOATING BOX ==================== -->
+                    <div class="floatingBox table">
+                        <div class="container-fluid">
+
+                            <table class="table table-condensed table-bordered">
+                                <thead style="">
+                                <tr style="">
+                                    <th width="9%">Heure/Jour</th>
+                                    <th width="13%">Lundi</th>
+                                    <th width="13%">Mardi</th>
+                                    <th width="13%">Mercredi</th>
+                                    <th width="13%">Jeudi</th>
+                                    <th width="13%">Vendredi</th>
+                                    <th width="13%">Samedi</th>
+                                    <th width="13%">Dimanche</th>
+                                </tr>
+                                </thead>
+                                <tbody style="">
+                                {% for i in 0..23 %}
+                                    <tr id="row{{ i }}">
+                                        <th width="9%">{{ i }}:00</th>
+                                        <td width="13%" id="Lundi{{ i }}"></td>
+                                        <td width="13%" id="Mardi{{ i }}"></td>
+                                        <td width="13%" id="Mercredi{{ i }}"></td>
+                                        <td width="13%" id="Jeudi{{ i }}"></td>
+                                        <td width="13%" id="Vendredi{{ i }}"></td>
+                                        <td width="13%" id="Samedi{{ i }}"></td>
+                                        <td width="13%" id="Dimanche{{ i }}"></td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+
+
+                        </div>
+                    </div>
+                    <!-- ==================== END OF TEXT INPUTS FLOATING BOX ==================== -->
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+{% endblock %}
+ {% block javascripts %}
+     <script>
+         $(document).ready(function () {
+             {% for item in entry.schedule %}
+             for (i ={{ item.openTimeMorning|date('H') }}; i <={{ item.closeTimeMorning|date('H') }}; i++) {
+                 $("#{{ item.day }}" + i).attr('style', "background:#F0F8DB")
+                 $("#{{ item.day }}" + i).html("<span class='hidden'>1</span>")
+             }
+             for (i ={{ item.openTimeAfternoon|date('H') }}; i <={{ item.closeTimeAfternoon|date('H') }}; i++) {
+                 $("#{{ item.day }}" + i).attr('style', "background:#F0F8DB")
+                 $("#{{ item.day }}" + i).html("<span class='hidden'>1</span>")
+             }
+             {% endfor %}
+             {% for i in 0..23 %}
+             $ligne = $("#row{{ i }}")
+             console.log($ligne.find('td').eq(0).html())
+             if ($ligne.find('td').eq(0).html() == ""
+                     && $ligne.find('td').eq(1).html() == ""
+                     && $ligne.find('td').eq(2).html() == ""
+                     && $ligne.find('td').eq(3).html() == ""
+                     && $ligne.find('td').eq(4).html() == ""
+                     && $ligne.find('td').eq(5).html() == ""
+                     && $ligne.find('td').eq(6).html() == "") {
+                 $ligne.remove();
+             }
+             {% endfor %}
+         });
+
+     </script>
+ {% endblock %}
+ {% block stylesheets %}
+     <link href="{{ asset('RessourcesBack/css/fullcalendar/fullcalendar.css') }}" rel='stylesheet'/>
+ {% endblock %}

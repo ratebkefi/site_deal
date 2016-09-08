@@ -1,0 +1,36 @@
+list_planner:
+    path:     /
+    defaults: { _controller: BackPlanningBundle:Planner:index }
+ajxpartenerback:
+    path:     /ajxpartener
+    defaults: { _controller: BackPlanningBundle:Planner:ajxpartener }
+
+update_planner_manager:
+    path:     /update/{id}
+    defaults: { _controller: BackPlanningBundle:Planner:edit}
+    requirements:
+        id: \d+
+view_planner_manager:
+    path:     /view/{id}
+    defaults: { _controller: BackPlanningBundle:Planner:view}
+    requirements:
+        id: \d+
+add_planner_manager:
+    path:     /add
+    defaults: { _controller: BackPlanningBundle:Planner:add}
+
+activate_planner_manager:
+    path:     /act/{id}
+    defaults: { _controller: BackPlanningBundle:Planner:activate}
+    requirements:
+        id: \d+
+unactivate_planner_manager:
+    path:     /unact/{id}
+    defaults: { _controller: BackPlanningBundle:Planner:unactivate}
+    requirements:
+        id: \d+
+delete_planner_manager:
+    path:     /unact/{id}
+    defaults: { _controller: BackPlanningBundle:Planner:unactivate}
+    requirements:
+        id: \d+

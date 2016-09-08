@@ -1,0 +1,51 @@
+<link href="{{ asset('RessourcesBack/css/bootstrap-responsive.min.css') }}" type="text/css" rel="stylesheet"/>
+<link href="{{ asset('RessourcesBack/css/styles.css') }}" type="text/css" rel="stylesheet"/>
+<link href="{{ asset('RessourcesBack/css/fancy-style.css') }}" type="text/css" rel="stylesheet"/>
+{% block body -%}
+<div class="row-fluid">
+    <div class="span12">
+        <!-- ==================== TEXT INPUTS HEADLINE ==================== -->
+        <div class="containerHeadline">
+            <i class="icon-edit"></i>
+
+            <h2>Remboursement BigFid</h2>
+
+            <div class="controlButton pull-right"><i class="icon-remove removeElement"></i></div>
+            <div class="controlButton pull-right"><i class="icon-caret-down minimizeElement"></i></div>
+        </div>
+        <!-- ==================== END OF TEXT INPUTS HEADLINE ==================== -->
+
+        <!-- ==================== TEXT INPUTS FLOATING BOX ==================== -->
+        <div class="floatingBox">
+            <div class="container-fluid">
+
+                <div class="container-fluid">
+
+                    <form class="form-horizontal contentForm" method="POST"
+                          action="{{ path('remboursement_bigfid',{'id':coupon.id,'ticket':ticket}) }}" target="_parent">
+                        <div class="control-group">
+                            <label class="control-label">BigDid</label>
+
+                            <div class="controls">
+                                <input type="text" name="bigfid" id="bigfid" value="{{ coupon.price|getBigfid }}"><em>BigFid</em>
+                            </div>
+                        </div>
+                        <div class="formFooter">
+                            <button type="submit" class="btn btn-success"><i class="icon-ok"> </i> Valider
+                            </button>
+                            <button type="reset" class="btn btn-danger"><i class="icon-remove"> </i>
+                                Effacer
+                            </button>
+
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+        <!-- ==================== END OF TEXT INPUTS FLOATING BOX ==================== -->
+    </div>
+</div>
+</div>
+</div>
+{% endblock %}

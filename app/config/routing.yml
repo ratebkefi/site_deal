@@ -1,0 +1,59 @@
+
+
+main_ratingclient:
+    resource: "@MainRatingclientBundle/Resources/config/routing.yml"
+    prefix:   /
+
+main_rest:
+    resource: "@MainRestBundle/Resources/config/routing.yml"
+    prefix:   /rest
+
+back_page:
+    resource: "@BackPageBundle/Resources/config/routing.yml"
+    prefix:   /dash
+
+main_front:
+    resource: "@MainFrontBundle/Resources/config/routing.yml"
+    prefix:   /
+#booking
+front_booking:
+    resource: "@MainBookingBundle/Resources/config/routing.yml"
+    prefix:   /reservation
+
+back_commande:
+    resource: "@BackCommandeBundle/Resources/config/routing.yml"
+    prefix:   /dash
+
+back_deal:
+    resource: "@BackDealBundle/Resources/config/routing.yml"
+    prefix:   /dash
+
+back_contract:
+    resource: "@BackContractBundle/Resources/config/routing.yml"
+    prefix:   /dash
+
+partner:
+    resource: "@BackPartnerBundle/Resources/config/routing.yml"
+    prefix:   /dash
+
+back_planning:
+    resource: "@BackPlanningBundle/Resources/config/routing.yml"
+    prefix:   /dash
+
+back_dash:
+    resource: "@BackDashBundle/Resources/config/routing.yml"
+    prefix:   /dash
+
+back_deal:
+    resource: "@BackDealBundle/Resources/config/routing.yml"
+    prefix:   /dash
+user_user:
+    resource: "@UserUserBundle/Resources/config/routing.yml"
+    prefix:   /dash
+    
+_liip_imagine:
+    resource: "@LiipImagineBundle/Resources/config/routing.xml"
+# rating
+dcs_rating:
+    resource: "@DCSRatingBundle/Resources/config/routing.xml"
+    prefix:   /

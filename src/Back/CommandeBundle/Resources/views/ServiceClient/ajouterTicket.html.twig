@@ -1,0 +1,143 @@
+{% extends '::baseBack.html.twig' %}
+{% block body -%}
+    <div class="content">
+        <div class="container-fluid">
+            <!-- ==================== COMMON ELEMENTS ROW ==================== -->
+            <div class="row-fluid">
+                <div class="span12">
+                    <!-- ==================== TEXT INPUTS HEADLINE ==================== -->
+                    <div class="containerHeadline">
+                        <i class="icon-edit"></i>
+                        <h2>Ajouter une ticket</h2>
+                        <div class="controlButton pull-right"><i class="icon-remove removeElement"></i></div>
+                        <div class="controlButton pull-right"><i class="icon-caret-down minimizeElement"></i></div>
+                    </div>
+                    <!-- ==================== END OF TEXT INPUTS HEADLINE ==================== -->
+                    <!-- ==================== TEXT INPUTS FLOATING BOX ==================== -->
+                    <div class="floatingBox">
+                        <div class="container-fluid">
+                            <div class="container-fluid">
+                                {{ form_start(form, {'enctype': 'multipart/form-data','method': 'POST','attr': {'class': 'form-horizontal contentForm' ,'name':'ticket'}}  ) }}
+                                <div class="control-group">
+                                    <label class="control-label">Client : </label>
+                                    <div class="controls">
+									{% if client %}
+									<div class="marg-bottom-40">
+                                                            <span><strong>{{ client.name }} {{ client.fname }}</strong></span></div>
+									
+									{% endif %}
+                                        <a href="javascript:void()"  onclick="window.open('{{ path('list_desclient')}}','name','width=900,height=650,scrollbars=yes')">Choisir un client</a>
+										
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">N° Commande : </label>
+                                    <div class="controls">
+                                        {{ form_widget(form.commande,{ 'attr': {'class':'selectpicker','data-live-search':'true'}} ) }}
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">Objet : </label>
+                                    <div class="controls">
+                                        {{ form_widget(form.object, { 'attr': {'class': "form-control"} }) }}
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <label class="control-label">Priorite : </label>
+                                    <div class="controls">
+                                        {{ form_widget(form.priorite, { 'attr': {'class': "form-control"} }) }}
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">Assigné à</label>
+                                    <div class="controls">
+                                        {{ form_widget(form.user) }}
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">Message : </label>
+                                    <div class="controls">
+                                        <textarea name="message" rows="5" cols="120"
+                                                  class="form-control"></textarea>
+                                    </div>
+                                </div>
+                                {% for item in form.message %}
+                                    <div class="form-group">
+                                        <div class="input-file-container col-sm-offset-3 col-sm-7">
+                                            {{ form_widget(item.file,{'attr':{'class':'input-file','id':'my-file'}}) }}
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                                <br>
+                                <div class="formFooter">
+                                    <button type="submit" class="btn btn-success"><i class="icon-ok"> </i> Valider
+                                    </button>
+                                    <button type="reset" class="btn btn-danger"><i class="icon-remove"> </i> Effacer
+                                    </button>
+                                    <a href="{{ path('list_ticket') }}">
+                                        <button class="btn btn-inverse" type="button"><i class="icon-list"></i> Liste
+                                        </button>
+                                    </a>
+                                    {{ form_widget(form._token) }}
+                                </div>
+								
+                                {{ form_end(form) }}
+                            </div>
+
+                        </div>
+                    </div>
+                    <!-- ==================== END OF TEXT INPUTS FLOATING BOX ==================== -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+ {% block stylesheets %}
+     <link rel="stylesheet" type="text/css" href="{{ asset('RessourcesBack/css/bootstrap-select2.css') }}">
+ {% endblock %}
+
+    {% block javascripts %}
+        <script src="{{ asset('RessourcesBack/js/bootstrap-select.js') }}"></script>
+<script>
+    var qtedata;
+   
+    $(function () {
+        $('#back_commandebundle_ticket_commande').html('');
+        $('#back_commandebundle_ticket_commande').attr('required', 'required');
+        $('.selectpicker').selectpicker('refresh');
+		{% if  app.request.query.get('client') %}
+            if ({{ client.id }}) {
+                $.ajax({
+                    type: "POST",
+                    dataType: "json",
+                    async: false,
+                    url: "{{ path('back_ajx_commande') }}",
+                    data: "client={{ client.id }}" ,
+                    success: function (data) {
+                        qtedata = data;
+                        console.log(data)
+                        html = '<option value=""></option>';
+                        $.each(data, function (key, val) {
+                            html += '<option value="' + val.id + '">' + val.name + '</option>';
+                        });
+                        $('#back_commandebundle_ticket_commande').html(html);
+                        $('.selectpicker').selectpicker('refresh');
+                    }
+                });
+            }
+			{% endif %}
+    })
+</script>
+        <script>
+            $(document).ready(function () {
+                $("#back_commandebundle_ticket_object").attr({
+                    'data-validation': 'length',
+                    'data-validation-length': 'min4'
+                });
+                $.validate();
+            });
+        </script>
+    {% endblock %}

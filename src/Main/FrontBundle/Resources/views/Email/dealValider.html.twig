@@ -1,0 +1,10 @@
+{% include 'MainFrontBundle:Email:header.html.twig' %}
+
+Bonjour <strong>{{ client.name }} {{ client.fname }}</strong>,<br/>
+Vous avez récemment commandé le deal  {{ commande.deal.title }} dont le numéro de commande est : {{ "%09d"|format(commande.id) }}.<br/>
+Nous vous informons que le deal a été validé et que votre coupon est disponible.<br/>
+Connectez-vous à votre compte avec votre adresse email et votre mot de passe puis allez à la rubrique « Mes commandes » pour récupérer votre coupon.<br/>
+<br/>
+<br/>
+<strong>L’équipe BIGDeal</strong>
+{% include 'MainFrontBundle:Email:footer.html.twig' %}

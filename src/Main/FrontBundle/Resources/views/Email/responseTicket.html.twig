@@ -1,0 +1,10 @@
+{% include 'MainFrontBundle:Email:header.html.twig' %}
+Bonjour, <strong>{{ ticketMessage.ticket.commande.client.name }} {{ ticketMessage.ticket.commande.client.fname }} </strong><br/>
+
+Vous avez reçu une réponse à votre ticket <a href="https://www.bigdeal.tn{{ path('detail_ticket',{'id':ticketMessage.ticket.id}) }}">{{ ticketMessage.ticket.code }}</a><br/>
+Connectez-vous à votre compte avec votre adresse email et votre mot de passe puis allez à la rubrique « Mes tickets » pour la consulter.
+
+<br/>
+<br/>
+<strong>L’équipe BIGDeal</strong>
+{% include 'MainFrontBundle:Email:footer.html.twig' %}

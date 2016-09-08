@@ -1,0 +1,206 @@
+{% form_theme form 'form_table_layout.html.twig' %}
+{% if tst==1 %}
+    <link href="{{ asset('RessourcesBack/css/bootstrap-responsive.min.css') }}" type="text/css" rel="stylesheet"/>
+    <link href="{{ asset('RessourcesBack/css/styles.css') }}" type="text/css" rel="stylesheet"/>
+	<link href="{{ asset('RessourcesBack/css/fancy-style.css') }}" type="text/css" rel="stylesheet"/>
+    <!-- ==================== COMMON ELEMENTS ROW ==================== -->
+	<div class="row-fluid">
+	    <div class="span12 floatingBoxPlanning">
+	        <!-- ==================== TEXT INPUTS HEADLINE ==================== -->
+	        <div class="containerHeadline">
+	            <i class="icon-edit"></i>
+	
+	            <h2>Modifier un planning</h2>
+	
+	            <div class="controlButton pull-right"><i class="icon-remove removeElement"></i></div>
+	            <div class="controlButton pull-right"><i class="icon-caret-down minimizeElement"></i></div>
+	        </div>
+	        <!-- ==================== END OF TEXT INPUTS HEADLINE ==================== -->
+	
+	        <!-- ==================== TEXT INPUTS FLOATING BOX ==================== -->
+	        <div class="floatingBox">
+	            <div class="container-fluid">
+	                <div class="row-fluid">
+	                    {{ form_start(form, {'method': 'POST','attr': {'class': 'form-horizontal contentForm','target':'_parent'}}) }}
+	                     <div class="control-group ">
+                                <label for="back_planningbundle_planning_state" class="control-label required"></label>
+
+                                <div class="controls">
+                                        {% if  planning.state == 0  %}Pré-Planifié{% endif %}
+                                        {% if  planning.state == 1 %}Planifié{% endif %}
+                                        {% if  planning.state == 2 %}Rédigé{% endif %}
+                                        {% if  planning.state == 5  %}Rédaction refusée{% endif %}
+                                        {% if  planning.state == 3  %}Validé{% endif %}
+                                        {% if  planning.state == 4  %}Annulé{% endif %}
+                                </div>
+
+                            </div>
+                            <div class="control-group ">
+                                <label for="back_planningbundle_planning_state" class="control-label required">Etat</label>
+
+                                <div class="controls">
+                                    <select class="span6" name="state" id="back_planningbundle_planning_state">
+                                        {% if planning.state == 0%}<option value="0" {% if planning.state==0 %} selected {% endif %}>Pré-Planifié</option>{% endif %}
+                                        {% if  planning.state == 0 or planning.state == 1%}<option value="1" {% if planning.state==1 %} selected {% endif %}>Planifié</option>{% endif %}
+                                        {% if  planning.state == 5 or planning.state == 2%}<option value="2" {% if planning.state==2 %} selected {% endif %}>Rédigé</option>{% endif %}
+                                        {% if  planning.state == 5 or planning.state == 2  %}<option value="5"  {% if planning.state==5 %} selected {% endif %}>Rédaction refusée</option>{% endif %}
+                                        {% if  planning.state == 3 or planning.state == 2 or planning.state == 5 %}<option  value="3"  {% if planning.state==3 %} selected {% endif %}>Validé</option>{% endif %}
+                                        {% if  planning.state == 4 or planning.state == 5 or  planning.state == 0 or  planning.state == 1  or  planning.state == 2 or  planning.state == 3 %}<option value="4"  {% if planning.state==4 %} selected {% endif %}>Annulé</option>{% endif %}
+                                    </select>
+                                </div>
+
+                            </div>
+
+	                                <div class="control-group blocannexe" style="display: none;">
+	
+	                                    <label class="control-label">Annexe</label>
+	
+	                                    <div class="controls">
+										<div class="span2">
+	                                        <select name="" class="selectpicker" id="partid" data-live-search="true" style="width:200px !important;">
+	                                            <option value="">Filtrer par partenaire</option>
+	                                            {% for item in partenaires %}
+	    <option value="{{ item.id }}">{{ item.name|raw }}</option>
+	{% endfor %}
+	                                        </select>
+											</div>
+											<div class="span2">
+
+	                                         <select name="annex_id" class="" id="annex_id">
+	                                            <option value=""></option>
+	                                            {% for item in annexes %}
+	
+	    <option value="{{ item.id }}"{% if planning.defaultannexe.id is defined and planning.defaultannexe.id==item.id %} selected="selected"{% endif %}>{{ item.object|raw }} - {{ item.protocol.user}}</option>
+	
+	{% endfor %}
+	                                        </select>
+											</div>
+	                                    </div>
+	                                </div>
+	
+	                                        {{ form_row(form.object,{'attr':{'class':'span6'}}) }}
+	
+	                                        {{ form_row(form.tariff,{'attr':{'class':'span6'}}) }}
+	                                        {{ form_row(form.ca,{'attr':{'class':'span6'}}) }}
+
+	                                        {{ form_row(form.description,{'attr':{'class':'span6'}}) }}
+	
+	                                        {{ form_row(form.startDate, { 'attr': {'class': 'span4 datetimepicker'}}) }}
+	
+	                                        {{ form_row(form.endDate, { 'attr': {'class': 'span4 datetimepicker'}}) }}
+	
+	
+	
+	                                        {{ form_row(form.remarks,{'attr':{'class':'span6'}}) }}
+	
+	                                        {{ form_row(form.categoryId,{'attr':{'class':'span6'}}) }}
+	
+	                                        {{ form_row(form.regionId) }}
+	
+	
+	                                <div class="formFooter">
+	                                    <button type="submit" id="btn-success" class="btn btn-success"><i class="icon-ok"> </i> Valider
+	                                    </button>
+	                                    <button type="reset" class="btn btn-danger"><i class="icon-remove"> </i> Effacer
+	                                    </button>
+	                                    <a href="{{ path('back_planning_home',{'regionid':regionid}) }}">
+	                                        <button class="btn btn-inverse" type="button"><i class="icon-list"></i> Liste
+	                                        </button>
+	                                    </a>
+	                                    {{ form_widget(form._token) }}
+	                                </div>
+	                            </div>
+	                       {{ form_end(form) }}
+	                </div>
+	            </div>
+	        </div>
+			    <link rel="stylesheet" type="text/css" href="{{ asset('RessourcesBack/css/bootstrap-select.css') }}">
+
+	        <!-- ==================== END OF TEXT INPUTS FLOATING BOX ==================== -->
+	    </div>
+    </div>
+    <script src="{{ asset('RessourcesBack/js/jquery-1.10.1.min.js') }}"></script>
+<script>window.jQuery || document.write('<script src="{{ asset('js/jquery-1.10.1.min.js') }}"><\/script>')</script>
+<script src="{{ asset('RessourcesBack/js/vendor/bootstrap.min.js') }}"></script>
+        <script src="{{ asset('RessourcesBack/js/bootstrap-select.js') }}"></script>
+
+    <!-- masked inputs -->
+    <script src="{{ asset('RessourcesBack/js/lib/jquery-inputmask/jquery.inputmask.min.js') }}"></script>
+    <script src="{{ asset('RessourcesBack/js/lib/jquery-inputmask/jquery.inputmask.extensions.js') }}"></script>
+    <script src="{{ asset('RessourcesBack/js/lib/jquery-inputmask/jquery.inputmask.date.extensions.js') }}"></script>
+    <script src="{{ asset('tinymce/tinymce.min.js') }}"></script>
+    <script src="{{ asset('RessourcesBack/js/vendor/bootstrap-datetimepicker.min.js') }}"></script>
+    <!-- bootbox -->
+<script src="{{ asset('RessourcesBack/js/lib/bootbox/bootbox.min.js') }}"></script>
+    <script type="text/javascript">
+        $(function () {
+        $("#annex_id").change(function () {
+                $.ajax({
+                   type: "POST",
+                   url: "{{ path("back_ajx_get_anexe_test_ref") }}",
+                   data: "id="+$("#annex_id").val(),
+                   success: function(msg){
+                       if(msg=="false"){
+                            bootbox.alert("Cet Annexe ne contient pas de référence");
+                            $('#btn-success').attr('disabled','disabled')
+                        }else{
+                            $('#btn-success').removeAttr('disabled')
+                        }
+                   }
+                 });
+            });
+
+
+            $(".datetimepicker").inputmask("datetime");
+            {% if planning.defaultannexe.id is defined %}
+                //$(".blocannexe").show();
+               // $("#annex_id").attr('required', 'required');
+            {% endif %}
+            $("#partid").change(function () {
+                partid=$("#partid").val();
+                $.ajax({
+                   type: "POST",
+                   url: "{{ path("back_ajx_get_anexe_from_part") }}",
+                   data: "partid="+partid+"&planningid={{ id }}",
+                   success: function(msg){
+                     $("#annex_id").html(msg)
+                   }
+                 });
+            });
+            $("#back_planningbundle_planning_state").change(function () {
+                if ($("#back_planningbundle_planning_state").val() == 1) {
+                    $("#annex_id").attr('required', 'required');
+                    $(".blocannexe").show();
+                } else {
+                    $(".blocannexe").hide();
+                    $("#annex_id").removeAttr('required');
+                }
+            });
+        });
+		
+		
+		
+		$('#partid').typeahead({
+
+                ajax: {
+                    url: '{{ path('ajxpartenerback') }}',
+                    triggerLength: 1,
+                    items: 10
+                },
+                afterSelect: function (item) {
+                    //save the id value into the hidden field
+
+                },
+                displayField: 'full_name'
+
+            })
+    </script>
+
+
+{% else %}
+    <script>
+        $(function () {
+            window.location.reload();
+        });
+    </script>
+{% endif %}

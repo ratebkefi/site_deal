@@ -1,0 +1,159 @@
+{% for item in couponReserver %}
+    <!--Coupon {{ coupon }} - Date réservaion : {{ item.booking|date('d-m-Y H:i:s') }} Réserver à {{ item.dcr|date('d-m-Y H:i:s') }}-->
+{% endfor %}
+{% set dateAuj = 'now'|date('Y-m-d') %}
+{% block stylesheets %}
+
+    <!-- Font-awesome Icons -->
+    <link rel="stylesheet" href="{{ asset('public/css/font-awesome.min.css') }}">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="{{ asset('public/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('public/css/reservation.css') }}">
+{% endblock %}
+<title>{% block title %}Bigdeal :: Réservation{% endblock %}</title>
+
+<div class="wrapper">
+    <div class="container">
+        <div id="content">
+            <div class="calendar">
+                <div class="row">
+                    <div class="col-md-4">
+                        <a class="navbar-brand" href="{{ path('front_booking_step1') }}"><img src="{{ asset('public/images/logo.png') }}" alt="Big Deal"
+                                                              class="img-responsive"/></a>
+                    </div>
+                    <div class="col-md-4"></div>
+                    <div class="col-md-4">
+                        <div class="date-container row">
+                            <div class="col-xs-2">
+                                <a href="{{ path('front_booking_step2',{'code_coupon':coupon, 'month':prev_month, 'year':prev_year}) }}"><span
+                                            data-toggle="datepicker" data-type="subtract"
+                                            class="fa fa-angle-left"></span></a>
+                            </div>
+                            <div class="col-xs-8">
+                                <h2 class="date">{{ monthName }} {{ year }}</h2>
+                            </div>
+                            <div class="col-xs-2">
+                                <a href="{{ path('front_booking_step2',{'code_coupon':coupon, 'month':next_month, 'year':next_year}) }}"><span
+                                            data-toggle="datepicker" class="fa fa-angle-right"></span></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="table-responsive">
+                            <table class="table-condensed table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    {% for day1 in daysOfWeek %}
+                                        <th>{{ day1 }}</th>
+                                    {% endfor %}
+                                    {% set  currentDay = 1 %}
+
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    {% if  dayOfWeek > 0 %}
+                                        <td colspan='{{ dayOfWeek }}'>&nbsp;</td>
+                                    {% endif %}
+                                    {% set month = afficherLeMonth(month) %}
+                                    {% for key,currentDay in currentDay..numberDays %}
+                                    {% if currentDay <= numberDays %}
+                                    {% if dayOfWeek == 7 %}
+                                    {% set dayOfWeek = 0 %}
+                                </tr>
+
+                                <tr>
+                                    {% endif %}
+                                    {% set currentDayRel = currentDayRel(currentDay) %}
+                                    {% set date1 =  year~"-"~month~"-"~currentDayRel %}
+                                    {% set dispoHoraire = dispo(date1,deal) %}
+                                    {% set dispoDate = dispoDate(deal,date1) %}
+                                    {% if dayOfWeek ==6 %}
+                                    <td rel='{{ date1 }}'>
+                                {% else %}
+                                    <td rel='{{ date1 }}'>
+                                        {% endif %}
+
+                                        {% if dispoDate %}
+                                            {% if (dispoHoraire) and ( date1 >= dateAuj ) %}
+
+                                                <div class="effect">
+
+                                                    {{ currentDay }}
+                                                    <div class="mask">
+                                                        <a href="{{ path('front_booking_user', { 'deal': deal ,  'date': date1,'codeCoupon':codeCoupon }) }}" class="btn btn-primary" title="Reserver" data-toggle="modal" data-target="#myModal"><i class="fa fa-pencil-square-o pr-10"></i>Reserver</a>
+
+                                                    </div>
+                                                </div>
+                                            {% else %}
+                                                {{ currentDay }}
+                                            {% endif %}
+                                        {% else %}
+                                            {{ currentDay }}
+                                        {% endif %}
+                                    </td>
+                                    {% set dayOfWeek = dayOfWeek +1 %}
+                                    {% endif %}
+                                    {% endfor %}
+                                    {% if  dayOfWeek != 7 %}
+                                        {% set remainingDays = 7 - dayOfWeek %}
+                                        <td colspan='{{ remainingDays }}'>&nbsp;</td>
+                                    {% endif %}
+                                </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- Réservation -->
+                        <div id="myModal" class="modal fade custom-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+                        <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-body">
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <div class="container">
+            <div class="wrap">
+                <div class="col-md-12">
+                    Bigdeal © 2015
+                </div>
+            </div>
+        </div>
+    </footer>
+</div>
+{% block javascripts %}
+
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script type="text/javascript" src="{{ asset('public/js/jquery-1.11.3.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('public/js/jquery-migrate-1.2.1.js') }}"></script>
+    <!-- Latest compiled and minified JavaScript -->
+    <script type="text/javascript" src="{{ asset('public/js/bootstrap.min.js') }}"></script>
+<script>
+$(document).ready(function() {
+  $(".modal").on("hidden.bs.modal", function() {
+    $(".modal-body").html("");
+    $(".modal-title").html("");
+  });
+});
+
+</script>
+    <!-- Main JS -->
+{% endblock %}
+

@@ -1,0 +1,275 @@
+{% extends '::baseBack.html.twig' %}
+{% block body -%}
+    <!-- ==================== PAGE CONTENT ==================== -->
+    <div class="content">
+        <!-- ==================== WIDGETS CONTAINER ==================== -->
+        <div class="container-fluid">
+            <!-- ==================== END OF ROW ==================== -->
+            <div class="row-fluid">
+                <div class="span12">
+                    <div class="containerHeadline">
+                        <i class="icon-zoom-in"></i>
+                        <h2>Filtre de recherche</h2>
+                        <div class="controlButton pull-right"><i class="icon-caret-down minimizeElement"></i></div>
+                    </div>
+                    <div class="floatingBox  ">
+                        <div class="container-fluid" style="padding: 10px">
+                            {{ form_start(form, {'method': 'GET','attr': {'class': 'form-horizontal contentForm','style':'padding:0; margin:0'}}) }}
+                            <div class="span5">
+                                <label>Nom</label>
+                                {{ form_widget(form.name,{'attr':{'class':'span10 selectpicker','data-live-search':'true'}}) }}
+                            </div>
+                            <div class="span5">
+                                <label>Email</label>
+                                {{ form_widget(form.email,{'attr':{'class':'span10 selectpicker','data-live-search':'true'}}) }}
+                            </div>
+
+                            <div class="span2">
+                                <label>&nbsp;</label>
+                                <input type="submit" value="Rechercher" class="btn btn-success"/>
+                            </div>
+                            {{ form_end(form) }}
+                        </div>
+
+                    </div>
+                {% if   app.user.roles[0]!= 'FINANCIER' %}
+                        <a href="{{ path('add_caissier_manager') }}" class="btn btn-danger">
+                            <i class="icon-user" style="opacity: 1;"></i> Ajouter un Caissier
+                        </a>
+                    {% endif %}
+                    {% for type, flashMessages in app.session.flashbag.all() %}
+                        {% for flashMessage in flashMessages %}
+                            <br/>
+                            <div class="alert {{ type }}">
+                                <button data-dismiss="alert" class="close" type="button">×</button>
+                                {{ flashMessage|trans }}
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
+                    <!-- ==================== DEFAULT TABLE HEADLINE ==================== -->
+                    <div class="containerHeadline">
+                        <i class="icon-table"></i>
+
+                        <h2>Liste des caissiers</h2>
+                    </div>
+                    <!-- ==================== END OF DEFAULT TABLE HEADLINE ==================== -->
+
+                    <!-- ==================== DEFAULT TABLE FLOATING BOX ==================== -->
+                    <div class="floatingBox table">
+                        <div class="container-fluid">
+                            <table class="table" id="membersTable">
+                                <thead>
+                                <tr>
+                                    <th>Nom et Prénom</th>
+                                    <th>Nom de caisse</th>
+
+                                    <th>Banque</th>
+                                    <th>Agence</th>
+                                    <th>Rib</th>
+                                    <th>Adresse</th>
+                                    <th>Téléphone</th>
+                                    <th>Montant espèce</th>
+                                    <th>Montant chéque</th>
+                                    <th>Dernier retrait</th>
+                                    <th>Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for entity in pagination %}
+                                    {% set espece = montantEspece(entity.id) %}
+                                    {% set cheque = montantCheque(entity.id) %}
+                                    {% set lastRetrait = lastRetrait(entity.id) %}
+                                    <tr>
+                                        <td>
+                                            <a href="{{ path('view_caissier_manager', { 'id': entity.id }) }}">{{ entity.name }}</a>
+                                        </td>
+                                        <td>{% if entity.caisse %}{{ entity.caisse.libelle }} {% endif %}</td>
+                                        <td>{{ entity.bank }}</td>
+                                        <td>{{ entity.agency }}</td>
+                                        <td>{{ entity.rib }}</td>
+                                        <td>{{ entity.address }}</td>
+                                        <td>{{ entity.phone }}</td>
+                                        <td>{{ espece }}</td>
+                                        <td>{{ cheque }}</td>
+                                        <td>{{ lastRetrait }}</td>
+                                        <td>
+                                            <div class="btn-toolbar" style="margin: 0;">
+                                                <div class="btn-group">
+                                                    <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                                        Action <span
+                                                                class="caret"></span></button>
+                                                    <ul class="dropdown-menu pull-right">
+                                                        <li>
+                                                            <a href="{{ path('view_caissier_manager', {'id': entity.id}) }}">Afficher</a>
+                                                        </li>
+                                                        {% if entity.roles[0]=='RESPONSABLECAISSE' and ( espece!="0 TND" or cheque!="0 TND" )   %}
+                                                            <li><a class='paye'    href="javascript:retraitArgent('{{ path('retrait_responsablecaissier_manager', { 'id': entity.id }) }}',{{ espece + cheque }})">Retrait</a>
+                                                            </li>
+                                                        {% endif %}
+                                                        {% if  app.user.roles[0]!= 'DAF' and app.user.roles[0]!= 'FINANCIER' and ( espece!="0 TND" or cheque!="0 TND" ) %}
+
+                                                        <li><a class='paye' href="javascript:retraitArgent('{{ path('retrait_responsablecaissier_manager', { 'id': entity.id }) }}',{{ espece + cheque }})">Retrait</a>
+                                                        </li>
+                                                        {% endif %}
+                                                        {% if app.user.roles[0]=='ROLE_SUPER_ADMIN' or app.user.roles[0]=='FINANCIER' or app.user.roles[0]=='DAF'%}
+
+                                                            <li>
+                                                                <a href="{{ path('user_contract_homepage', {'user_id': entity.id}) }}">Contrat</a>
+                                                            </li>
+
+                                                            <li>
+                                                                <a href="{{ path('update_caissier_manager', {'id': entity.id}) }}">Modifier</a>
+                                                            </li>
+                                                        {% endif %}
+
+                                                        {% if  app.user.roles[0]== 'DAF' or app.user.roles[0]=='ROLE_SUPER_ADMIN' %}
+
+                                                        <li>
+                                                            <a href="{{ path('daf_historique_caisse', {'id': entity.id}) }}">Historique</a>
+                                                        </li>
+                                                        {% endif %}
+
+                                                    </ul>
+                                                </div>
+                                            </div>
+
+
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                            {# display navigation #}
+                            <div class="pagination pagination-large" style="text-align: center">
+                                {{ knp_pagination_render(pagination) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ==================== END OF WIDGETS CONTAINER ==================== -->
+    </div>
+    <link rel="stylesheet" type="text/css" href="{{ asset('RessourcesBack/css/bootstrap-select.css') }}">
+
+    <!-- ==================== END OF PAGE CONTENT ==================== -->
+{% endblock %}
+    {% block javascripts %}
+        <script src="{{ asset('RessourcesBack/js/bootstrap-select.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('public/js/sweet-alert.js') }}"></script>
+
+        <script src="{{ asset('RessourcesBack/js/vendor/jquery.tablesorter.min.js') }}"></script>                   <!-- bootstrap slider plugin -->
+        <script src="{{ asset('RessourcesBack/js/vendor/jquery.tablesorter.widgets.min.js') }}"></script>                   <!-- bootstrap slider plugin -->
+        <script src="{{ asset('RessourcesBack/js/vendor/jquery.tablesorter.pager.min.js') }}"></script>                   <!-- bootstrap slider plugin -->
+
+
+        <script>
+            function retraitArgent(url ,montant) {
+                swal({
+                            title: "Voulez vous Retiré la somme de " + montant + " TND",
+                            text: "",
+                            type: "error",
+                            showCancelButton: true,
+                            confirmButtonClass: 'btn-danger',
+                            confirmButtonText: 'Confirmer'
+
+                        },
+                        function (isConfirm) {
+                            if (isConfirm) {
+                                // ajax delete delete_mes_adresse
+
+                                $(location).attr('href', url);
+
+                            } else {
+
+                            }
+                        }
+                )
+                ;
+            }
+            ;
+            $("#membersTable").tablesorter({
+
+                headers: {
+                    0: {sorter: 'numeric'},
+                    1: {sorter: 'numeric'},
+                    2: {sorter: 'text'},
+                    3: {sorter: 'text'},
+                    4: {sorter: 'text'},
+                    5: {sorter: 'text'},
+                    6: {sorter: 'text'},
+                    7: {sorter: 'text'},
+                    8: {sorter: 'text'},
+                    9: {sorter: false, filter: false}
+                },
+
+                dateFormat: 'uk',
+
+                // sort on the first column and third column in ascending order
+                sortList: [[1, 0]],
+
+                // hidden filter input/selects will resize the columns, so try to minimize the change
+                widthFixed: true,
+
+                // initialize zebra striping and filter widgets
+                widgets: ["zebra", "filter"],
+
+                widgetOptions: {
+
+                    // If there are child rows in the table (rows with class name from "cssChildRow" option)
+                    // and this option is true and a match is found anywhere in the child row, then it will make that row
+                    // visible; default is false
+                    filter_childRows: false,
+
+                    // if true, a filter will be added to the top of each table column;
+                    // disabled by using -> headers: { 1: { filter: false } } OR add class="filter-false"
+                    // if you set this to false, make sure you perform a search using the second method below
+                    filter_columnFilters: true,
+
+                    // css class applied to the table row containing the filters & the inputs within that row
+                    filter_cssFilter: 'tablesorter-filter',
+
+                    // add custom filter functions using this option
+                    // see the filter widget custom demo for more specifics on how to use this option
+                    filter_functions: null,
+
+                    // if true, filters are collapsed initially, but can be revealed by hovering over the grey bar immediately
+                    // below the header row. Additionally, tabbing through the document will open the filter row when an input gets focus
+                    filter_hideFilters: true,
+
+                    // Set this option to false to make the searches case sensitive
+                    filter_ignoreCase: true,
+
+                    // Delay in milliseconds before the filter widget starts searching; This option prevents searching for
+                    // every character while typing and should make searching large tables faster.
+                    filter_searchDelay: 300,
+
+                    // Set this option to true to use the filter to find text from the start of the column
+                    // So typing in "a" will find "albert" but not "frank", both have a's; default is false
+                    filter_startsWith: false,
+
+                    // Filter using parsed content for ALL columns
+                    // be careful on using this on date columns as the date is parsed and stored as time in seconds
+                    filter_useParsedData: false
+
+                }
+
+            })
+        </script>
+
+
+
+
+        <!-- masked inputs -->
+        <script src="{{ asset('RessourcesBack/js/bootstrap-select.js') }}"></script>
+
+        <script>
+            $(document).ready(function () {
+                $('.alert-success').delay(5000).fadeOut();
+            });
+            $(document).ready(function () {
+                $('.alert-error').delay(5000).fadeOut();
+            });
+
+        </script>
+    {% endblock %}

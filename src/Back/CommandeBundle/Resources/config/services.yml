@@ -1,0 +1,6 @@
+parameters:
+#    back_commande.example.class: Back\CommandeBundle\Example
+
+services:
+    
+

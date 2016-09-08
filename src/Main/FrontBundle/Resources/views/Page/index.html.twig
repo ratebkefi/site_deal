@@ -1,0 +1,17 @@
+{% extends '::base.html.twig' %}
+{% block stylesheets %}
+{% endblock %}
+{% block title %} {{ page.name }}{% endblock %}
+
+{% block body %}
+    <div class="details_deal_jour">
+        <div class="row">
+            <div class="col-md-12">
+                <h1> {{ page.name }}</h1>
+                {{ page.body|raw }}
+            </div>
+        </div>
+    </div>
+	
+
+{% endblock %}

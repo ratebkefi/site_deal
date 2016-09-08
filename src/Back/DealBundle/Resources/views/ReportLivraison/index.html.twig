@@ -1,0 +1,433 @@
+{% extends '::baseBack.html.twig' %}
+{% block body -%}
+    {% set livraison = true %}
+
+    <!-- ==================== PAGE CONTENT ==================== -->
+    <div class="content" xmlns="http://www.w3.org/1999/html">
+        <!-- ==================== WIDGETS CONTAINER ==================== -->
+        <div class="container-fluid">
+            <!-- ==================== END OF ROW ==================== -->
+            <div class="row-fluid">
+                <div class="span12">
+                    <div class="containerHeadline">
+                        <i class="icon-zoom-in"></i>
+
+                        <h2>Filtre de recherche</h2>
+
+                        <div class="controlButton pull-right"><i class="icon-caret-down minimizeElement"></i></div>
+                    </div>
+                    <div class="floatingBox table ">
+                        <div class="container-fluid" style="padding: 3px 10px">
+                            <form action="{{ path('back_reportlivraison') }}" method="post"
+                                  class="form-horizontal contentForm" style="padding:0; margin:0">
+                                <div class="span6">
+                                    <label>Deal</label>
+                                    <select name="deal_id" class="span10 selectpicker" data-live-search="true">
+                                        <option value="0">Choisissez un deal</option>
+                                        {% for entity in listdeal %}
+                                            {% for entity1 in entity.planning.defaultannexe.reference %}
+                                                {% set livraison = entity1.shipping %}
+                                            {% endfor %}
+                                            {% if livraison %}
+                                                <option {% if deal == entity.id %} selected="selected" {% endif %}
+                                                        value="{{ entity.id }}">{{ entity.title }}
+                                                    - {{ entity.planning.startDate|date('d-m-Y H:i:s') }}</option>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="span2">
+                                    <label>Etat de coupon</label>
+                                    <select name="etat" class="span10 " >
+                                        <option value="">Choisissez un état</option>
+                                        <option value="1" {% if etat == 1 %} selected="selected" {% endif %}>Non
+                                            Consommé
+                                        </option>
+                                        <option value="2" {% if etat == 2 %} selected="selected" {% endif %}>Consommé
+                                        </option>
+                                        <option value="3" {% if etat == 3 %} selected="selected" {% endif %}>Consommé et
+                                            Facturé
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="span1">
+                                    <label>&nbsp;</label>
+                                    <input type="submit" value="Rechecher" class="btn btn-success"/>
+                                </div>
+                            </form>
+                            <form name="export" action="{{ path('back_reportlivraisoncsv') }}"
+                                  class="form-horizontal contentForm" method="post" style="margin-top: 15px;">
+                                <div class="span1" style="margin-left: 16px !important;">
+                                    <input type="hidden" name="deal_id" value="{{ deal }}">
+                                    <input type="hidden" name="etat" value="{{ etat }}">
+                                    <input type="submit" value="Export" class="btn btn-danger"/>
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+                    <form name="export" action="{{ path('back_reportlivraison') }}"
+                                class="form-horizontal contentForm" method="post" style="margin-top: 15px;">
+                        <div class="span1" style="margin-left: 16px !important;">
+                            <input type="submit" value="Consommé" class="btn btn-success" name="consomme"/>
+                        </div>
+                        <div class="span1" style="margin-left: 16px !important;">
+                            <input type="submit" value="Non consommé" class="btn btn-danger" name="non_consomme" />
+                        </div><br><br>
+                    <!-- ==================== DEFAULT TABLE HEADLINE ==================== -->
+                    <div class="containerHeadline">
+                        <i class="icon-table"></i>
+
+                        <h2>Rapport livraison</h2>
+                    </div>
+
+                    <!-- =================== END OF DEFAULT TABLE HEADLINE ==================== -->
+                    <!-- ==================== DEFAULT TABLE FLOATING BOX ==================== -->
+                    <div class="floatingBox table">
+                        <div class="container-fluid">
+
+                            <table class="tablesorter" id="tablesorterDemo">
+                                <thead>
+                                <tr>
+                                    <th class="selectable"><input type="checkbox"></th>
+                                    <th>Nom de l'acheteur</th>
+                                    <th>Email Acheteur</th>
+                                    <th>Tel</th>
+                                    <th>Adresse</th>
+                                    <th>VILLE</th>
+                                    <th>CP</th>
+                                    <th>Indication Adresse</th>
+                                    <th>Cassier</th>
+                                    <th>Prix</th>
+                                    <th>Date de commande</th>
+                                    <th>Date de payement</th>
+                                    <th>Code coupon</th>
+                                    <th>Reference</th>
+                                    <th>Date du début du deal</th>
+                                    <th>Coupon Status</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for key,entity in pagination %}
+                                    {% set adresse = getAdresse(entity.command.client.id) %}
+                                    {% set indicationAdresse = getIndicationAdresse(entity.command.client.id) %}
+                                    <tr>
+                                        <td><input type="checkbox" name="id[]" value="{{ entity.id }}"></td>
+                                        <td>{{ entity.client }}  </td>
+                                        <td>{{ entity.command.client.email }}</td>
+                                        <td> {{ entity.command.client.phone }} </td>
+                                        <td> {% if entity.command.adresse %} {{ entity.command.adresse.adress }}  {% endif %} </td>
+                                        <td> {% if entity.command.adresse.localite %}{{ entity.command.adresse.localite.name }} {% endif %}</td>
+                                        <td> {% if entity.command.adresse.localite %} {{ entity.command.adresse.localite.cp }} {% endif %} </td>
+                                        <td> {% if entity.command.adresse %} {{ entity.command.adresse.indcation }} {% endif %} </td>
+                                        <td> {{ entity.command.caisse }} </td>
+                                        <td> {{ entity.command.reference.bigdealPrice }} TND</td>
+                                        <td> {{ entity.dcr|date('d-m-Y H:i:s') }} </td>
+                                        <td> {{ entity.dcr|date('d-m-Y H:i:s') }} </td>
+
+                                        <td> {{ entity.code }} </td>
+                                        <td> {{ entity.command.reference }} </td>
+                                        <td> {{ entity.command.deal.planning.startDate|date('d-m-Y H:i:s') }} </td>
+                                        <td>{{ entity.vendu|getVenduCoupon }} - {{ entity.recu|getRecuCoupon }}</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                            {# display navigation #}
+                            <div class="pagination pagination-large" style="text-align: center">
+                                {{ knp_pagination_render(pagination) }}
+                            </div>
+                        </div>
+                    </div>
+                        <input type="hidden" name="deal_id" value="{{ deal }}">
+                        <input type="hidden" name="etat" value="{{ etat }}"></form></div>
+            </div>
+        </div>
+
+        <!-- ==================== END OF WIDGETS CONTAINER ==================== -->
+    </div>
+    <link rel="stylesheet" type="text/css" href="{{ asset('RessourcesBack/css/bootstrap-select.css') }}">
+{% endblock %}
+    {% block javascripts %}
+        <script src="{{ asset('RessourcesBack/js/bootstrap-select.js') }}"></script>
+        <script src="{{ asset('RessourcesBack/js/vendor/jquery.tablesorter.min.js') }}"></script>                   <!-- bootstrap slider plugin -->
+        <script src="{{ asset('RessourcesBack/js/vendor/jquery.tablesorter.widgets.min.js') }}"></script>                   <!-- bootstrap slider plugin -->
+        <script src="{{ asset('RessourcesBack/js/vendor/jquery.tablesorter.pager.min.js') }}"></script>                   <!-- bootstrap slider plugin -->
+        <script src="{{ asset('RessourcesBack/js/vendor/bootstrap-editable.min.js') }}"></script>                   <!-- bootstrap slider plugin -->
+
+        <script>
+            $.tablesorter.addParser({
+                id: 'checkbox',
+                is: function (s) {
+                    return false;
+                },
+                format: function (s, table, cell, cellIndex) {
+                    var $t = $(table), $c = $(cell), c,
+
+                    // resort the table after the checkbox status has changed
+                            resort = false;
+
+                    if (!$t.hasClass('hasCheckbox')) {
+                        $t
+                                .addClass('hasCheckbox')
+                            // make checkbox in header set all others
+                                .find('thead th:eq(' + cellIndex + ') input[type=checkbox]')
+                                .bind('change', function () {
+                                    c = this.checked;
+                                    $t.find('tbody tr:visible td:nth-child(' + (cellIndex + 1) + ') input').each(function () {
+                                        this.checked = c;
+                                        $(this).trigger('change');
+                                    });
+                                })
+                                .bind('mouseup', function () {
+                                    return false;
+                                });
+                        $t.find('tbody tr').each(function () {
+                            $(this).find('td:eq(' + cellIndex + ')').find('input[type=checkbox]').bind('change', function () {
+                                $t.trigger('updateCell', [$(this).closest('td')[0], resort]);
+                            });
+                        });
+                    }
+                    // return 1 for true, 2 for false, so true sorts before false
+                    c = ($c.find('input[type=checkbox]')[0].checked) ? 1 : 2;
+                    $c.closest('tr')[c === 1 ? 'addClass' : 'removeClass']('checked');
+                    return c;
+                },
+                type: 'numeric'
+            });
+
+            $(function () {
+                $('#tablesorterDemo').tablesorter({
+                    sortList: [[1, 0]],
+                    widgets: ['zebra', 'stickyHeaders'],
+                    headers: {
+                        0: {
+                            sorter: 'checkbox'
+                        },
+                    }
+                });
+
+                /*=============================================================================================
+                 ============================== LOAD TABLESORTER PAGER SETTINGS ===============================
+                 =============================================================================================*/
+
+                // define pager options
+                var pagerOptions = {
+                    // target the pager markup - see the HTML block below
+                    container: $(".pager"),
+                    // output string - default is '{page}/{totalPages}'; possible variables: {page}, {totalPages}, {startRow}, {endRow} and {totalRows}
+                    output: '{startRow} - {endRow} / {filteredRows} ({totalRows})',
+                    // if true, the table will remain the same height no matter how many records are displayed. The space is made up by an empty
+                    // table row set to a height to compensate; default is false
+                    fixedHeight: false,
+                    // remove rows from the table to speed up the sort of large tables.
+                    // setting this to false, only hides the non-visible rows; needed if you plan to add/remove rows with the pager enabled.
+                    removeRows: false,
+                    // go to page selector - select dropdown that sets the current page
+                    cssGoto: '.gotoPage'
+                };
+
+                /*=============================================================================================
+                 ======================================= LOAD TABLESORTER =====================================
+                 =============================================================================================*/
+
+                $("#membersTable").tablesorter({
+
+                    headers: {
+                        0: {sorter: false, filter: false},
+                        1: {sorter: 'text'},
+                        2: {sorter: 'text'},
+                        3: {sorter: 'numeric'},
+                        4: {sorter: 'text'},
+                        5: {sorter: 'text'},
+                        6: {sorter: 'numeric'},
+                        7: {sorter: 'text'},
+                        8: {sorter: 'text'},
+                        9: {sorter: 'numeric'},
+                        10: {sorter: 'shortDate'},
+                        11: {sorter: 'shortDate'},
+                        12: {sorter: 'numeric'},
+                        13: {sorter: 'text'},
+                        14: {sorter: 'shortDate'},
+                        15: {sorter: 'text'},
+                        16: {sorter: false, filter: false}
+                    },
+
+                    dateFormat: 'uk',
+
+                    // sort on the first column and third column in ascending order
+                    sortList: [[1, 0]],
+
+                    // hidden filter input/selects will resize the columns, so try to minimize the change
+                    widthFixed: true,
+
+                    // initialize zebra striping and filter widgets
+                    widgets: ["zebra", "filter"],
+
+                    widgetOptions: {
+
+                        // If there are child rows in the table (rows with class name from "cssChildRow" option)
+                        // and this option is true and a match is found anywhere in the child row, then it will make that row
+                        // visible; default is false
+                        filter_childRows: false,
+
+                        // if true, a filter will be added to the top of each table column;
+                        // disabled by using -> headers: { 1: { filter: false } } OR add class="filter-false"
+                        // if you set this to false, make sure you perform a search using the second method below
+                        filter_columnFilters: true,
+
+                        // css class applied to the table row containing the filters & the inputs within that row
+                        filter_cssFilter: 'tablesorter-filter',
+
+                        // add custom filter functions using this option
+                        // see the filter widget custom demo for more specifics on how to use this option
+                        filter_functions: null,
+
+                        // if true, filters are collapsed initially, but can be revealed by hovering over the grey bar immediately
+                        // below the header row. Additionally, tabbing through the document will open the filter row when an input gets focus
+                        filter_hideFilters: true,
+
+                        // Set this option to false to make the searches case sensitive
+                        filter_ignoreCase: true,
+
+                        // Delay in milliseconds before the filter widget starts searching; This option prevents searching for
+                        // every character while typing and should make searching large tables faster.
+                        filter_searchDelay: 300,
+
+                        // Set this option to true to use the filter to find text from the start of the column
+                        // So typing in "a" will find "albert" but not "frank", both have a's; default is false
+                        filter_startsWith: false,
+
+                        // Filter using parsed content for ALL columns
+                        // be careful on using this on date columns as the date is parsed and stored as time in seconds
+                        filter_useParsedData: false
+
+                    }
+
+                })
+
+                    /*=============================================================================================
+                     ================================== LOAD PAGER TO TABLESORTER =================================
+                     =============================================================================================*/
+
+                        .tablesorterPager(pagerOptions);
+
+                $('.pagesize').multiselect();
+
+
+                /*=============================================================================================
+                 ================================ SEARCH FUNCTION FOR WHOLE TABLE =============================
+                 =============================================================================================*/
+
+                // Write on keyup event of keyword input element
+                $("#memberSearch").keyup(function () {
+                    // When value of the input is not blank
+                    if ($(this).val() != "") {
+                        // Show only matching TR, hide rest of them
+                        $("#membersTable tbody>tr").hide();
+                        $("#membersTable td:contains-ci('" + $(this).val() + "')").parent("tr").show();
+                    }
+                    else {
+                        // When there is no input or clean again, show everything back
+                        $("#membersTable tbody>tr").show();
+                    }
+                });
+
+                /*=============================================================================================
+                 ======================== ADD ROLLER GRIP TO TABLESORTER HIDEME ROW ===========================
+                 =============================================================================================*/
+
+                $('.tablesorter-filter-row td:first').append('<div class="tableFilterRoller"></div>');
+
+                /*=============================================================================================
+                 ======================= ADD MOREOPTIONS ICON TO HIDDEN ROW WITH FILTERS ======================
+                 =============================================================================================*/
+
+                $('.tablesorter-filter-row td').not(':first').not(':last').append('<i class="icon-play-circle moreOptions pull-right"></i>');
+
+                /*=============================================================================================
+                 ================================ TABLE ROW INFO / EDIT / DELETE ICON ACTIONS =================
+                 =============================================================================================*/
+
+
+                var showMemberIcon = $('i.info').parent(),
+                        editMemberIcon = $('i.edit').parent(),
+                        deleteMemberIcon = $('i.delete').parent();
+
+                $(showMemberIcon).tooltip({
+                    title: 'View member profile'
+                });
+
+                $(editMemberIcon).tooltip({
+                    title: 'Edit member profile'
+                });
+
+                $(deleteMemberIcon).tooltip({
+                    title: 'Delete member'
+                });
+
+                $('i.info, i.edit, i.delete').parent().hover(function () {
+                    $(this).children().stop().animate({
+                        opacity: 1
+                    }, 200);
+                }, function () {
+                    $(this).children().stop().animate({
+                        opacity: .7
+                    }, 200);
+                });
+
+                /*=============================================================================================
+                 ===================================== SET FIELDS EDITABLE ====================================
+                 =============================================================================================*/
+
+                $('#membersTable a.username').editable({
+                    type: 'text',
+                    name: 'username',
+                    url: '/post',
+                    title: 'Enter username',
+                    placement: 'right'
+                });
+
+                $('#membersTable a.registrationDate').editable({
+                    type: 'date',
+                    viewformat: 'dd/mm/yyyy',
+                    name: 'registrationDate',
+                    url: '/post',
+                    title: 'Enter date of registration'
+                });
+
+                $('#membersTable a.memberGroup').editable({
+                    type: 'select',
+                    source: [{value: 1, text: 'admin'}, {value: 2, text: 'editor'}, {
+                        value: 3,
+                        text: 'author'
+                    }, {value: 4, text: 'user'}, {value: 5, text: 'second technician'}],
+                    name: 'memberGroup',
+                    url: '/post',
+                    title: 'Choose a role'
+                }).click(function () {
+                    $(this).next().find('select').multiselect();
+                });
+
+                $('#membersTable a.memberStatus').editable({
+                    type: 'select',
+                    source: [{value: 'active', text: 'active'}, {value: 'inactive', text: 'inactive'}, {
+                        value: 'banned',
+                        text: 'banned'
+                    }, {value: 'pending', text: 'pending'}],
+                    name: 'memberStatus',
+                    url: '/post',
+                    title: 'Choose a status',
+                    success: function () {
+                        var label = $(this).parent() // define variable for link parent
+                        selectVal = $(this).next().find('select').val(); // define variable for selected value
+
+
+                        $(label).removeClass().addClass('label' + ' ' + selectVal); // remove actual class from label and add new class defined by selected value (this change color of label)
+                    }
+                }).click(function () {
+                    $(this).next().find('select').multiselect();
+                });
+            });
+        </script>
+    {% endblock %}

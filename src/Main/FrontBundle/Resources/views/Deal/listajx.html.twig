@@ -1,0 +1,46 @@
+{% if deal|length>0 %}
+{% for item in deal %}
+    
+    {% if item.seoLink %}
+    {% set permelink = item.seoLink %}
+    {% else %}
+    {% set permelink = item.title %}
+    {%endif%}
+
+    {% set link=path('deal_detail',  {'region':(app.session.get('region')|getAlias),'categorie':(item.planning.categoryId|getAlias), 'id': item.id ,'name':(permelink|getAlias)}) %}
+    <div class="col-md-6 show">
+        <a href="{{ link }}"><img src="{{ asset(item.image1| imagine_filter('homedeal')) }}" class="img-responsive" alt="{{ item.title }}" /></a>
+        <div class="details">
+                <p><a href="{{ link }}">{{ item.title }}</a></p>
+                <p><i class="fa fa-tags teal"></i><span class="dark-gray">{% set pointVente=item.planning.defaultannexe.protocol.user.sellingpoint %}
+					       {% if pointVente|length != 0 %}
+
+                          {% if pointVente[0].visible == 0   %}
+                                                                    {{ pointVente[0].name }}
+                                                            {% else %}
+                                                                {{ pointVente[0].visibleAdress }}
+                                                            {% endif %}
+                                                            {% endif %} </span>  <i class="fa fa-map-marker teal"></i><span class="dark-gray">{{ item.planning.regionId }}</span></p>
+                <div class="row">
+	                <div class="teal bold col-md-5 col-sm-5 col-xs-7">{% set ref=item.planning.defaultannexe.reference[0] %}
+	                    {{ ref.bigdealPrice }}<sup>DT</sup><span class="bottom dark-gray"> {{ ref.shopPrice }}<sup>DT</sup></span>
+	                </div>
+	                <div class="teal bold col-md-3 col-sm-3 col-xs-5">
+	                	{{ ref.bigdealPrice|getBigfid }} <i class="flaticon-computerchip"></i>
+	                </div>
+	                <div class="col-md-4">
+                		<a href="{{ link }}" class="btn">Voir le Deal</a>
+                	</div>
+                </div>
+            </div>
+    </div>
+    {% if loop.index%2==0 %}<div class="clearfix"></div>{% endif %}
+{% endfor %}
+
+    <div style="clear: both;"></div>
+
+{% else %}
+	<div class="col-sm-12">
+		<div class="alert alert-danger">Cette catégorie ne contient pas des deals</div>
+	</div>
+{% endif %}

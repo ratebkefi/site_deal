@@ -1,0 +1,121 @@
+list_serviceclient:
+    path:     /
+    defaults: { _controller: BackCommandeBundle:ServiceClient:index }
+
+update_serviceclient_manager:
+    path:     /update/{id}
+    defaults: { _controller: BackCommandeBundle:ServiceClient:edit}
+    requirements:
+        id: \d+
+view_serviceclient_manager:
+    path:     /view/{id}
+    defaults: { _controller: BackCommandeBundle:ServiceClient:view}
+    requirements:
+        id: \d+
+add_serviceclient_manager:
+    path:     /add
+    defaults: { _controller: BackCommandeBundle:ServiceClient:add}
+
+list_ticket:
+    path:     /ticket/
+    defaults: { _controller: BackCommandeBundle:ServiceClient:ticket }
+add_ticket:
+    path:     /ticket/add/
+    defaults: { _controller: BackCommandeBundle:ServiceClient:ajouterTicket }
+view_ticket:
+    path:     /{id}/ticket/view/
+    defaults: { _controller: BackCommandeBundle:ServiceClient:viewTicket }
+message_ticket:
+    path:     /{id}/ticket/message/
+    defaults: { _controller: BackCommandeBundle:ServiceClient:messageTicket }
+supprimer_ticket:
+    path:     /{id}/{ticket}/ticket/delete/
+    defaults: { _controller: BackCommandeBundle:ServiceClient:supprimerTicket }
+modifier_ticket:
+    path:     /{id}/{ticket}/ticket/edit/
+    defaults: { _controller: BackCommandeBundle:ServiceClient:modifierTicket }
+historique_ticket:
+    path:     /{id}/ticket/historique/
+    defaults: { _controller: BackCommandeBundle:ServiceClient:historiqueTicket }
+note_ticket:
+    path:     /{id}/ticket/note/
+    defaults: { _controller: BackCommandeBundle:ServiceClient:noteTicket }
+note_ticket_add:
+    path:     /{id}/ticket/note/add/
+    defaults: { _controller: BackCommandeBundle:ServiceClient:addNoteTicket }
+fermer_ticket:
+    path:     /{id}/ticket/fermer/
+    defaults: { _controller: BackCommandeBundle:ServiceClient:fermerTicket }
+ouvrire_ticket:
+    path:     /{id}/ticket/ouvrire/
+    defaults: { _controller: BackCommandeBundle:ServiceClient:ouvrireTicket }
+list_desclient:
+    path:     /listclient
+    defaults: { _controller: "BackCommandeBundle:ServiceClient:client"}
+
+back_ajx_commande:
+    pattern: /ticket/commande
+    defaults: { _controller: "BackCommandeBundle:ServiceClient:ListCommande"}
+back_ajx_ticket1_json:
+    pattern: /ticket/ticket1json
+    defaults: { _controller: "BackCommandeBundle:ServiceClient:ticket1json"}
+back_ajx_ticket2_json:
+    pattern: /ticket/ticket2json
+    defaults: { _controller: "BackCommandeBundle:ServiceClient:ticket2json"}
+back_ajx_ticket3_json:
+    pattern: /ticket/ticket3json
+    defaults: { _controller: "BackCommandeBundle:ServiceClient:ticket3json"}
+back_ajx_ticket4_json:
+    pattern: /ticket/ticket4json
+    defaults: { _controller: "BackCommandeBundle:ServiceClient:ticket4json"}
+back_ajx_ticket5_json:
+    pattern: /ticket/ticket5json
+    defaults: { _controller: "BackCommandeBundle:ServiceClient:ticket5json"}
+back_ajx_ticket6_json:
+    pattern: /ticket/ticket6json
+    defaults: { _controller: "BackCommandeBundle:ServiceClient:ticket6json"}
+
+back_ajx_ticket133_json:
+    pattern: /ticket/ticket133json
+    defaults: { _controller: "BackCommandeBundle:ServiceClient:ticket133json"}
+
+back_ajx_ticket7_json:
+    pattern: /ticket/ticket7json
+    defaults: { _controller: "BackCommandeBundle:ServiceClient:ticket7json"}
+back_ajx_ticket10_json:
+    pattern: /ticket/ticket10json
+    defaults: { _controller: "BackCommandeBundle:ServiceClient:ticket10json"}
+
+back_ajx_ticket11_json:
+    pattern: /ticket/ticket11json
+    defaults: { _controller: "BackCommandeBundle:ServiceClient:ticket11json"}
+back_ajx_ticket122_json:
+    pattern: /ticket/ticket122json
+    defaults: { _controller: "BackCommandeBundle:ServiceClient:ticket122json"}
+back_ajx_ticket114_json:
+     pattern: /ticket/ticket14json
+     defaults: { _controller: "BackCommandeBundle:ServiceClient:ticket14json"}
+back_ajx_ticket155_json:
+     pattern: /ticket/ticket155json
+     defaults: { _controller: "BackCommandeBundle:ServiceClient:ticket155json"}
+back_ajx_ticket116_json:
+     pattern: /ticket/ticket16json
+     defaults: { _controller: "BackCommandeBundle:ServiceClient:ticket16json"}
+back_ajx_ticket156_json:
+     pattern: /ticket/ticket156json
+     defaults: { _controller: "BackCommandeBundle:ServiceClient:ticket156json"}
+back_dash_json_cs_deal:
+    pattern: /ticket/deal
+    defaults: { _controller: "BackCommandeBundle:ServiceClient:ticketdeal"}
+
+back_dash_json_cs_deal2:
+    pattern: /ticket/deal2
+    defaults: { _controller: "BackCommandeBundle:ServiceClient:ticket2deal"}
+
+back_dash_json_cs_deal3:
+    pattern: /ticket/deal3
+    defaults: { _controller: "BackCommandeBundle:ServiceClient:ticket2deal"}
+
+back_dash_json_cs_part:
+    pattern: /ticket/deal/part
+    defaults: { _controller: "BackCommandeBundle:ServiceClient:ticketdealpart"}

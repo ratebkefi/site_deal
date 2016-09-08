@@ -1,0 +1,130 @@
+{% extends '::baseBack.html.twig' %}
+{% block body -%}
+    <!-- ==================== PAGE CONTENT ==================== -->
+    <div class="content">
+
+        <!-- ==================== WIDGETS CONTAINER ==================== -->
+        <div class="container-fluid">
+
+            <!-- ==================== END OF ROW ==================== -->
+            <div class="row-fluid">
+                <div class="span12">
+                    <div class="containerHeadline">
+                        <i class="icon-flag"></i>
+
+                        <h2>Légende</h2>
+
+                        <div class="controlButton pull-right"><i class="icon-caret-down minimizeElement"></i></div>
+                    </div>
+                    <div class="floatingBox table ">
+                        <div class="container-fluid">
+                            <div class="span3">
+                                <div class="alert alert-info">
+                                    <strong>Date de publication passée.</strong>
+                                </div>
+                            </div>
+                            <div class="span3"><div class="alert alert-error">
+                                    <strong>Date publication dans moins 48 heures</strong>
+                                </div></div>
+                            <div class="span3"><div class="alert alert-warning">
+                                    <strong>Date publication entre  48 et 96 heures!</strong>
+                                </div></div>
+                            <div class="span3"><div class="alert alert-success">
+                                    <strong>Date publication aprés 96 heures!</strong>
+                                </div></div>
+                        </div>
+                    </div>
+
+                    <!-- ==================== DEFAULT TABLE HEADLINE ==================== -->
+                    <div class="containerHeadline">
+                        <i class="icon-table"></i><h2>Liste Deal</h2>
+                    </div>
+                    <!-- ==================== END OF DEFAULT TABLE HEADLINE ==================== -->
+
+                    <!-- ==================== DEFAULT TABLE FLOATING BOX ==================== -->
+                    <div class="floatingBox table">
+                        <div class="container-fluid">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Titre</th>
+                                        <th>Date de plublication</th>
+
+                                        <th>Date de début de validité de coupon</th>
+                                    	<th>Date de fin de validité de coupon</th>
+                                        <th>Accepter payment espéce</th>
+                                        <th>Max coupon par utilisateur</th>
+                                        <th>Planning</th>
+                                        <th>Etat</th>
+
+                                       
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    
+                                    {% for entity in pagination %}
+                                        <tr class="{{  date('now')|deferenceDateDeal(date(entity.planning.startDate)) }}">
+                                            <td>{{ entity.id }}</td>
+                                            <td><a href="{{ path('show_deal_manager', { 'id': entity.id }) }}">{{ entity.title }}</a></td>
+
+                                            <td>
+                                                {{ entity.planning.startDate|date('d/m/Y H:i') }}
+
+                                            </td>
+                                            <td>{{ entity.startDateValidtyCoupon|date("d/m/Y")  }}</td>
+                                            <td>{{ entity.endDateValidtyCoupon|date("d/m/Y")  }}</td>
+                                             <td>{% if entity.cashPayment ==1%} Oui {% else %} Non {% endif %}</td>
+                                            <td>{{ entity.maxCouponUser }}</td>
+                                            <td>{{ entity.planning  }}</td>
+                                            <td>{% if entity.planning.state ==0 %} Pré-Planifié {% elseif  entity.planning.state ==1 %}Planifié {% elseif entity.planning.state ==2 %}Rédigé {% elseif entity.planning.state ==3  %} Validé {% elseif entity.planning.state ==4  %}Annulé {% elseif entity.planning.state ==5  %} Rédaction refusée{% endif %}</td>
+
+
+
+                                            <td>
+
+
+                                                <div class="btn-group">
+                                                    <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                                        Action <span
+                                                                class="caret"></span></button>
+                                                    <ul class="dropdown-menu pull-right">
+
+                                                        <li>
+                                                            <a href="{{ path('update_deal_manager2', { 'id': entity.id,'type':2 }) }}">Modifier </a>
+                                                        </li>
+                                                        <li>
+                                                            <a target="_blank" href="{{ path('detail_deal_view', { 'id': entity.id }) }}">Détail de deal </a>
+                                                        </li>
+                                                        <li>
+                                                            <a target="_blank" href="{{ path('apercu_deal_view', { 'id': entity.id }) }}">Aperçu</a>
+                                                        </li>
+                                                        <li  style="text-align: left">
+                                                            <a target="_blank" href="{{ path('pdf_annexe_manager', { 'id': entity.planning.defaultannexe.id ,'protocol_id': entity.planning.defaultannexe.protocol.id}) }}">Annexe
+                                                                au Protocole D’accord </a>
+                                                        </li>
+                                                        <li  style="text-align: left">
+                                                            <a class="iframe-btnx" href="{{ path('show_planning_manager',{'id':entity.planning.id,'regionid':entity.planning.regionId.id}) }}">Planning </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>  
+                            {# display navigation #}
+                        <div class="pagination pagination-large" style="text-align: center">
+                            {{ knp_pagination_render(pagination) }}
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ==================== END OF WIDGETS CONTAINER ==================== -->
+    </div>
+
+    <!-- ==================== END OF PAGE CONTENT ==================== -->
+{% endblock %}

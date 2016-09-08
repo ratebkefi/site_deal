@@ -1,0 +1,48 @@
+back_page_homepage:
+    path:     /pages
+    defaults: { _controller: BackPageBundle:Default:index }
+update_page_manager:
+    path:     /pages/update/{id}
+    defaults: { _controller: BackPageBundle:Default:update }
+    requirements:
+        id: \d+
+add_page_manager:
+    path:     /pages/add
+    defaults: { _controller: BackPageBundle:Default:add }
+
+#social
+back_social_homepage:
+    path:     /social
+    defaults: { _controller: BackPageBundle:Social:index }
+update_social_manager:
+    path:     /social/update/{id}
+    defaults: { _controller: BackPageBundle:Social:update }
+    requirements:
+        id: \d+
+delete_social_manager:
+    path:     /social/delete/{id}
+    defaults: { _controller: BackPageBundle:Social:delete }
+    requirements:
+        id: \d+
+add_social_manager:
+    path:     /social/add
+    defaults: { _controller: BackPageBundle:Social:add }
+
+
+#banner
+back_banner_homepage:
+    path:     /banner
+    defaults: { _controller: BackPageBundle:Banner:index }
+update_banner_manager:
+    path:     /banner/update/{id}
+    defaults: { _controller: BackPageBundle:Banner:update }
+    requirements:
+        id: \d+
+delete_banner_manager:
+    path:     /banner/delete/{id}
+    defaults: { _controller: BackPageBundle:Banner:delete }
+    requirements:
+        id: \d+
+add_banner_manager:
+    path:     /banner/add
+    defaults: { _controller: BackPageBundle:Banner:add }

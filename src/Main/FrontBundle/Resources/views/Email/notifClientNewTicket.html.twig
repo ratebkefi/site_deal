@@ -1,0 +1,9 @@
+{% include 'MainFrontBundle:Email:header.html.twig' %}
+Bonjour <strong>{{ ticket.commande.client.name }} {{ ticket.commande.client.fname }},</strong><br/>
+Merci de nous avoir contacté, notre service clients traitera votre demande dans les plus brefs délais.
+<br>
+Vous pouvez voir votre ticket ici: <a href="https://www.bigdeal.tn{{ path('detail_ticket',{'id':ticket.id}) }}">{{ ticket.code }}</a>
+<br/>
+<br/>
+<strong>L’équipe BIGDeal</strong>
+{% include 'MainFrontBundle:Email:footer.html.twig' %}

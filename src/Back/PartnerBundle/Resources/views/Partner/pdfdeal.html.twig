@@ -1,0 +1,50 @@
+<html>
+    <body>
+        <div style="width: 100%;">
+            <table width="100%" cellpadding="5" cellspacing="5">
+                <tr>
+                    <td style="border: 1px solid #000">
+                        <h2 style="text-align: center;">Rapport du deal : {{ titre }}</h2>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div style="width: 100%;">
+            <table width="100%" cellpadding="5" cellspacing="5">
+
+                <tr>
+                    <td>
+                        <h2>Date d'achat</h2>
+                    </td>
+                    <td>
+                        <h2>Client</h2>
+                    </td>
+                    <td>
+                        <h2>Téléphone</h2>
+                    </td>
+                    <td>
+                        <h2>Référence</h2>
+                    </td>
+                </tr>
+                {% for entity in command %}
+                    {% set coupon = entity.coupon %}
+                    {% for entity2 in coupon %}
+                        <tr>
+                            <td>{{ entity.dpa|date('d / m / Y') }}</td>
+
+                            <td>{{ entity2.client }}</td>
+                            <td>{{ entity.client.phone }}</td>
+                            <td>{{ entity.reference }}</td>
+                        </tr>
+
+
+                    {% endfor %}
+
+
+
+                {% endfor %}
+            </table>
+
+        </div>
+    </body>
+</html>

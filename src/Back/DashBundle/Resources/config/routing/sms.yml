@@ -1,0 +1,29 @@
+#sms
+back_dash_sms:
+    path:     /
+    defaults: { _controller: BackDashBundle:Sms:index }
+
+add_dash_sms:
+    path:     /add
+    defaults: { _controller: BackDashBundle:Sms:add }
+update_dash_sms:
+    path:     /update/{id}
+    defaults: { _controller: BackDashBundle:Sms:edit}
+    requirements:
+        id: \d+
+delete_dash_sms:
+    path:     /delete/{id}
+    defaults: { _controller: BackDashBundle:Sms:delete}
+    requirements:
+        id: \d+
+send_dash_sms:
+    path:     /send/{id}
+    defaults: { _controller: BackDashBundle:Sms:send }
+    requirements:
+        id: \d+
+sendind_dash_sms:
+    path:     /sending
+    defaults: { _controller: BackDashBundle:Sms:sending }
+sendind_cat_sms:
+    path:     /cat
+    defaults: { _controller: BackDashBundle:Sms:cat }

@@ -1,0 +1,51 @@
+{% for item in deal %}
+    {% set link = path('deal_detail',  {'region':(app.session.get('region')|getAlias),'categorie':(item.planning.categoryId|getAlias), 'id': item.id ,'name':(item.title|getAlias)}) %}
+    <div class="col-md-12 show">
+        <div class="row">
+            <div class="col-md-3 col-sm-12">
+                <a href="{{ link }}"> <img src="{{ asset(item.image1| imagine_filter('homedeal')) }}" class="img-responsive" alt="{{ item.title }}" /></a>
+            </div>
+            <div class="col-md-9 col-sm-12">
+                <div class="details">
+			                        <p><a href="{{ link }}">{{ item.title }}</a></p>
+			                        <p class="clearfix">
+			                        </p>
+			
+			                        {% set ref=item.planning.defaultannexe.reference[0] %}
+			                        <p><i class="fa fa-tags teal"></i><span class="dark-gray">
+									{% set pointVente=item.planning.defaultannexe.protocol.user.sellingpoint %}
+				
+			{% if pointVente|length != 0 %}
+						{% if pointVente[0].visible == 0 %}
+						{{ pointVente[0].name }} 
+						{% else %}
+							{{ pointVente[0].visibleAdress }} 
+						{% endif %}  
+						{% endif %} 
+									</span>  <i class="fa fa-map-marker teal"></i><span class="dark-gray">{{ item.planning.regionId }}</span></p>
+			                        {#
+			                        <a href="{{ link }}" class="btn pull-right">Voir le Deal</a>
+			                        <div class="price teal bold pull-right"><div class="pull-left">{{ ref.bigdealPrice }}<sup>DT</sup><span class="bottom gray"> {{ ref.shopPrice }}<sup>DT</sup></span></div>
+			                            <div class="pull-right">{{ item.id|nombreAcheteurs }} <img src="{{ asset('public/images/buyer.png') }}" alt="acheteurs" /></div> </div>
+			                        #}  
+			                        <div class="pull-right">
+		                                    <div class="teal bold pull-left">
+		                                        <div class="btn btn-white">{{ ref.bigdealPrice }}<sup>DT</sup><span class="bottom gray"> {{ ref.shopPrice }}<sup>DT</sup></span></div>
+		                                        <div class="btn btn-white border"><i class="flaticon-group2"></i>{{ item.id|nombreAcheteurs }}</div>
+		                                    </div>
+		                                    <a href="{{ link }}" class="btn pull-right">Voir le Deal</a>
+		                           </div>
+			                        
+			                        
+			                    </div>
+            </div>
+        </div>
+    </div>
+
+    {% if loop.index%2==0 %}<div class="clearfix"></div>{% endif %}
+{% endfor %}
+<div style="clear: both;"></div>
+
+{% if pager==1 %}
+    <div class="last"><a href="{{ path('deal_listpassed_page',{'page':pagenext,'cat':catstr}) }}" style="display: none;">next</a></div>
+{% endif %}

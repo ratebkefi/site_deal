@@ -1,0 +1,91 @@
+back_dash_homepage:
+    path:     /home
+    defaults: { _controller: BackDashBundle:Default:index }
+back_entreprise:
+    resource: "@BackDashBundle/Resources/config/routing/entreprise.yml"
+    prefix:   /entreprise
+
+back_parameter:
+    resource: "@BackDashBundle/Resources/config/routing/parameter.yml"
+    prefix:   /parameter
+
+back_regle:
+    resource: "@BackDashBundle/Resources/config/routing/regle.yml"
+    prefix:   /regle
+
+back_dash_sms:
+    resource: "@BackDashBundle/Resources/config/routing/sms.yml"
+    prefix:   /sms
+back_notification:
+    resource: "@BackDashBundle/Resources/config/routing/notification.yml"
+    prefix:   /notification
+ajx_json:
+    resource: "@BackDashBundle/Resources/config/routing/ajxjson.yml"
+    prefix:   /json
+dash_csc:
+    path:     /csc
+    defaults: { _controller: BackDashBundle:Default:ChefServiceClient }
+dash_daf:
+    path:     /ddaf
+    defaults: { _controller: BackDashBundle:Default:Daf }
+dash_dc:
+    path:     /dc
+    defaults: { _controller: BackDashBundle:Default:directeurCommercial }
+dash_rcef:
+    path:     /rcef
+    defaults: { _controller: BackDashBundle:Default:redacteurChef }
+dash_plan:
+    path:     /dplan
+    defaults: { _controller: BackDashBundle:Default:planificateur }
+
+dash_compagnes:
+    path:     /dcompagne/{page}
+    defaults: { _controller: BackDealBundle:Compagne:comp, page: 1 }
+    requirements:
+        page: \d*
+
+
+compagne_show:
+    path:     /dcompagne/{id}/show
+    defaults: { _controller: BackDealBundle:Compagne:show }
+
+compagne_save:
+    path:     /dcompagne/savecompagne
+    defaults: { _controller: BackDealBundle:Compagne:saveCompagne }
+
+compagne_new:
+    path:     /dcompagne/new/{idr}
+    defaults: { _controller: BackDealBundle:Compagne:new , idr: 0 }
+    requirements:
+        idr: \d*
+
+compagne_create:
+    path:     /dcompagne/create
+    defaults: { _controller: BackDealBundle:Compagne:create }
+    requirements: { _method: post }
+
+compagne_createf:
+    path:     /dcompagne/createfinal
+    defaults: { _controller: BackDealBundle:Compagne:createFinal }
+    requirements: { _method: post }
+
+compagne_edit:
+    path:     /dcompagne/{id}/edit/{idr}
+    defaults: { _controller: BackDealBundle:Compagne:edit , idr: 0 }
+    requirements:
+        idr: \d*
+
+compagne_update:
+    path:     /dcompagne/{id}/update
+    defaults: { _controller: BackDealBundle:Compagne:update }
+    requirements: { _method: post|put }
+
+compagne_updatef:
+    path:     /dcompagne/{id}/updatefinal
+    defaults: { _controller: BackDealBundle:Compagne:updateFinal }
+    requirements: { _method: post|put }
+
+compagne_delete:
+    path:     /dcompagne/{id}/delete
+    defaults: { _controller: BackDealBundle:Compagne:delete }
+    requirements: { _method: post|delete }

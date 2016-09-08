@@ -1,0 +1,539 @@
+{% extends '::base.html.twig' %}
+
+{% block head %}
+<meta property="og:site_name" content="NOM_DU_SITE" />
+<meta property="fb:admins" content="ID_FACEBOOK_DU_WEBMASTER" />
+<meta property="fb:page_id" content="ID_PAGE_FACEBOOK" />
+<meta property="og:type" content="CONTENT_TYPE" />
+<meta property="og:image" content="SHARE_IMG" />
+<meta property="og:url" content="SHARE_URL" />
+<meta property="og:title" content="SHARE_TITLE" />
+<meta property="og:description" content="SHARE_DESCRIPTION" />
+{% endblock %}
+
+{% block stylesheets %}
+    <!-- BxSlider -->
+    <link rel="stylesheet" href="{{ asset('public/css/jquery.bxslider.css') }}">
+    <link rel="stylesheet" href="{{ asset('bundles/dcsrating/css/rating.css') }}"/>
+    <style>
+        .fa {
+            color: #de0e79;
+            font-size: 1.3em;
+
+        }
+
+        .modal-open .modal {
+            z-index: 10000;
+        }
+    </style>
+
+{% endblock %}
+{% block javascripts %}
+    {% javascripts '@MainFrontBundle/Resources/public/js/jquery.jscroll.min.js' %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $('#shows').jscroll({
+                loadingHtml: '<div class="row"><div class="col-md-12 col-sm-12"><div id="loading"><img src="{{ asset('public/images/loading.gif') }}" alt="Loader"></div></div></div>',
+
+                nextSelector: '.last a'
+
+            });
+
+            $('#shwos2').jscroll({
+                loadingHtml: '<div class="row"><div class="col-md-12 col-sm-12"><div id="loading"><img src="{{ asset('public/images/loading.gif') }}" alt="Loader"></div></div></div>',
+
+                nextSelector: '.last2 a'
+
+            });
+            $('.bxslider').bxSlider({
+                pagerCustom: '#bx-pager'
+            });
+            /*
+            $("#price-hover").hover(function(){
+			    $(".price-big").css("opacity", "1.0");
+			    }, function(){
+			    $(".price-big").css("opacity", "0.0");
+			});  */
+			
+			$('[data-toggle="tooltip"]').tooltip();   
+
+        })
+
+    </script>
+    <!-- BxSlider JS -->
+    <script src="{{ asset('public/js/jquery.bxslider.js') }}"></script>
+    {% set sellingpoint= deal.planning.defaultannexe.protocol.user.sellingpoint %}
+    {% if sellingpoint|length>0 %}
+
+        <script type="text/javascript">
+
+
+            function initialize() {
+                {% if sellingpoint[0].visible %}
+                var myLatlng = new google.maps.LatLng({{ sellingpoint[0].latVisibleAdress }}, {{ sellingpoint[0].lonVisibleAdress }});
+                {% else %}
+                var myLatlng = new google.maps.LatLng({{ sellingpoint[0].latitude }}, {{ sellingpoint[0].longitude }});
+                {% endif %}
+                var mapOptions = {
+                    {% if sellingpoint[0].visible %}
+                    center: {lat: {{ sellingpoint[0].latVisibleAdress }}, lng: {{ sellingpoint[0].lonVisibleAdress }}},
+                    {% else %}
+                    center: {lat: {{ sellingpoint[0].latitude }}, lng: {{ sellingpoint[0].longitude }}},
+
+                    {% endif %}
+                    zoom: 14
+                };
+                var map = new google.maps.Map(document.getElementById('map-canvas'),
+                        mapOptions);
+                {% for item in sellingpoint %}
+                {% if item.visible %}
+                var mypoint{{ item.id }} = new google.maps.LatLng({{ item.latVisibleAdress }}, {{ item.lonVisibleAdress }});
+                {% else %}
+                var mypoint{{ item.id }} = new google.maps.LatLng({{ item.latitude }}, {{ item.longitude }});
+                {% endif %}
+                var marker = new google.maps.Marker({
+                    position: mypoint{{ item.id }},
+                    map: map,
+                    title: '{{ deal.planning.defaultannexe.protocol.user }}'
+                });
+                {% endfor %}
+            }
+
+            google.maps.event.addDomListener(window, 'load', initialize);
+        </script>
+    {% endif %}
+
+
+
+    <script src="{{ asset('bundles/dcsrating/js/rating.js') }}"></script>
+    <script src="{{ asset('public/js/jquery.countdown.js') }}" type="text/javascript" charset="utf-8"></script>
+
+    <script type="text/javascript">
+        var ts = new Date({{ deal.planning.endDate|date("Y") }}, {{ deal.planning.endDate|date("m") }}-1, {{ deal.planning.endDate|date("d") }}, {{ deal.planning.endDate|date("H") }}, {{ deal.planning.endDate|date("i") }}, {{ deal.planning.endDate|date("s") }});
+
+    </script>
+    <script src="{{ asset('public/js/scriptcounter.js') }}" type="text/javascript"></script>
+    {% javascripts '@MainFrontBundle/Resources/public/js/bootstrap-rating-input.min.js' %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    <script>
+        $(document).ready(function () {
+            $('#back_dealbundle_comment_value').rating();
+            $('.starss').rating("refresh", {disabled: true, showClear: false});
+        });
+    </script>
+{% endblock %}
+
+
+{% block body %}
+
+    {% set ref=deal.planning.defaultannexe.reference %}
+    {% set reservation = ref[0].annexe.booking %}
+
+    {% set indexref=0 %}
+    {% set i=0 %}
+    {% for key,item in ref %}
+
+    {% if i!=0 %}
+        {% if item.bigdealPrice<ref[0].bigdealPrice %}
+            {% set indexref=key %}
+        {% endif %}
+    {% endif %}
+    {% set i=i+1 %}
+{% endfor %}
+
+    <div class="row">
+        <div class="col-md-12 entry"><h1>{{ deal.title }}</h1></div>
+    </div>
+
+    <!-- Shows -->
+    <div id="offre" class="row">
+        
+        <div class="col-md-9 col-sm-12 product pull-right">
+            <ul class="bxslider">
+                {% if deal.image1!="" %}
+    <li><img src="{{ asset(deal.image1| imagine_filter('sliddetaildeal')) }}" id="image1"></li>{% endif %}
+                {% if deal.image2!="" %}
+    <li><img src="{{ asset(deal.image2| imagine_filter('sliddetaildeal')) }}" id="image2"></li>{% endif %}
+                {% if deal.image3!="" %}
+    <li><img src="{{ asset(deal.image3| imagine_filter('sliddetaildeal')) }}" id="image3"></li>{% endif %}
+            </ul>
+
+            <ul class="row" id="bx-pager">
+				<div class="col-md-offset-2 col-md-10 col-sm-12">
+					<div class="row">
+                		{% if deal.image1!="" %}
+					    <li class="col-xs-4 col-md-3">
+					    <a data-slide-index="0" href=""><img
+					                src="{{ asset(deal.image1| imagine_filter('thumbdetaildeal')) }}"
+					                class="img-responsive "></a></li>{% endif %}
+					
+					                {% if deal.image2!="" %}
+					    <li class="col-xs-4 col-md-3"><a data-slide-index="1" href=""><img
+					                src="{{ asset(deal.image2| imagine_filter('thumbdetaildeal')) }}"
+					                class="img-responsive "></a></li>{% endif %}
+					                {% if deal.image3!="" %}
+					    <li class="col-xs-4 col-md-3"><a data-slide-index="2" href=""><img
+					                src="{{ asset(deal.image3| imagine_filter('thumbdetaildeal')) }}"
+					                class="img-responsive "></a></li>{% endif %}
+					</div>
+                </div>
+            </ul>
+        </div>
+		
+        <div class="col-md-3 col-sm-12 product-det">
+            <div class="row">
+                <div class="col-sm-12"><p class="dark-gray bold">Dés</p></div>   
+                <div class="col-md-9 col-sm-9 col-xs-12 text-center">
+                	{# <div class="price-big">
+	                	<b></b>
+	                    <p class="dark-gray bold">{{ ref[indexref].bigdealPrice|getBigfid }} <img
+		                                src="{{ asset('public/images/btn.png') }}" alt="price" width="24"/></p><p class="teal">IGFid</p>
+		            </div>#}
+	            </div>
+            </div>
+            <div class="row price">
+                <div class="col-sm-12 text-center">
+                    <strong id="price-hover" data-html="true" data-toggle="tooltip" title="<p class='dark-gray bold'>{{ ref[indexref].bigdealPrice|getBigfid }} <i class='flaticon-computerchip'></i></p><p class='teal'>IGFid</p>">{{ ref[indexref].bigdealPrice }}<sup>DT</sup></strong>
+                </div>
+            </div>
+            <div class="row details">
+                <div class="col-md-4 col-sm-4 col-xs-4">
+                    <p class="dark-gray ">Valeur</p>
+                    <strong class="dark-gray ">{{ ref[indexref].shopPrice }} <sup>DT</sup></strong>
+                </div>
+                <div class="col-md-4 col-sm-4 col-xs-4">
+                    <p class="dark-gray ">Remise</p>
+                    <strong class="dark-gray bold">{{ ref[indexref].shopPrice|getPourcentage(ref[indexref].bigdealPrice) }}%</strong>
+                </div>
+                <div class="col-md-4 col-sm-4 col-xs-4">
+                    <p class="dark-gray ">économie</p>
+                    <strong class="dark-gray bold">{{ ref[indexref].shopPrice-ref[indexref].bigdealPrice }}
+                        <sup>DT</sup></strong>
+                </div>
+                
+            </div>
+            <div class="row buy">
+                <div class="col-md-12">
+                {% if nbcoupon<deal.maxCouponUser %}
+                    {% if deal.id|verifExpire %}
+    <p class="hidden-xs">
+    <a href="javascript:void();"
+       class="btn btn-teal no-bg"><i class="fa fa-exclamation-triangle pr-30"></i>Expiré</a>
+{% else %}
+    {% if ref|length >1 %}
+        <p class="hidden-xs"><a href="#" data-toggle="modal" data-target=".add-modal" class="btn btn-teal"><i class="flaticon-buy10"></i>J'achete</a></p>
+    {% else %}
+        {% if ref[indexref].maxCoupon ==0 %}
+            <p class="hidden-xs"><a href="{{ path('jachetelist',{'deal':deal.id,'id':ref[indexref].id}) }}" class="btn btn-teal"><i class="flaticon-buy10"></i>J'achete</a></p>
+
+        {% elseif ref[indexref].maxCoupon > deal.id|nombreAcheteurs %}
+            <p class="hidden-xs"><a href="{{ path('jachetelist',{'deal':deal.id,'id':ref[indexref].id}) }}" class="btn btn-teal"><i class="flaticon-buy10"></i>J'achete</a></p>
+        {% else %}
+            <p class="hidden-xs">
+                <a href="javascript:void();"
+                   class="btn btn-teal no-bg"><i class="fa fa-cart-arrow-down"></i>Epuisé</a></p>
+
+            <p>
+        {% endif %}
+    {% endif %}
+{% endif %}
+                        {% if deal.id|verifExpire %}
+{% else %}
+
+    <p class="dark-gray dispo">Disponible pour un temps limité !</p>
+
+    <p class="teal"><i class="flaticon-clock96"></i> <span
+                id="countdown"></span></p>
+{% endif %}
+{% elseif deal.maxCouponUser==0 %} 
+					{% if ref|length >1 %}
+					    	<p class="hidden-xs"><a href="#" data-toggle="modal" data-target=".add-modal" class="btn btn-teal"><i class="flaticon-buy10"></i>J'achete</a></p>
+						{% else %}
+					    {% if ref[indexref].maxCoupon ==0 %}
+					        <p class="hidden-xs"><a href="{{ path('jachetelist',{'deal':deal.id,'id':ref[indexref].id}) }}" class="btn btn-teal"><i class="flaticon-buy10"></i>J'achete</a></p>
+					
+					    {% elseif ref[indexref].maxCoupon > deal.id|nombreAcheteurs %}
+					        <p class="hidden-xs"><a href="{{ path('jachetelist',{'deal':deal.id,'id':ref[indexref].id}) }}" class="btn btn-teal"><i class="flaticon-buy10"></i>J'achete</a></p>
+					    {% else %}
+					        <p class="hidden-xs">
+					            <a href="javascript:void();"
+					               class="btn btn-teal no-bg"><i class="fa fa-cart-arrow-down"></i>Epuisé</a></p>
+					
+					        <p>
+					    {% endif %}
+					{% endif %}
+					<p class="dark-gray dispo">Disponible pour un temps limité !</p>
+
+    <p class="teal"><i class="flaticon-clock96"></i> <span
+                id="countdown"></span></p>
+    {% else %}
+        <p class="hidden-xs"><a href="javascript:void()" class="btn btn-teal-disabled"><i class="fa fa-ban"></i>J'achete</a></p>
+{% endif %}
+                    {% if deal.id|verifExpire %}
+    <p class="dark-gray buyers">
+        <i class="flaticon-group2"></i>
+        {{ deal.id|nombreAcheteurs }} Acheteurs</p>
+{% else %}
+    {% if deal.id|nombreAcheteurs >= deal.planning.defaultannexe.mincoupon %}
+        <p class="dark-gray buyers">
+
+            <i class="flaticon-group2"></i>
+            {{ deal.id|nombreAcheteurs }} Acheteurs
+        </p>
+    {% else %}
+        <!-- small box -->
+        <p class="dark-gray buyers">
+        	<i class="flaticon-group2 teal"></i>
+            Encore {{ deal.planning.defaultannexe.mincoupon - deal.id|nombreAcheteurs }} Participant(s) pour VALIDER LE DEAL
+            </p>
+    {% endif %}
+{% endif %}
+	<p><a href="#" class="btn btn-facebook"><i class="fa fa-facebook"></i>Partagez & Gagnez 20 BIGfid</a></p>
+   {% if reservation ==1 %}
+    <p><a target="_blank" href="{{ path('disponibilite',{'id':deal.id}) }}" class="btn blue-btn text-center">Disponibilités</a>
+    </p>
+
+    <p><a target="_blank" href="{{ path('front_booking_step1') }}" class="btn green-btn text-center">Réserver</a></p>
+{% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="offre">
+            <div class="row">
+                <div class="col-md-8 col-sm-12 offre-det">
+                    {{ deal.description|raw }}
+                
+	                <h2></h2>
+	
+	                <br/>
+                    <h3>Le Deal :</h3>
+                    {{ deal.deal|raw }}<br/><br/>
+                
+                    <h3>BigDeal.tn aime :</h3>
+                    {{ deal.bigdeallike|raw }}<br/><br/>
+                
+                    <h3>Vous allez adorer :</h3>
+                    {{ deal.youLike|raw }}<br/><br/>
+                
+                    <h3>Conditions du deal :</h3>
+                    {{ deal.toBeClear|raw }}<br/><br/>
+                
+                    <h3>Les points forts :</h3>
+                    {{ deal.strongpoint|raw }}
+                </div>
+            	<div class="col-md-4 offre-location">
+            		<h4>{{ deal.planning.defaultannexe.protocol.user }}</h4>
+                    {% if deal.planning.defaultannexe.protocol.user.webSite!="" %}
+					    <a target="_blank" href="{{ deal.planning.defaultannexe.protocol.user.webSite }}" title=""
+					       class="website"><i class="fa fa-globe"></i></a>
+					{% endif %}
+					                    {% if deal.planning.defaultannexe.protocol.user.fbpage!="" %}
+					    <a target="_blank" href="{{ deal.planning.defaultannexe.protocol.user.fbpage }}" title=""
+					                 class="social"><i class="fa fa-facebook"></i></a>
+					{% endif %}
+					 <a href="#" title="Iténiraire" class="social"><i class="fa fa-map-marker teal"></i></a>
+					 <p class="address">
+                        <strong>Adresse: </strong>{% set sellingpoint=deal.planning.defaultannexe.protocol.user.sellingpoint %}
+                        {% for item in sellingpoint %}
+						    {% if loop.index==1 %}
+						        {{ item.adress }}
+						    {% endif %}
+						{% endfor %}
+					</p>
+					<div class="map"><div id="map-canvas" style="width: 100%; height: 515px;"></div></div>
+                    
+
+                    <h3>Popularomètre</h3>
+
+                    <p>Note: <span>{# include 'DCSRatingBundle:Rating:rating.html.twig' with {'id' : deal.id} #}
+                            {% include 'MainRatingclientBundle:Rating:control.html.twig' with {'id' : deal.id, 'role' : 'ROLE_CLIENT'} %}</span>
+                        <span> <a href="#mon_ancre" class="dark-gray">  Avis</a></span></p>
+                    <ul>
+                        <li><label class="label gray-label">{{ "%05d"|format(nbcoupon) }}</label><span>membres ont <strong>essayé</strong> ce Partenaire </span>
+                        </li>
+                        <li><label class="label gray-label"></label><span>membres ont <strong>visité</strong> ce Partenaire </span>
+                        </li>
+                        <li>
+                            <label class="label gray-label"></label><span>membres sont <strong>satisfait </strong>
+                             <a href="#" data-toggle="modal" data-target=".commentpartner" class="dark-gray">Voir commentaires</a>
+                             </span>
+                        </li>
+                    </ul>
+               
+            </div>
+        </div>
+    </div>
+		<div class="col-sm-12">
+		{% if  app.user.roles[0]=='REDACTEUR'   or app.user.roles[0]=="ROLE_SUPER_ADMIN"  or app.user.roles[0]=="CHEFRED"%}
+		    <form action="" method="post">
+		        <div class="formFooter">
+
+		            <button type="submit" class="btn green-btn text-center"><i class="icon-ok"> </i>
+		                Valider
+		            </button>
+
+		            <a href="{{ path('back_deal') }}">
+		                <button class="btn blue-btn" type="button"><i class="icon-list"></i>
+		                    Retour
+		                </button>
+		            </a>
+
+		        </div>
+
+		    </form>
+		    {% else %}
+		        <form action="" method="post">
+		            <div class="formFooter">
+
+		                <a href="{{ path('back_deal') }}">
+		                    <button class="btn blue-btn" type="button"><i class="icon-list"></i>
+		                        Retour
+		                    </button>
+		                </a>
+
+		            </div>
+
+		        </form>
+		{% endif %}
+		</div>
+<!-- Fixed Mobile Buy button -->
+<div class="fixed-buy product-det mobile-visible">
+<div class="col-sm-12 buy">
+{% if nbcoupon<deal.maxCouponUser %}
+                    {% if deal.id|verifExpire %}
+    <p>
+    <a href="javascript:void();"
+       class="btn btn-teal no-bg"><i class="fa fa-exclamation-triangle pr-30"></i>Expiré</a>
+{% else %}
+    {% if ref|length >1 %}
+        <p><a href="#" data-toggle="modal" data-target=".add-modal" class="btn btn-teal"><i class="flaticon-buy10"></i>J'achete</a></p>
+    {% else %}
+        {% if ref[indexref].maxCoupon ==0 %}
+            <p><a href="{{ path('jachetelist',{'deal':deal.id,'id':ref[indexref].id}) }}" class="btn btn-teal"><i class="flaticon-buy10"></i>J'achete</a></p>
+
+        {% elseif ref[indexref].maxCoupon > deal.id|nombreAcheteurs %}
+            <p><a href="{{ path('jachetelist',{'deal':deal.id,'id':ref[indexref].id}) }}" class="btn btn-teal"><i class="flaticon-buy10"></i>J'achete</a></p>
+        {% else %}
+            <p>
+                <a href="javascript:void();"
+                   class="btn btn-teal no-bg"><i class="fa fa-cart-arrow-down"></i>Epuisé</a></p>
+
+            <p>
+        {% endif %}
+    {% endif %}
+{% endif %}
+                        {% if deal.id|verifExpire %}
+{% else %}
+
+
+  
+{% endif %}
+{% elseif deal.maxCouponUser==0 %} 
+					{% if ref|length >1 %}
+					    	<p><a href="#" data-toggle="modal" data-target=".add-modal" class="btn btn-teal"><i class="flaticon-buy10"></i>J'achete</a></p>
+						{% else %}
+					    {% if ref[indexref].maxCoupon ==0 %}
+					        <p><a href="{{ path('jachetelist',{'deal':deal.id,'id':ref[indexref].id}) }}" class="btn btn-teal"><i class="flaticon-buy10"></i>J'achete</a></p>
+					
+					    {% elseif ref[indexref].maxCoupon > deal.id|nombreAcheteurs %}
+					        <p><a href="{{ path('jachetelist',{'deal':deal.id,'id':ref[indexref].id}) }}" class="btn btn-teal"><i class="flaticon-buy10"></i>J'achete</a></p>
+					    {% else %}
+					        <p>
+					            <a href="javascript:void();"
+					               class="btn btn-teal no-bg"><i class="fa fa-cart-arrow-down"></i>Epuisé</a></p>
+					
+					        <p>
+					    {% endif %}
+					{% endif %}
+
+  
+    {% else %}
+        <p><a href="javascript:void()" class="btn btn-teal-disabled"><i class="fa fa-ban"></i>J'achete</a></p>
+{% endif %}
+</div>
+</div>
+<!-- End Fixed Mobile Buy button -->
+</div>
+    <!-- modal -->
+
+    <div class="modal fade commentpartner" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" style="width:60%">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true"><i class="fa fa-close"></i></span></button>
+                    <h4 class="modal-title">Les commentaires du partenaire {{ deal.planning.defaultannexe.protocol.user }}</h4>
+                </div>
+                <div class="modal-body"  >
+<iframe src="{{ path('pager_deal_allcomment',{'id':deal.id}) }}" style="zoom:0.60" width="100%" height="500" frameborder="0"></iframe>
+
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade add-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true"><i class="fa fa-close"></i></span></button>
+                    <h4 class="modal-title">Choisir une offre</h4>
+                </div>
+                <div class="modal-body">
+
+
+                    <div class="">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>Offres</th>
+                                <th>Prix</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for item in ref %}
+    <tr>
+        <td>{{ item.title }}</td>
+
+        <td>{{ item.bigdealPrice }} <sup>TND</sup></td>
+
+        <td>
+            {% if item.maxCoupon ==0 %}
+                <a href="{{ path('jachetelist',{'deal':deal.id,'id':item.id}) }}" title="J’ACHETE"
+                   class="btn btn-buy pull-right">J’ACHETE</a>
+            {% elseif item.maxCoupon > item.id|nombreAcheteursReference %}
+
+                <a href="{{ path('jachetelist',{'deal':deal.id,'id':item.id}) }}" title="J’ACHETE"
+                   class="btn btn-buy pull-right">J’ACHETE</a>
+            {% else %}
+                <a href="javascript:void();" title="Epuisé"
+                   class="btn btn-primary no-bg pull-right"><i
+                            class="fa fa-cart-arrow-down pr-10"></i>Epuisé</a>
+            {% endif %}
+        </td>
+
+    </tr>
+{% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+
+                </div>
+                <div class="modal-footer">
+                    <a type="button" class="btn btn-default" data-dismiss="modal">Annuler</a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

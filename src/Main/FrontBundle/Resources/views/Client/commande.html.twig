@@ -1,0 +1,103 @@
+{% extends '::base.html.twig' %}
+{% block stylesheets %}
+{% endblock %}
+{% block javascripts %}
+<script src="{{ asset('public/js/jquery-ias.min.js') }}"></script>
+	<script>
+	
+
+	 $(document).ready(function () {
+		var ias = $.ias({
+		  container:  ".ddcontainer",
+		  item:       ".dditem",
+		  pagination: ".pagination",
+		  next:       ".next a",
+		  delay:      1250  
+		});
+
+		//ias.extension(new IASSpinnerExtension());            // shows a spinner (a.k.a. loader)
+		ias.extension(new IASSpinnerExtension({src: '/public/images/loading.gif' }));
+		//ias.extension(new IASTriggerExtension({})); // shows a trigger after page 3
+		ias.extension(new IASTriggerExtension({html: '<div class="ias-trigger ias-trigger-next" style="text-align: center; cursor: pointer;"><a class="btn btn-primary">Afficher plus</a></div>', offset: 4})); // override text show more
+		
+		/*ias.extension(new IASNoneLeftExtension({
+		  text: 'Plus aucun deal à afficher'      // override text when no pages left
+		}));*/
+	});
+     </script>
+    {% endblock %}
+
+{% block body %}
+	<div class="row">
+		<div class="col-md-12 entry">
+			<h1>Mon compte</h1>
+		</div>
+	</div>
+    <div class="informations">
+        <!-- Profile Menu -->
+        {{ render(controller('MainFrontBundle:Client:menuclient')) }}
+        <!-- Nav -->
+        <div class="row">
+            <div class="col-md-12">
+                <ol class="breadcrumb">
+                    <li class="active">Mes commandes</li>
+                </ol>
+            </div>
+        </div>
+        
+        <!-- Liste de mes commandes -->
+        <div class="table-responsive ddcontainer">
+            <table class="table table-striped " >
+                <thead>
+                <tr>
+                    <th>N° Commande</th>
+                    <th>Date de commande</th>
+                    <th>Deal</th>
+                    <th>Réference</th>
+                    <th>Prix</th>
+                    <th>Etat</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in commande %}
+                    {% set CouponAnnuler = item.id|listCouponAnnuler %}
+
+                    <tr class="dditem">
+                    <td>{{ "%09d"|format(item.id) }}</td>
+                    <td>{{ item.dcr|date('d/m/Y') }}</td>
+                    <td>{{ item.deal }}</td>
+                    <td>{{ item.reference }}</td>
+                    <td nowrap>{% if item.caisse!=null %}{% if item.caisse.id==26 %} {% set total = 3 %}  {% else %} {% set total = 0 %} {% endif %}
+						{% else %} {% set total = 0 %} {% endif %}
+                        {% for cop in  item.coupon %}
+                            {% set total = cop.price + total %}
+                        {% endfor %}
+                        {{ total }} <sup>DT</sup></td>
+                    <td>
+                        {% if item.etat == 1 %}<span class="badge badge-success">Payé</span>
+                        {% elseif item.etat == 0 %}<span class="badge badge-danger">En attente</span>
+                        {% elseif item.etat == 2 %}<span class="badge badge-danger">En attente de confirmation</span>
+                        {% elseif item.etat == 3 %}<span class="badge badge-danger">Annulé</span>
+                        {% elseif item.etat == 4 %}<span class="badge badge-danger">Commande confirmé</span>
+                        {% else %}<span class="badge badge-warning">Epuisé</span>{% endif %}
+
+                    </td>
+                    <td>
+                        <a href="{{ path('detail_commande',{'id':item.id}) }}" title="Détail commande" class="btn btn-primary"><i
+                                    class="fa fa-info-circle"></i>Consulter</a>
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        <div style="clear: both;"></div>
+		{# display navigation #}
+                                     <div class="pagination col-sm-12" style="text-align: center">
+                {{ knp_pagination_render(commande) }}
+            </div>
+         </div>                           </div>
+    </div>
+
+{% endblock %}
+    

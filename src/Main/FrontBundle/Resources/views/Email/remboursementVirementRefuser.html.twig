@@ -1,0 +1,8 @@
+{% include 'MainFrontBundle:Email:header.html.twig' %}
+Bonjour, <strong>{{ ticket.commande.client.name }} {{ ticket.commande.client.fname }} </strong><br/>
+La demande de remboursement relatif à la commande liée au ticket {{ ticket.code }} a été traitée. Le remboursement s’est alors refusé.<br/>
+Si vous avez des questions, n’hésitez pas à nous contacter au <strong>71 168 444</strong>.
+<br/>
+<br/>
+<strong>L’équipe BIGDeal</strong>
+{% include 'MainFrontBundle:Email:footer.html.twig' %}

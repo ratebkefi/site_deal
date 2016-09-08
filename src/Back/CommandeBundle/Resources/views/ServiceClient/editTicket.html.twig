@@ -1,0 +1,48 @@
+<link href="{{ asset('RessourcesBack/css/bootstrap-responsive.min.css') }}" type="text/css" rel="stylesheet"/>
+<link href="{{ asset('RessourcesBack/css/styles.css') }}" type="text/css" rel="stylesheet"/>
+{% block body -%}
+
+    <div class="span12">
+        <!-- ==================== TEXT INPUTS HEADLINE ==================== -->
+        <div class="containerHeadline">
+            <i class="icon-edit"></i>
+
+            <h2>Modifier un message</h2>
+
+            <div class="controlButton pull-right"><i class="icon-remove removeElement"></i></div>
+            <div class="controlButton pull-right"><i class="icon-caret-down minimizeElement"></i></div>
+        </div>
+        <!-- ==================== END OF TEXT INPUTS HEADLINE ==================== -->
+        <!-- ==================== TEXT INPUTS FLOATING BOX ==================== -->
+        <div class="floatingBox">
+            <div class="container-fluid">
+                <div class="container-fluid">
+                    <form target="_parent" action="{{ path('modifier_ticket',{'id':id,'ticket':ticket}) }}"
+                          method="post" name="form" class="form-horizontal contentForm">
+                        <div class="table">
+                            <div class="control-group">
+                                <label class="control-label">Message</label>
+
+                                <div class="controls">
+                                    <textarea style="width: 500px !important;" class="input-xlarge required" rows="20" cols="120" id="ticket_message"
+                                              name="message">{{ message.message }}</textarea>
+                                </div>
+                            </div>
+                            <div class="formFooter">
+                                <button type="submit" class="btn btn-success"><i class="icon-ok"> </i> Submit
+                                </button>
+
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+        <!-- ==================== END OF TEXT INPUTS FLOATING BOX ==================== -->
+    </div>
+
+{% endblock %}
+ {% block javascripts %}
+     <script type="text/javascript" src="{{ asset('tinymce/tinymce.min.js') }}"></script>
+ {% endblock %}

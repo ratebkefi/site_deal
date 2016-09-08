@@ -1,0 +1,70 @@
+{% extends '::baseBack.html.twig' %}
+{% block body -%}
+
+
+<!-- ==================== PAGE CONTENT ==================== -->
+<div class="content">
+    <!-- ==================== WIDGETS CONTAINER ==================== -->
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span12">
+
+                </div>
+
+
+                <!-- ==================== END OF ROW ==================== -->
+                <div class="row-fluid">
+                    <div class="span12">
+                        <!-- ==================== DEFAULT TABLE HEADLINE ==================== -->
+                        <div class="containerHeadline">
+                            <i class="icon-table"></i>
+                            {% set counter = 0 %}
+                            {% for entity in pagination %}
+                                {% if entity.operation ==1%}{% set counter = counter + entity.montant %} {% else %} {% set counter = counter - entity.montant %} {% endif %}
+                            {% endfor %}
+                            
+                            <h2>Historique BigFid : {{ counter }}</h2>
+                        </div>
+                        <!-- ==================== END OF DEFAULT TABLE HEADLINE ==================== -->
+
+                        <!-- ==================== DEFAULT TABLE FLOATING BOX ==================== -->
+                        <div class="floatingBox table">
+                            <div class="container-fluid">
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th>Montant</th>
+                                        <th>Date</th>
+                                        <th>Motif</th>
+
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    
+                                    {% for entity in pagination %}
+                                        <tr>
+                                            <td><strong>{% if entity.operation ==1%} + {% else %} - {% endif %}{{ entity.montant }} <sub>B</sub></strong></td>
+                                            <td>{{ entity.dcr|date('d-m-Y H:i:s') }}</td>
+                                            <td>{{ entity.motif }}</td>
+                                            
+
+                                        </tr>
+
+{% endfor %}
+                                    </tbody>
+                                </table>
+                                {# display navigation #}
+                                <div class="pagination pagination-large" style="text-align: center">
+                                    {{ knp_pagination_render(pagination) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- ==================== END OF WIDGETS CONTAINER ==================== -->
+        </div>
+        </div>
+        </div>
+
+{% endblock %}

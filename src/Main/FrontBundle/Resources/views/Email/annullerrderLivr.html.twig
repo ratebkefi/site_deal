@@ -1,0 +1,18 @@
+{% include 'MainFrontBundle:Email:header.html.twig' %}
+Bonjour <strong>{{ client.name }} {{ client.fname }} </strong>,<br/>
+Vous avez passé une pré-commande sur BIGDeal avec les détails suivants:<br/>
+Commande <strong>{{ "%09d"|format(commande.id) }}</strong><br/>
+Deal: <strong>{{ commande.deal }}</strong><br/>
+Quantité : <strong>{{ commande.qte }}</strong><br/>
+Prix total : <strong>{{ commande.reference.bigdealPrice *  commande.qte }}  DT</strong><br/>
+Date de commande : <strong>{{ commande.dcr|date('Y-m-d H:i:s') }}</strong><br/>
+Mode de paiement  <strong>Livraison</strong><br/>
+<br/>
+<br/>
+Pour confirmer votre commande, nous vous invitons à la payer au paybox le plus proche avant la date d’expiration du deal.<br/>
+Nous vous informons que les quantités sont limitées, donc soyez les premiers arrivés afin d’être les premiers servis.<br>
+<br/>
+<br/>
+
+<strong>L’équipe BIGDeal</strong>
+{% include 'MainFrontBundle:Email:footer.html.twig' %}

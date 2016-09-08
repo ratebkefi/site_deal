@@ -1,0 +1,8 @@
+{% include 'MainFrontBundle:Email:header.html.twig' %}
+Bonjour <strong>{{ ticket.commande.client.name }} {{ ticket.commande.client.fname }},</strong><br/>
+La demande de remboursement relatif à la commande liée au ticket <a href="https://www.bigdeal.tn{{ path('detail_ticket',{'id':ticket.id}) }}">{{ ticket.code }}</a> a été traitée. Le remboursement s’est alors effectué par points BIGFid.<br/>
+Connectez-vous à votre compte avec votre adresse email et votre mot de passe puis allez à la rubrique « Mes BIGFid » pour consulter l’historique de vos BIGFid.<br/>
+<br/>
+<br/>
+<strong>L’équipe BIGDeal</strong>
+{% include 'MainFrontBundle:Email:footer.html.twig' %}

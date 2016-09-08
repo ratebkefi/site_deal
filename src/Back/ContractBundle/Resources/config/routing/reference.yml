@@ -1,0 +1,32 @@
+#protocol
+#back_reference_homepage:
+#    path:     /{protocol_id}/{annexe_id}
+#    defaults: { _controller: BackContractBundle:Reference:index }
+
+dash_reference_show:
+    path:     /{protocol_id}/{annexe_id}/view/{id}/{partner}
+    defaults: { _controller: BackContractBundle:Reference:show}
+    requirements:
+        id: \d+
+        partner: \d+
+        
+add_reference_manager:
+    path:     /{protocol_id}/{annexe_id}/add/{partner}
+    defaults: { _controller: BackContractBundle:Reference:add }
+update_reference_manager:
+    path:     /{protocol_id}/{annexe_id}/update/{id}/{partner}
+    defaults: { _controller: BackContractBundle:Reference:edit}
+    requirements:
+        id: \d+
+        partner: \d+
+delete_reference_manager:
+    path:     /{protocol_id}/{annexe_id}/delete/{id}/{partner}
+    defaults: { _controller: BackContractBundle:Reference:delete}
+    requirements:
+        id: \d+
+        partner: \d+
+back_ajx_reference:
+    path:     /ajx
+    defaults: { _controller: BackContractBundle:Reference:ajxcmd}
+    requirements:
+        id: \d+

@@ -1,0 +1,86 @@
+{% extends '::baseBack.html.twig' %}
+{% block body %}
+    <!-- ==================== PAGE CONTENT ==================== -->
+    <div class="content">
+
+        <!-- ==================== WIDGETS CONTAINER ==================== -->
+        <div class="container-fluid">
+            <a href="{{ path('dash_contact_partner_add',{ 'partid': partid }) }}">
+                <button class="btn btn-danger" type="button">Ajouter un contact</button>
+            </a>
+
+            <!-- ==================== END OF ROW ==================== -->
+            <div class="row-fluid">
+                <div class="span12">
+                    <!-- ==================== DEFAULT TABLE HEADLINE ==================== -->
+                    <div class="containerHeadline">
+                        <i class="icon-table"></i>
+                        <h2>Liste contact partenaire</h2>
+                    </div>
+                    <!-- ==================== END OF DEFAULT TABLE HEADLINE ==================== -->
+
+                    <!-- ==================== DEFAULT TABLE FLOATING BOX ==================== -->
+                    <div class="floatingBox table">
+                        <div class="container-fluid">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>Prénom</th>
+                                    <th>Nom</th>
+                                    <th>Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for entity in pagination %}
+                                    <tr>
+                                        <td>{{ entity.firstname }}</td>
+                                        <td>{{ entity.lastname }}</td>
+
+                                        <td>
+                                            <div class="btn-toolbar" style="margin: 0;">
+                                                <div class="btn-group">
+                                                    <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                                        Action <span
+                                                                class="caret"></span></button>
+                                                    <ul class="dropdown-menu pull-right">
+
+                                                        <li>
+                                                            <a href="{{ path('dash_contact_partner_show', { 'id': entity.id ,'partid':partid}) }}">Afficher </a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="{{ path('dash_contact_partner_update', { 'id': entity.id,'partid':partid }) }}">Modifier</a>
+                                                        </li>
+                                                        {% if app.user.roles[0]=='ROLE_SUPER_ADMIN' %}
+
+                                                        <li>
+                                                            <a href="javascript:confirmdeletbox('{{ path('dash_contact_partner_delete', { 'id': entity.id,'partid':partid }) }}')">Supprimer</a>
+                                                        </li>
+                                                        {% endif %}
+
+                                                    </ul>
+                                                </div>
+                                            </div>
+
+
+
+
+
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                            {# display navigation #}
+                            <div class="pagination pagination-large" style="text-align: center">
+                                {{ knp_pagination_render(pagination) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ==================== END OF WIDGETS CONTAINER ==================== -->
+    </div>
+
+    <!-- ==================== END OF PAGE CONTENT ==================== -->
+{% endblock %}

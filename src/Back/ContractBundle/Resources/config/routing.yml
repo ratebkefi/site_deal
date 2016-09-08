@@ -1,0 +1,12 @@
+back_protocol_homepage:
+    resource: "@BackContractBundle/Resources/config/routing/protocol.yml"
+    prefix:   /protocol
+back_annexe_homepage:
+    resource: "@BackContractBundle/Resources/config/routing/annexe.yml"
+    prefix:   /annexe
+back_reference_homepage:
+    resource: "@BackContractBundle/Resources/config/routing/reference.yml"
+    prefix:   /reference
+list_caissier:
+    resource: "@BackContractBundle/Resources/config/routing/commercial.yml"
+    prefix:   /commercial

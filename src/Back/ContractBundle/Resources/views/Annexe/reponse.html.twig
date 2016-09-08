@@ -1,0 +1,9 @@
+{% if entities %}
+    {% for entity in entities %}
+        <textarea required="required" name="reponse_{{ id_question }}" placeholder="Votre réponse"
+                  class="space10">{{ entity.response }}</textarea>
+    {% endfor %}
+{% else %}
+    <textarea required="required" name="reponse_{{ id_question }}" placeholder="Votre réponse"
+              class="space10"></textarea>
+{% endif %}

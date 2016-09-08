@@ -1,0 +1,165 @@
+{% extends '::baseBack.html.twig' %}
+{% form_theme form 'form_table_layout.html.twig' %}
+{% block body -%}
+    <div class="content">
+        <div class="container-fluid">
+
+            <!-- ==================== COMMON ELEMENTS ROW ==================== -->
+            <div class="row-fluid">
+                <div class="span12">
+                    <!-- ==================== TEXT INPUTS HEADLINE ==================== -->
+                    <div class="containerHeadline">
+                        <i class="icon-edit"></i>
+
+                        <h2>Modifier Deal</h2>
+
+                        <div class="controlButton pull-right"><i class="icon-remove removeElement"></i></div>
+                        <div class="controlButton pull-right"><i class="icon-caret-down minimizeElement"></i></div>
+                    </div>
+                    <!-- ==================== END OF TEXT INPUTS HEADLINE ==================== -->
+
+                    <!-- ==================== TEXT INPUTS FLOATING BOX ==================== -->
+                    <div class="floatingBox">
+                        <div class="container-fluid">
+                            <div class="container-fluid">
+                                {% if type is not null %}
+                                <form class="form-horizontal contentForm" method="POST"
+                                      action="{{ path('update_deal_manager2',{'id' : id,'type':type}) }}">
+                                    {% else %}
+                                    <form class="form-horizontal contentForm" method="POST"
+                                          action="{{ path('update_deal_manager',{'id' : id}) }}">
+                                        {% endif %}
+                                        {{ form_row(form.title,{'attr':{'class':'span11'}}) }}
+                                        {{ form_row(form.seoTitle,{'attr':{'class':'span11'}}) }}
+                                        {{ form_row(form.seoDescription,{'attr':{'class':'span11'}}) }}
+                                        {{ form_row(form.seoLink,{'attr':{'class':'span11'}}) }}
+                                        {{ form_row(form.description,{'attr':{'class':'tinymce'}}) }}
+                                        {{ form_row(form.deal,{'attr':{'class':'tinymce'}}) }}
+                                        {{ form_row(form.bigdeallike,{'attr':{'class':'tinymce'}}) }}
+                                        {{ form_row(form.youLike,{'attr':{'class':'tinymce'}}) }}
+                                        {{ form_row(form.toBeClear,{'attr':{'class':'tinymce'}}) }}
+                                        {{ form_row(form.strongpoint,{'attr':{'class':'tinymce'}}) }}
+                                        {{ form_row(form.slider) }}
+                                        <div class="control-group">
+                                            <label class="control-label">Image slider : </label>
+
+                                            <div class="controls">
+                                                <input type="text" value="{{ image4 }}" name="file4" id="filexxxx4">
+                                        <span class="add-on">
+                                            <a class='btn btn-success iframe-btnx'
+                                               href='{{ asset('tinymce/plugins/filemanager/dialog.php') }}?type=2&field_id=filexxxx4'>
+                                                <i class="icon-download"></i></a>
+                                        </span>
+                                            </div>
+
+                                        </div>
+                                        {{ form_row(form.startDateValidtyCoupon) }}
+                                        {{ form_row(form.endDateValidtyCoupon, {'attr': {'min': '1'}}) }}
+
+                                        <div class="control-group">
+                                            <label class="control-label">Image 1 : </label>
+
+                                            <div class="controls">
+                                                <input type="text" value="{{ image1 }}" name="file" id="filexxxx">
+                                        <span class="add-on">
+                                            <a class='btn btn-success iframe-btnx'
+                                               href='{{ asset('tinymce/plugins/filemanager/dialog.php') }}?type=2&field_id=filexxxx'>
+                                                <i class="icon-download"></i></a>
+                                        </span>
+                                            </div>
+
+                                        </div>
+                                        <div class="control-group">
+                                            <label class="control-label">Image 2 : </label>
+
+                                            <div class="controls">
+                                                <input type="text" value="{{ image2 }}" name="file2" id="filexxxx2">
+                                        <span class="add-on">
+                                            <a class='btn btn-success iframe-btnx'
+                                               href='{{ asset('tinymce/plugins/filemanager/dialog.php') }}?type=2&field_id=filexxxx2'>
+                                                <i class="icon-download"></i></a>
+                                        </span>
+                                            </div>
+
+                                        </div>
+                                        <div class="control-group">
+                                            <label class="control-label">Image 3 : </label>
+
+                                            <div class="controls">
+                                                <input type="text" value="{{ image3 }}" name="file1" id="filexxxx1">
+                                        <span class="add-on">
+                                            <a class='btn btn-success iframe-btnx'
+                                               href='{{ asset('tinymce/plugins/filemanager/dialog.php') }}?type=2&field_id=filexxxx1'>
+                                                <i class="icon-download"></i></a>
+                                        </span>
+                                            </div>
+
+                                        </div>
+                                        {{ form_row(form.cashPayment) }}
+                                        {{ form_row(form.maxCouponUser, {'attr': {'min': '0'}}) }}
+                                        <div class="formFooter">
+                                            <button type="submit" class="btn btn-success"><i class="icon-ok"> </i>
+                                                Enregistrer
+                                            </button>
+                                            <button type="reset" class="btn btn-danger"><i class="icon-remove"> </i>
+                                                Effacer
+                                            </button>
+                                            <a href="{{ path('back_deal') }}">
+                                                <button class="btn btn-inverse" type="button"><i class="icon-list"></i>
+                                                    Liste
+                                                </button>
+                                            </a>
+                                            {{ form_widget(form._token) }}
+                                        </div>
+                                    </form>
+                            </div>
+
+                        </div>
+                    </div>
+                    <!-- ==================== END OF TEXT INPUTS FLOATING BOX ==================== -->
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+
+
+    <script src="{{ asset('tinymce/tinymce.min.js') }}"></script>
+
+
+    <script src="{{ asset('RessourcesBack/js/lib/jquery-inputmask/jquery.inputmask.min.js') }}"></script>
+    <script src="{{ asset('RessourcesBack/js/lib/jquery-inputmask/jquery.inputmask.extensions.js') }}"></script>
+    <script src="{{ asset('RessourcesBack/js/lib/jquery-inputmask/jquery.inputmask.date.extensions.js') }}"></script>
+    <script>
+        $(".datepickerField").inputmask("date");
+        $(document).ready(function () {
+            $("#back_dealbundle_deal_title").attr({
+                'data-validation': 'length',
+                'data-validation-length': 'max115'
+            });
+            // ("#back_dealbundle_deal_maxCouponUser").attr({
+            //     'data-validation': 'number',
+            //    'data-validation-length': 'min-0'
+            // });
+            $.validate();
+        });
+
+        tinymce.init({
+            selector: '.tinymce',
+            plugins: [
+                "advlist autolink lists link image charmap print preview anchor",
+                "searchreplace visualblocks code fullscreen ",
+                "insertdatetime media table contextmenu paste moxiemanager responsivefilemanager filemanager importcss textcolor "
+            ],
+            toolbar: "insertfile undo redo | styleselect | forecolor fontselect fontsizeselect | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | forecolor backcolor table",
+            autosave_ask_before_unload: false,
+            theme_advanced_fonts: "Arial=arial,helvetica,sans-serif;Arial Black=arial black;Courier New=courier new,courier,monospace;Times New Roman=times new roman;Georgia=georgia;Comic Sans MS=comic sans ms;Book Antiqua=book antiqua;Tahoma=tahoma;Trebuchet MS=trebuchet ms;",
+            max_height: 600,
+            min_height: 160,
+            height: 180
+        });
+
+    </script>
+{% endblock %}
+

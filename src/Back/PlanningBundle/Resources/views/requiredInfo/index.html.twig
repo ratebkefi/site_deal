@@ -1,0 +1,81 @@
+{% extends '::baseBack.html.twig' %}
+{% block body -%}
+    <!-- ==================== PAGE CONTENT ==================== -->
+    <div class="content">
+
+        <!-- ==================== WIDGETS CONTAINER ==================== -->
+        <div class="container-fluid">
+            <a href="{{ path('add_requiredInfo_manager', { 'category_id': category_id }) }}">
+                <button class="btn btn-danger" type="button">Ajouter</button>
+            </a>
+
+            <!-- ==================== END OF ROW ==================== -->
+            <div class="row-fluid">
+                <div class="span12">
+                    <!-- ==================== DEFAULT TABLE HEADLINE ==================== -->
+                    <div class="containerHeadline">
+                        <i class="icon-table"></i>
+
+                        <h2>Liste des Questions</h2>
+                    </div>
+                    <!-- ==================== END OF DEFAULT TABLE HEADLINE ==================== -->
+
+                    <!-- ==================== DEFAULT TABLE FLOATING BOX ==================== -->
+                    <div class="floatingBox table">
+                        <div class="container-fluid">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>Question</th>
+                                    <th>Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for entity in pagination %}
+                                    <tr>
+                                        <td>
+                                            <a href="{{ path('update_requiredInfo_manager', { 'id': entity.id , 'category_id': category_id }) }}">{{ entity.question }}</a>
+                                        </td>
+                                        <td>
+                                            <div class="btn-toolbar" style="margin: 0;">
+                                                <div class="btn-group">
+                                                    <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                                        Action <span
+                                                                class="caret"></span></button>
+                                                    <ul class="dropdown-menu pull-right">
+
+                                                        <li>
+                                                            <a href="{{ path('update_requiredInfo_manager', { 'id': entity.id, 'category_id': category_id }) }}">Modifier</a>
+                                                        </li>
+
+                                                        {% if app.user.roles[0]=='ROLE_SUPER_ADMIN' %}
+
+                                                            <li>
+                                                                <a href="javascript:confirmdeletbox('{{ path('delete_requiredInfo_manager', {'id': entity.id , 'category_id': category_id}) }}')">Supprimer</a>
+                                                            </li>
+                                                        {% endif %}
+
+                                                    </ul>
+                                                </div>
+                                            </div>
+
+
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                            {# display navigation #}
+                            <div class="pagination pagination-large" style="text-align: center">
+                                {{ knp_pagination_render(pagination) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ==================== END OF WIDGETS CONTAINER ==================== -->
+    </div>
+
+    <!-- ==================== END OF PAGE CONTENT ==================== -->
+{% endblock %}

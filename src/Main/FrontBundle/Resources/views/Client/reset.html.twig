@@ -1,0 +1,87 @@
+{% extends '::base.html.twig' %}
+{% block stylesheets %}
+{% endblock %}
+{% block body %}
+
+    {% for type, flashMessages in app.session.flashbag.all() %}
+        {% for flashMessage in flashMessages %}
+            <br/>
+            <div class="alert {{ type }}">
+                <button data-dismiss="alert" class="close" type="button">×</button>
+                {{ flashMessage|trans }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+    <div class="row" id="identif">
+        <div class="col-md-12 entry">
+            <h1>Changer votre mot de passe</h1>
+        </div>
+        {{ form_start(form, {'method': 'POST','attr': {'class': 'validatedForm'}}) }}
+
+
+        <div class="col-md-12 plop">
+            <div class="row">
+                <div class="col-md-4 hidden-xs">
+                    <p class="text-right">Nouveau mot de passe</p>
+                </div>
+                <div class="col-md-8 col-xs-12">
+                    {{ form_widget(form.pwd, {'id': 'password' ,'attr': {'class': "form-control password",
+                        'placeholder': "Enter votre nouveau mot de passe"} }) }}
+
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4 hidden-xs">
+                    <p class="text-right"> Confirmer</p>
+                </div>
+                <div class="col-md-8 col-xs-12">
+                    <input type="password" class="form-control confpass" id="confiremer"
+                           placeholder="Confirmer mot de passe"><br>
+                    <button type="submit" id="submit"  class="btn btn-info btn-reset">Valider</button>
+                </div>
+
+
+            </div>
+            <br>
+            {{ form_widget(form._token) }}
+            {{ form_end(form) }}
+
+        </div>
+    </div>
+
+{% endblock %}
+    {% block javascripts %}
+
+
+        <script>
+            $("document").ready(function () {
+
+                $('#submit').click(function (event) {
+
+                    data = $('#password').val();
+                    var len = data.length;
+
+                    if (len < 1) {
+                        alert("Password cannot be blank");
+                        // Prevent form submission
+                        event.preventDefault();
+                    }
+
+                    if ($('.password').val() != $('.confpass').val()) {
+                        alert("Password and Confirm Password don't match");
+                        // Prevent form submission
+                        event.preventDefault();
+                    }
+
+                });
+            });
+            $(document).ready(function () {
+                $('.alert-success').delay(5000).fadeOut();
+            });
+            $(document).ready(function () {
+                $('.alert-error').delay(5000).fadeOut();
+            });
+
+        </script>
+    {% endblock %}

@@ -1,0 +1,147 @@
+{% extends '::baseBack.html.twig' %}
+{% block body -%}
+    <style type="text/css">
+        [type="checkbox"]:not(:checked),
+        [type="checkbox"]:checked {
+            position: absolute;
+
+
+        }
+
+        /* on prépare le label */
+        [type="checkbox"]:not(:checked) + label,
+        [type="checkbox"]:checked + label {
+            position: relative; /* permet de positionner les pseudo-éléments */
+            padding-left: 25px; /* fait un peu d'espace pour notre case à venir */
+            cursor: pointer;    /* affiche un curseur adapté */
+
+        }
+
+    </style>
+
+
+    <div class="content">
+        <div class="container-fluid">
+
+            <!-- ==================== COMMON ELEMENTS ROW ==================== -->
+            <div class="row-fluid">
+                <div class="span12">
+                    <!-- ==================== TEXT INPUTS HEADLINE ==================== -->
+                    <div class="containerHeadline">
+                        <i class="icon-edit"></i>
+
+                        <h2>Ajouter une Compagne</h2>
+
+                        <div class="controlButton pull-right"><i class="icon-remove removeElement"></i></div>
+                        <div class="controlButton pull-right"><i class="icon-caret-down minimizeElement"></i></div>
+                    </div>
+                    <!-- ==================== END OF TEXT INPUTS HEADLINE ==================== -->
+
+                    <!-- ==================== TEXT INPUTS FLOATING BOX ==================== -->
+                    <div class="floatingBox">
+                        <div class="container-fluid">
+
+                            <div class="container-fluid">
+
+                                {{ form(form_region) }}
+                                <div class="floatingBox">
+                                    <div class="container-fluid">
+
+
+
+                                        {{ form_start(edit_form) }}
+                                        {{ form_errors(edit_form) }}
+
+                                        {{ form_row(edit_form.namecompagne) }}
+                                        {{ form_row(edit_form.dealcompagne) }}
+
+                                        <div  class="span12" > {{ form_row(edit_form.dealfeatued ) }}</div>
+
+
+
+                                        <div class="span12" style="margin-top: 15px;">{{ form_row(edit_form.submit, { 'label': 'Generer' }) }}</div>
+                                        {{ form_end(edit_form) }}
+
+
+
+
+
+
+
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+
+                        </div>
+                    </div>
+                    <!-- ==================== END OF TEXT INPUTS FLOATING BOX ==================== -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+
+    <script type="text/javascript">
+        $( "#back_dealbundle_region_region" ).change(function() {
+
+
+            var idr = $( "#back_dealbundle_region_region option:selected" ).val();
+
+            var route = "{{ path('compagne_new', { 'idr': '999999' }) }}";
+            location.href = route.replace('999999', idr);
+
+
+        });
+
+
+        $(document).ready(function() {
+
+            var idr=parseInt({{idr}});
+            if(idr!=0)
+
+
+            $("#back_dealbundle_region_region").val({{idr}});
+        } );
+    </script>
+
+
+
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

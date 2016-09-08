@@ -1,0 +1,41 @@
+list_responsablecaissier:
+    path:     /
+    defaults: { _controller: BackCommandeBundle:ResponsableCaissier:index }
+historique_responsablecaissier:
+    path:     /historique
+    defaults: { _controller: BackCommandeBundle:ResponsableCaissier:historique }
+
+update_responsablecaissier_manager:
+    path:     /update/{id}
+    defaults: { _controller: BackCommandeBundle:ResponsableCaissier:edit}
+    requirements:
+        id: \d+
+view_responsablecaissier_manager:
+    path:     /view/{id}
+    defaults: { _controller: BackCommandeBundle:ResponsableCaissier:view}
+    requirements:
+        id: \d+
+add_responsablecaissier_manager:
+    path:     /add
+    defaults: { _controller: BackCommandeBundle:ResponsableCaissier:add}
+
+activate_responsablecaissier_manager:
+    path:     /act/{id}
+    defaults: { _controller: BackCommandeBundle:ResponsableCaissier:activate}
+    requirements:
+        id: \d+
+unactivate_responsablecaissier_manager:
+    path:     /unact/{id}
+    defaults: { _controller: BackCommandeBundle:ResponsableCaissier:unactivate}
+    requirements:
+        id: \d+
+retrait_responsablecaissier_manager:
+    path:     /retrait/{id}
+    defaults: { _controller: BackCommandeBundle:ResponsableCaissier:retrait}
+    requirements:
+        id: \d+
+historique_responsablecaissier_manager:
+    path:     /historique/{id}
+    defaults: { _controller: BackCommandeBundle:ResponsableCaissier:historiqueResp}
+    requirements:
+        id: \d+

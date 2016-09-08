@@ -1,0 +1,7 @@
+#entreprise
+back_notification:
+    path:     /
+    defaults: { _controller: BackDashBundle:Notification:index }
+back_notification_vu:
+    path:   /marquervues
+    defaults: { _controller: BackDashBundle:Notification:notifvu }

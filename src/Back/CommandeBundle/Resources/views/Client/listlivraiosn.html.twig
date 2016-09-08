@@ -1,0 +1,331 @@
+{% extends '::baseBack.html.twig' %}
+{% block body -%}
+    <!-- ==================== PAGE CONTENT ==================== -->
+    <div class="content">
+        <!-- ==================== WIDGETS CONTAINER ==================== -->
+        <div class="container-fluid">
+            <!-- ==================== END OF ROW ==================== -->
+            <div class="row-fluid">
+                <div class="span12">
+                    <div class="containerHeadline">
+                        <i class="icon-zoom-in"></i>
+                        <h2>Filtre de recherche</h2>
+                        <div class="controlButton pull-right"><i class="icon-caret-down minimizeElement"></i></div>
+                    </div>
+                    <div class="floatingBox table ">
+                        {{ form_start(form, {'method': 'GET','attr': {'class': 'form-horizontal contentForm','style':'padding:0; margin:0'}}) }}
+                        <div class="container-fluid" style="padding: 3px 10px">
+
+                            <div class="span2">
+                                <label>N° commande</label>
+                                {{ form_widget(form.id,{'attr':{'class':'span10'}}) }}
+                            </div>
+
+                            <div class="span2">
+                                <label>&Eacute;tat de commande</label>
+                                {{ form_widget(form.etat,{'attr':{'class':'span12'}}) }}
+                            </div>
+
+                            <div class="span2">
+                                <label>Nom de client</label>
+                                {{ form_widget(form.name,{'attr':{'autocomplete':'off','class':'span12'}}) }}
+
+                            </div>
+                            <div class="span2">
+                                <label>Prénom de client</label>
+                                {{ form_widget(form.fname,{'attr':{'autocomplete':'off','class':'span12'}}) }}
+
+                            </div>
+                            <div class="span3" style="display: none">
+                                <label>Payée à la caisse</label>
+                                {{ form_widget(form.paypar,{'attr':{'class':'span10 selectpicker','data-live-search':'true'}}) }}
+                            </div>
+                            <div class="span3">
+                                <label>N° chèque</label>
+                                {{ form_widget(form.num_cheque,{'attr':{'class':'span12'}}) }}
+                            </div>
+                        </div>
+                        <div class="container-fluid" style="padding: 3px 10px">
+                            <div class="span6">
+                                <label>Deal</label>
+                                {{ form_widget(form.deal,{'attr':{'class':'span12 selectpicker','data-live-search':'true'}}) }}
+                            </div>
+                            <div class="span3">
+                                <label>N° coupon</label>
+                                {{ form_widget(form.numcoupon,{'attr':{'class':'span12'}}) }}
+                            </div>
+                            <div class="span3">
+                                <label>Téléphone de client</label>
+                                {{ form_widget(form.telc,{'attr':{'class':'span12 selectpicker','data-live-search':'true'}}) }}
+                            </div>
+                        </div>
+                        <div class="container-fluid" style="padding: 3px 10px 20px">
+                            <div class="span2">
+                                <label>&nbsp;</label>
+                                <input type="submit" value="Rechecher" class="btn btn-success"/>
+
+                            </div>
+                        </div>
+                        {{ form_end(form) }}
+
+                    </div>
+                    {% for type, flashMessages in app.session.flashbag.all() %}
+                        {% for flashMessage in flashMessages %}
+                            <div class="alert {{ type }}">
+                                <button data-dismiss="alert" class="close" type="button">×</button>
+                                {{ flashMessage|trans }}
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
+                    <!-- ==================== DEFAULT TABLE HEADLINE ==================== -->
+                    <div class="containerHeadline">
+                        <i class="icon-table"></i>
+
+                        <h2>Liste des commandes</h2>
+                    </div>
+                    <!-- ==================== END OF DEFAULT TABLE HEADLINE ==================== -->
+
+                    <!-- ==================== DEFAULT TABLE FLOATING BOX ==================== -->
+                    <div class="floatingBox table">
+                        <div class="container-fluid">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>N° commande</th>
+                                    <th>Date création</th>
+                                    <th>Deal</th>
+                                    <th>Reference</th>
+                                    <th>Total commande</th>
+                                    <th>Client</th>
+                                    <th>Tel</th>
+                                    <th>Quantité</th>
+                                    <th>Payer à</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for entity in pagination %}
+
+
+
+                                    {% set CouponAnnuler = entity.id|listCouponAnnuler %}
+                                    {% set nbrCouponClient = nbrCouponAcheter(entity.deal.id,entity.client.id) %}
+                                    <tr class="{% if entity.etat==2 %} error{% endif %}">
+                                        <td> {{ CouponAnnuler }} {{ "%09d"|format(entity.id) }}</td>
+                                        <td>{{ entity.dcr|date("d/m/Y H:i:s") }}</td>
+                                        <td>{{ entity.deal }}</td>
+                                        <td>{{ entity.reference.title }}</td>
+                                        <td>{{ entity.reference.bigdealPrice *  entity.qte + 3 }} DT</td>
+                                        <td>{{ entity.client }} </td>
+                                        <td>{{ entity.client.phone }}</td>
+                                        <td>{{ entity.qte }}</td>
+                                        <td>{% if entity.caisse is not null %}{{ entity.caisse.libelle }}{% endif %}
+                                        </td>
+                                        <td>{% if  entity.etat==2 %} En attente de confirmation  {% elseif entity.etat == 4 %} Confirmé {% elseif entity.etat==3 %} Annulé{% endif %}</td>
+                                        <td>
+
+                                                <div class="btn-toolbar" style="margin: 0;">
+                                                    <div class="btn-group">
+                                                        {% if entity.etat == 2 %}
+                                                            <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                                                Action <span class="caret"></span></button>
+                                                            <ul class="dropdown-menu pull-right">
+                                                                <li>
+                                                                    <a href="{{ path('coupon_commande_traiter', { 'id': entity.id }) }}">Traiter</a>
+                                                                </li>
+                                                            </ul>
+                                                        {% endif %}
+
+                                                        {% if entity.etat == 4 %}
+                                                            <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                                                Action <span class="caret"></span></button>
+
+                                                            <ul class="dropdown-menu pull-right">
+                                                                <li>
+                                                                    <a href="{{ path('coupon_commande_tracking', { 'id': entity.id }) }}">Tracking </a>
+                                                                </li>
+                                                            </ul>
+                                                        {% endif %}
+
+                                                    </div>
+                                                </div>
+
+                                        </td>
+                                    </tr>
+
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                            {# display navigation #}
+                            <div class="pagination pagination-large" style="text-align: center">
+                                {{ knp_pagination_render(pagination) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ==================== END OF WIDGETS CONTAINER ==================== -->
+    </div>
+
+    <!-- ==================== END OF PAGE CONTENT ==================== -->
+    <link rel="stylesheet" type="text/css" href="{{ asset('RessourcesBack/css/bootstrap-select.css') }}">
+
+{% endblock %}
+    {% block javascripts %}
+        {% javascripts '@MainFrontBundle/Resources/public/js/bootstrap-typeahead.min.js' %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+        {% endjavascripts %}
+        <script src="{{ asset('RessourcesBack/js/bootstrap-select.js') }}"></script>
+
+
+        <!-- masked inputs -->
+        <script src="{{ asset('public/js/jquery.ui.autocomplete.min.js') }}"></script>
+        <script src="{{ asset('RessourcesBack/js/vendor/jquery-ui-1.10.2.custom.min.js') }}"></script>        <!-- jquery ui dragging -->
+        <script>
+            $(document).ready(function () {
+                $('.alert-success').delay(5000).fadeOut();
+            });
+            $(document).ready(function () {
+                $('.alert-error').delay(5000).fadeOut();
+            });
+            $(function () {
+
+                // fancybox
+                $('.paye').fancybox({
+                    'height': 'auto',
+                    'width': 990,
+                    'type': 'iframe',
+                    'autoScale': false
+                });
+//back_commandebundle_commandfilter_vadd
+                $("#back_commandebundle_commandfilter_vadd").change(function () {
+
+                    if ($('#back_commandebundle_commandfilter_vadd').val() == 0) {
+                        $('#back_commandebundle_commandfilter_user').attr('disabled', 'disabled')
+                    } else {
+                        $('#back_commandebundle_commandfilter_user').removeAttr('disabled')
+                    }
+                });
+            })
+
+
+            var cache = {};
+
+            $(document).ready(function () {
+                $("input[data-id=codePostal], input[data-id=ville]").autocomplete({
+                    source: function (request, response) {
+                        alert(request);
+                        alert(response);
+                        //Si la réponse est dans le cache
+                        if (request.term in cache) {
+                            response($.map(cache[request.term], function (item) {
+                                return {
+                                    label: item.CodePostal + ", " + item.Ville,
+                                    value: function () {
+                                        if ($(this).attr('data-id') == 'codePostal') {
+                                            $('input[data-id=ville]').val(item.Ville);
+                                            return item.CodePostal;
+                                        }
+                                        else {
+                                            $('input[data-id=codePostal]').val(item.CodePostal);
+                                            return item.Ville;
+                                        }
+                                    }
+                                };
+                            }));
+                        }
+                        //Sinon -> Requete Ajax
+                        else {
+                            var objData = {};
+                            var url = $(this.element).attr('data-url');
+                            alert(url);
+                            if ($(this.element).attr('data-id') == 'codePostal') {
+                                objData = {codePostal: request.term};
+                            }
+                            else {
+                                objData = {ville: request.term};
+                            }
+
+                            $.ajax({
+                                url: url,
+                                dataType: "json",
+                                data: objData,
+                                type: 'POST',
+                                success: function (data) {
+                                    //Ajout de reponse dans le cache
+                                    cache[request.term] = data;
+
+                                    response($.map(data, function (item) {
+                                        return {
+                                            label: item.CodePostal + ", " + item.Ville,
+                                            value: function () {
+                                                if ($(this).attr('data-id') == 'codePostal') {
+                                                    $('input[data-id=ville]').val(item.Ville);
+                                                    return item.CodePostal;
+                                                }
+                                                else {
+                                                    $('input[data-id=codePostal]').val(item.CodePostal);
+                                                    return item.Ville;
+                                                }
+                                            }
+                                        };
+                                    }));
+                                },
+                                error: function (jqXHR, textStatus, errorThrown) {
+                                    console.log(textStatus, errorThrown);
+                                }
+                            });
+                        }
+                    },
+                    minLength: 3,
+                    delay: 300
+                });
+            });
+
+            $('#back_commandebundle_commandfilter_name').typeahead({
+
+                ajax: {
+                    url: '{{ path('list_client_par_nom') }}',
+                    triggerLength: 1,
+                    items: 10
+                },
+                afterSelect: function (item) {
+                    //save the id value into the hidden field
+
+                },
+                displayField: 'full_name'
+
+            })
+
+            $('#back_commandebundle_commandfilter_fname').typeahead({
+
+                ajax: {
+                    url: '{{ path('list_client_par_prenom') }}',
+                    triggerLength: 1,
+                    items: 10
+                },
+                afterSelect: function (item) {
+                    //save the id value into the hidden field
+
+                },
+                displayField: 'full_name'
+
+            })
+            $('#back_commandebundle_commandfilter_telc').typeahead({
+
+                ajax: {
+                    url: '{{ path('list_client_par_tel') }}',
+                    triggerLength: 1,
+                    items: 10
+                },
+                afterSelect: function (item) {
+                    //save the id value into the hidden field
+
+                },
+                displayField: 'full_name'
+
+            })
+        </script>
+    {% endblock %}

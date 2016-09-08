@@ -1,0 +1,25 @@
+{% extends '::base.html.twig' %}
+
+{% block body %}
+    <h2>Confirmation </h2>
+    <p>Bienvenue chez BIGDeal,</p><br/>
+    <p>Vous vous êtes inscrit avec succès sur BIGDeal.</p><br/>
+
+    <p>Grâce à BIGDeal vous allez pouvoir profiter d’expériences inédites dans les commerces de votre ville à des prix
+        exceptionnels.</p><br/>
+    <p>Lorsque vous vous connectez à votre compte BIGDeal.tn, vous pouvez utiliser votre adresse email et mot de passe
+        que vous avez choisi lors de votre inscription.</p><br/>
+    <p>*BIGDeal est généreux et vous offre <strong>20 BIGFid</strong> comme cadeau de bienvenue.*</p><br/>
+    <p>Votre solde BIGFid vous permettra de payer vos commandes comme si vous l’avez payé en Dinars !</p><br/>
+    <p> Connectez-vous dès maintenant et commencez à profiter des offres exceptionnelles dans votre ville.
+        Pour plus d’infos sur les politiques des membres et les conditions d’utilisation, <a
+                href="{{ path('pages_detail',{'name':'conditions-generales'}) }}">cliquez ici</a> .</p><br/>
+    <p> Profitez des offres exceptionnelles dès maintenant !</p><br/>
+    <div class="row">
+        <div class="col-sm-12">
+            <a href="{{ path('identification') }}" class="btn btn-info pull-left"><i class="fa fa-sign-in pr-10"></i>Se
+                connecter</a>
+        </div>
+    </div>
+
+{% endblock %}

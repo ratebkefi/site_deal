@@ -1,0 +1,24 @@
+back_invoice:
+    path:     /
+    defaults: { _controller: BackPartnerBundle:Invoice:index }
+dash_invoice_update:
+    path:     /update/{id}
+    defaults: { _controller: BackPartnerBundle:Invoice:edit}
+    requirements:
+        id: \d+
+
+dash_invoice_show:
+    path:     /view/{id}
+    defaults: { _controller: BackPartnerBundle:Invoice:show}
+    requirements:
+        id: \d+
+dash_invoice_add:
+    path:     /add
+    defaults: { _controller: BackPartnerBundle:Invoice:add}
+    requirements:
+        id: \d+
+dash_invoice_pdf:
+    path:     /print/{id}
+    defaults: { _controller: BackPartnerBundle:Invoice:print}
+    requirements:
+        id: \d+

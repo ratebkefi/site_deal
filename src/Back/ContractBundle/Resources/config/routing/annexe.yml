@@ -1,0 +1,39 @@
+#annexe
+back_annexe_homepage:
+    path:     /{protocol_id}/{partner}
+    defaults: { _controller: BackContractBundle:Annexe:index }
+    requirements:
+        protocol_id: \d+
+        
+dash_annexe_show:
+    path:     /{protocol_id}/view/{id}/{partner}
+    defaults: { _controller: BackContractBundle:Annexe:show}
+    requirements:
+        id: \d+
+pdf_annexepar_manager:
+    path:     /{protocol_id}/pdfp/{id}
+    defaults: { _controller: BackContractBundle:Annexe:printpart }
+pdf_annexe_manager:
+    path:     /{protocol_id}/pdf/{id}
+    defaults: { _controller: BackContractBundle:Annexe:print }
+add_annexe_manager:
+    path:     /{protocol_id}/add/{partner}
+    defaults: { _controller: BackContractBundle:Annexe:add }
+update_annexe_manager:
+    path:     /{protocol_id}/update/{id}/{partner}
+    defaults: { _controller: BackContractBundle:Annexe:edit}
+    requirements:
+        id: \d+
+delete_annexe_manager:
+    path:     /{protocol_id}/delete/{id}/{partner}
+    defaults: { _controller: BackContractBundle:Annexe:delete}
+    requirements:
+        id: \d+
+back_ajx_get_planing:
+    path:     /ajxAnexe
+    defaults: { _controller: BackContractBundle:Annexe:GetPlanning}
+    requirements:
+        id: \d+
+back_ajx_get_anexe_from_part:
+    path:     /ajxpartannex
+    defaults: { _controller: BackContractBundle:Annexe:partannex}

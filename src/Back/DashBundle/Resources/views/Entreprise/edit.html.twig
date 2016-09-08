@@ -1,0 +1,70 @@
+{% extends '::baseBack.html.twig' %}
+{% form_theme form 'form_table_layout.html.twig' %}
+{% block javascripts%}
+    <script>
+
+        $(document).ready(function () {
+            $("#back_dashbundle_entreprise_libelle").attr({'data-validation': 'required'});
+            $("#back_dashbundle_entreprise_adresse").attr({'data-validation': 'required'});
+            $("#back_dashbundle_entreprise_gerant").attr({'data-validation': 'required'});
+            $("#back_dashbundle_entreprise_mf").attr({'data-validation': 'required'});
+            $("#back_dashbundle_entreprise_email").attr({'data-validation': 'email'});
+            $("#back_dashbundle_entreprise_tel").attr({'data-validation': 'length number', 'data-validation-length': '8-8'});
+            $.validate();
+        });
+    </script>
+{% endblock %}
+{% block body -%}
+    <div class="content">
+        <div class="container-fluid">
+
+            <!-- ==================== COMMON ELEMENTS ROW ==================== -->
+            <div class="row-fluid">
+                <div class="span12">
+                    <!-- ==================== TEXT INPUTS HEADLINE ==================== -->
+                    <div class="containerHeadline">
+                        <i class="icon-edit"></i>
+
+                        <h2>Ajouter/Modifier une entreprise</h2>
+                    </div>
+                    <!-- ==================== END OF TEXT INPUTS HEADLINE ==================== -->
+
+                    <!-- ==================== TEXT INPUTS FLOATING BOX ==================== -->
+                    <div class="floatingBox">
+                        <div class="container-fluid">
+                            <h2>Entreprise {{ entreprise.libelle }}</h2>
+
+                            <div class="container-fluid">
+                                {{ form_start(form, {'method': 'POST','attr': {'class': 'form-horizontal contentForm'}}) }}
+                                        {{ form_row(form.libelle) }}
+                                        {{ form_row(form.adresse) }}
+                                        {{ form_row(form.gerant) }}
+                                        {{ form_row(form.tel) }}
+                                        {{ form_row(form.email) }}
+                                        {{ form_row(form.mf) }}
+
+                                        <div class="formFooter">
+                                            <button type="submit" class="btn btn-success"><i class="icon-ok"> </i>
+                                                Valider
+                                            </button>
+                                            <button type="reset" class="btn btn-danger"><i class="icon-remove"> </i>
+                                                Effacer
+                                            </button>
+                                            <a href="{{ path('back_entreprise') }}">
+                                                <button class="btn btn-inverse" type="button"><i class="icon-list"></i>
+                                                    Liste
+                                                </button>
+                                            </a>
+                                            {{ form_widget(form._token) }}
+                                        </div>
+                                {{ form_end(form) }}
+                            </div>
+
+                        </div>
+                    </div>
+                    <!-- ==================== END OF TEXT INPUTS FLOATING BOX ==================== -->
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

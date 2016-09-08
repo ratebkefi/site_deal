@@ -1,0 +1,12 @@
+back_partner:
+    resource: "@BackPartnerBundle/Resources/config/routing/partner.yml"
+    prefix:   /partner
+back_contact_partner:
+    resource: "@BackPartnerBundle/Resources/config/routing/contactpartner.yml"
+    prefix:   /contactpartner
+back_sellingpoint:
+    resource: "@BackPartnerBundle/Resources/config/routing/sellingpoint.yml"
+    prefix:   /sellingpoint
+back_invoice:
+    resource: "@BackPartnerBundle/Resources/config/routing/invoice.yml"
+    prefix:   /invoice

@@ -1,0 +1,32 @@
+#deal
+back_reportcaisse:
+    path:     /caisse
+    defaults: { _controller: BackDealBundle:ReportFinancier:caisse }
+
+back_reportfidelite:
+    path:     /fidelite
+    defaults: { _controller: BackDealBundle:ReportFinancier:fidelite }
+
+
+back_reportfacturepaye:
+    path:     /facturepaye
+    defaults: { _controller: BackDealBundle:ReportFinancier:facturepaye }
+
+
+back_reportfacture:
+    path:     /facture
+    defaults: { _controller: BackDealBundle:ReportFinancier:facture }
+
+
+back_reportnouveaudeal:
+    path:     /nouveaudeal
+    defaults: { _controller: BackDealBundle:ReportFinancier:nouveaudeal }
+
+
+back_reportnouveaupart:
+    path:     /nouveaupart
+    defaults: { _controller: BackDealBundle:ReportFinancier:nouveaupart }
+
+back_reportcouponconsomme:
+    path:     /couponconsomme
+    defaults: { _controller: BackDealBundle:ReportFinancier:couponconsomme }

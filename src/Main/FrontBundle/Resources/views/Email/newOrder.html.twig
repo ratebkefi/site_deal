@@ -1,0 +1,15 @@
+{% extends '::header.html.twig' %}
+
+Bonjour <strong>Administrateur</strong>,<br/>
+Vous avez une nouvelle commande :<br/>
+Commande : <strong>{{ "%09d"|format(commande.id) }}</strong><br/>
+Deal : <strong>{{ commande.deal }}</strong><br/>
+Quantité : <strong>{{ commande.qte }}</strong><br/>
+Prix total: <strong>{{ commande.reference.bigdealPrice *  commande.qte }} DT</strong><br/>
+Date de commande : <strong>{{ commande.dcr|date('Y-m-d H:i:s') }}</strong><br/>
+Mode de paiement : <strong>{{ mode }}</strong><br/>
+<br/>
+<br/>
+
+<strong>L’équipe BIGDeal</strong>
+{% extends '::footer.html.twig' %}

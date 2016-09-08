@@ -1,0 +1,201 @@
+{% extends '::baseBack.html.twig' %}
+{% form_theme form 'form_table_layout.html.twig' %}
+{% block body -%}
+    <div class="content">
+        <div class="container-fluid">
+
+            <!-- ==================== COMMON ELEMENTS ROW ==================== -->
+            <div class="row-fluid">
+                <div class="span12">
+                    <!-- ==================== TEXT INPUTS HEADLINE ==================== -->
+                    <div class="containerHeadline">
+                        <i class="icon-edit"></i>
+
+                        <h2>Ajouter/Modifier une compagne sms</h2>
+                    </div>
+                    <!-- ==================== END OF TEXT INPUTS HEADLINE ==================== -->
+
+                    <!-- ==================== TEXT INPUTS FLOATING BOX ==================== -->
+                    <div class="floatingBox">
+                        <div class="container-fluid">
+                            <h2>Compagne {{ sms.title }}</h2>
+
+                            <div class="container-fluid">
+                                {{ form_start(form, {'method': 'POST','attr': {'class': 'form-horizontal contentForm'}}) }}
+                                        {{ form_row(form.title) }}
+                                        {{ form_row(form.body,{'attr':{'maxlength':'160','onkeyup':'countChar(this)','class':'span6'}}) }}
+
+                                <div class="control-group ">
+                                    <label class="control-label required" for="back_dashbundle_sms_body"></label>
+
+                                    <div class="controls" id="charNum">
+
+                                    </div>
+
+                                </div>
+
+                            <div class="container-fluid">
+                                <div class="row-fluid">
+                                    <div class="span12 voir-ticket">
+                                        <div class="containerHeadline">
+                                            <h2>Filtre</h2>
+
+                                            <div class="controlButton pull-right"><i
+                                                        class="icon-caret-down minimizeElement"></i></div>
+                                        </div>
+                                        <div class="floatingBox">
+                                            <div class="container-fluid">
+                                                <div class="row">
+                                                    <div class="span3"><div class="control-group ">
+                                                            <label class="control-label required" for="back_dashbundle_sms_categoris">Categories</label>
+
+                                                            <div class="controls" >
+                                                                <select multiple="multiple" class="span12" name="categorie" id="categorie">
+
+                                                                    {% for item in category %}
+                                                                        {% if item.category|length>0 %}
+                                                                            <optgroup label="{{ item.name }}">
+                                                                                {% for item2 in item.category %}
+                                                                                    <option value="{{ item2.id }}">{{ item2.name }}</option>
+                                                                                {% endfor %}
+                                                                            </optgroup>
+                                                                        {% else %}
+                                                                            <option value="{{ item.id }}">{{ item.name }}</option>
+                                                                        {% endif %}
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="span9"><div class="control-group ">
+                                                            <label class="control-label required" for="back_dashbundle_sms_Deal">Deals</label>
+
+                                                            <div class="controls" >
+                                                                <select multiple="multiple" class="span12" name="deals" id="deals"></select>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <div class="row">
+                                                    <div class="span3">
+                                                        <div class="control-group ">
+                                                            <label class="control-label" style="width: 160px;" for="back_dashbundle_sms_Ageentre">Age entre</label>
+
+                                                            <div class="controls"  style="margin-left: 170px;">
+                                                                <input type="text" value=""  name="agefrom" />
+                                                            </div>
+
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="span3">
+                                                        <div class="control-group ">
+                                                            <label class="control-label required" style="width: 160px;" for="back_dashbundle_sms_ageto">Et</label>
+
+                                                            <div class="controls" style="margin-left: 170px;" >
+                                                                <input type="text"  name="ageto" />
+                                                            </div>
+
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="span3">
+                                                        <div class="control-group ">
+                                                            <label class="control-label" style="width: 160px;" for="back_dashbundle_sms_Sexe">Sexe</label>
+
+                                                            <div class="controls" style="margin-left: 170px;" >
+                                                                <select  name="sexe">
+                                                                    <option value="">Hommes et Femmes</option>
+                                                                    <option value="Femme">Femmes</option>
+                                                                    <option value="Homme">Hommes</option>
+                                                                </select>
+                                                            </div>
+
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="span3">
+                                                        <div class="control-group ">
+                                                            <label class="control-label" style="width: 160px;" for="back_dashbundle_sms_Gouvernerat">Gouvernerat</label>
+
+                                                            <div class="controls"  style="margin-left: 170px;">
+                                                                <select multiple="multiple" name="locality">
+                                                                    {% for item in locality %}
+                                                                    <option value="{{ item.id }}">{{ item.name }}</option>
+                                                                    {% endfor %}
+
+                                                                </select>
+                                                            </div>
+
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="formFooter">
+                                        <button type="submit" class="btn btn-success"><i class="icon-ok"> </i>
+                                            Valider
+                                        </button>
+                                        <button type="reset" class="btn btn-danger"><i class="icon-remove"> </i>
+                                            Effacer
+                                        </button>
+                                        <a href="{{ path('back_dash_sms') }}">
+                                            <button class="btn btn-inverse" type="button"><i class="icon-list"></i>
+                                                Liste
+                                            </button>
+                                        </a>
+                                        {{ form_widget(form._token) }}
+                                    </div>
+                                    {{ form_end(form) }}
+                                </div>
+                                    <!-- ==================== END OF TEXT INPUTS FLOATING BOX ==================== -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ==================== END OF TEXT INPUTS FLOATING BOX ==================== -->
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    <script src="{{ asset('RessourcesBack/js/vendor/bootstrap-multiselect.js') }}"></script>              <!-- multiselect plugin -->
+    <script src="{{ asset('RessourcesBack/js/vendor/parsley.min.js') }}"></script>                        <!-- parsley validator plugin -->
+<script type="text/javascript">
+
+    $( "#categorie" ).change(function() {
+        $.ajax({
+            type: "POST",
+            url: "{{ path('get_all_deal_categorie') }}",
+            data: "id="+$( "#categorie").val(),
+            success: function(msg){
+                $( "#deals").html(msg);
+               // $('#deals').multiselect();
+            }
+        });
+    });
+    $(function () {
+
+       // $('#categorie').multiselect();
+        //$('#deals').multiselect();
+
+
+    })
+
+    function countChar(val){
+        var len = val.value.length;
+        if (len >= 160) {
+            val.value = val.value.substring(0, 160);
+            $('#charNum').text("Reste 0 caractére");
+        } else {
+            $('#charNum').text("Reste "+(160 - len)+ " caractére(s)");
+        }
+    };
+</script>
+{% endblock %}

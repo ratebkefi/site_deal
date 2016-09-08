@@ -1,0 +1,45 @@
+{% for item in commentaire %}
+    <div class="row comments">
+    	<div class="col-md-2 col-sm-2 col-xs-12 text-right">
+
+			{% if app.user.fbid!="" %}
+                <img src="http://graph.facebook.com/v2.3/{{ app.user.fbid }}/picture?width=80&height=80"
+                     alt="">
+            {% else %}
+                <img src="{{ asset('public/images/profile-no-picture.png') }}"
+                     alt="">
+            {% endif %}
+		</div>
+        
+       <div class="col-md-9 col-sm-9 col-xs-12">
+			<div class="row">
+				<div class="col-sm-12"><strong>{{ app.user }}</strong></div>
+			</div>
+            
+            <div class="row">
+				<div class="col-sm-12 col-xs-12">
+					{{ form_widget(form.comment, { 'attr': {'class': "form-control"} }) }}
+					{{ form_widget(form.value, { 'attr': {'class': "form-control",
+                        "data-max":5,
+                        "data-min":1,
+                        "data-icon-lib":"fa" ,
+                        "data-active-icon":"fa-star" ,
+                        "data-inactive-icon":"fa-star-o" ,
+                       "data-clearable-icon":"fa-trash-o"
+
+                    } }) }}
+				</div>
+			</div>
+			<div class="col-sm-12 col-xs-12 text-right">
+				{% if testfrm==1 %}
+					<input class="btn btn-comment" type="submit" value="Commenter">
+				{% endif %}
+			</div>
+		</div>
+    </div>
+    {% endfor %}
+    {% if pagercomment==1 %}
+        <div class="last"><a
+                    href="{{ path('pager_deal_comment',{'id':deal.id,'page':page}) }}"
+                    style="display: none;">next</a></div>
+    {% endif %}

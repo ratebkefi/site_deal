@@ -1,0 +1,50 @@
+back_partner:
+    path:     /
+    defaults: { _controller: BackPartnerBundle:Partner:index }
+dash_partner_update:
+    path:     /update/{id}
+    defaults: { _controller: BackPartnerBundle:Partner:edit}
+    requirements:
+        id: \d+
+
+dash_partner_show:
+    path:     /view/{id}
+    defaults: { _controller: BackPartnerBundle:Partner:schow}
+    requirements:
+        id: \d+
+dash_partner_add:
+    path:     /add
+    defaults: { _controller: BackPartnerBundle:Partner:add}
+    requirements:
+        id: \d+
+dash_partner_deal:
+    path:     /deal
+    defaults: { _controller: BackPartnerBundle:Partner:deal}
+dash_partner_booking:
+    path:     /booking/{deal}/{month}/{year}
+    defaults: { _controller: BackPartnerBundle:Partner:booking}
+    requirements:
+        id: \d+
+dash_partner_book_detail:
+    path:     /detail/{deal}/{date}
+    defaults: { _controller: BackPartnerBundle:Partner:bookDetail}
+    requirements:
+        id: \d+
+dash_partner_book_print:
+    path:     /detail/{deal}
+    defaults: { _controller: BackPartnerBundle:Partner:print}
+    requirements:
+        id: \d+
+dash_partner_deal_print:
+    path:     /rapportdeal/{deal}
+    defaults: { _controller: BackPartnerBundle:Partner:printrapportdeal}
+    requirements:
+        id: \d+
+back_partner_password:
+    path:     /motdepasse/{id}
+    defaults: { _controller: BackPartnerBundle:Partner:motdepasse }
+    requirements:
+        id: \d+
+dash_partner_invoice:
+    path:     /invoice
+    defaults: { _controller: BackPartnerBundle:Partner:Invoice}

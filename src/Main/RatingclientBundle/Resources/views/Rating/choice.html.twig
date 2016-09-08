@@ -1,0 +1,18 @@
+{% spaceless %}
+
+{{ rating.rate }}
+            {% for i in 1..maxValue %}
+                {% set style = 'fa fa-star-o' %}
+                {% if i <= rating.rate %}
+                    {% set style = 'fa fa-star' %}
+                {% else %}
+                    {% set style = rating.rate|isHalfStar(i) ? 'fa fa-star-half-o' %}
+                {% endif %}
+                {% set params = params|merge({'id' : rating.id, 'value' : i}) %}
+                {% if style == '' %}
+                    {% set style = 'fa fa-star-o' %}
+                {% endif %}
+                <a href="{{ url('dcs_rating_add_vote', params) }}" class="{{ style }}"></a>
+            {% endfor %}
+
+{% endspaceless %}

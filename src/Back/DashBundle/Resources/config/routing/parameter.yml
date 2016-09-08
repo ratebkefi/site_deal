@@ -1,0 +1,9 @@
+#entreprise
+back_parameter:
+    path:     /
+    defaults: { _controller: BackDashBundle:Parameter:index }
+update_parameter_manager:
+    path:     /update/{id}
+    defaults: { _controller: BackDashBundle:Parameter:edit}
+    requirements:
+        id: \d+

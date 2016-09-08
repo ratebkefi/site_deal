@@ -1,0 +1,6 @@
+{% if deal.seoLink %}
+{% set permelink = deal.seoLink %}
+{% else %}
+{% set permelink = deal.title %}
+{%endif%}
+{{ path('deal_detail',  {'region':(deal.planning.regionId|getAlias),'categorie':(deal.planning.categoryId|getAlias), 'id': deal.id ,'name':(permelink|getAlias)}) }}

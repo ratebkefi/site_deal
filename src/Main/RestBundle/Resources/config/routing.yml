@@ -1,0 +1,16 @@
+main_rest_register:
+    path:     /login/{email}/{pwd}/{key}
+    defaults: { _controller: MainRestBundle:Default:index }
+main_rest_partner:
+    path:     /partner/{iduser}/{key}
+    defaults: { _controller: MainRestBundle:Default:partner }
+main_rest_deal:
+    path:     /deal/{iduser}/{key}
+    defaults: { _controller: MainRestBundle:Default:deal }
+
+main_rest_check:
+    path:     /coupon/{iduser}/{codecoupon}/{key}
+    defaults: { _controller: MainRestBundle:Default:check }
+main_rest_demande:
+    path:     /demande/{iduser}/{iddeal}/{key}
+    defaults: { _controller: MainRestBundle:Default:demande }

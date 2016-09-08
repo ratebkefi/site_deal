@@ -1,0 +1,140 @@
+<html>
+    <body>
+        {% set livraison = "non" %}
+        <div style="width: 100%;">
+            <table width="100%" cellpadding="5" cellspacing="5">
+                <tr>
+                    <td style="border: 1px solid #000"><h2 style="text-align: center;">Annexe au Protocole D’accord :
+                            Informations supplémentaires sur les offres</h2></td>
+                </tr>
+
+            </table>
+            <p><b><i><u>Article 1 : </u></i></b></p>
+
+            <p><b>{{ protocol.user.name }}</b> et <b>BIGDEAL</b> approuvent la publication de l’offres suivante sur <a
+                    target="_blank" href="http://www.bigdeal.tn/">www.bigdeal.tn</a></p>
+
+            <p><b>- Objet l’offre : </b>{% if annexe.object %}{{ annexe.object }} {% endif %}</p>
+
+            <p><b>- Nombre minimum pour validation : </b>{{ annexe.minCoupon }}</p>
+
+
+
+
+            <table width="100%" cellpadding="5" ccellspacing="5" style="border-collapse: collapse;">
+                <tr>
+                    <th style="border: 0.5px solid #000">Référence</th>
+                    <th style="border: 0.5px solid #000">Description</th>
+                    <th style="border: 0.5px solid #000">Ancien prix</th>
+                    <th style="border: 0.5px solid #000">Prix bigdeal</th>
+                    <th style="border: 0.5px solid #000" style="display:none;">Quantité</th>
+                </tr>
+                {% for entity in reference %}
+                    <tr>
+                        <td style="border: 0.5px solid #000">{{ entity.title }}</td>
+                        <td style="border: 0.5px solid #000">{{ entity.description|raw }}</td>
+                        <td style="border: 0.5px solid #000">{{ entity.shopPrice }} TND</td>
+                        <td style="border: 0.5px solid #000">{{ entity.bigdealPrice }} TND</td>
+                        <td style="border: 0.5px solid #000" style="display:none;">{{ entity.maxCoupon }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+
+            <p><u>Informations générales requises :</u></p>
+
+        <p><b>- Horaires :</b></p>
+        {% for entity in protocol.user.sellingpoint %}
+            <p>&nbsp;{{ entity.name }}</p>
+            {% for enty in entity.schedule %}
+                <p style="padding-left: 20px;"><b>&nbsp;&nbsp;&nbsp;{{ enty.day }} : </b>
+                    de {{ enty.openTimeMorning|date("H") }} à {{ enty.closeTimeMorning|date("H") }} -
+                    de {{ enty.openTimeAfternoon|date("H") }} à {{ enty.closeTimeAfternoon|date("H") }}</p>
+                {% endfor %}
+            <p>&nbsp;<b>- Capacité / Heure :</b> {{ entity.capacityPerHour }}</p>
+            <p>&nbsp;<b>- Nombre d’employés :</b> {{ entity.nbrEmployee }}</p>
+            <p>&nbsp;<b>-    {{ entity.schedule|length }} jour/ 7</b></p>
+        {% endfor %}
+        {% if releaseDate is defined   %}
+
+            <p><u>Période de parution :</u></p>
+        <p>1 . {{ annexe.releaseDate|date("d-m-Y") }}</p>
+    {% endif %}
+
+
+    <p><b>Réservation : </b> {% if annexe.booking ==1 %}Oui {% else %} Non {% endif %}</p>
+    {% if annexe.booking ==1 %}
+        <p><b>Réservation avant :</b> 48 Heures</p>
+    {% endif %}
+    <p>Commission fixe  <b>{{ annexe.fixedCommission }} DT</b></p>
+    <p>Commission variable  <b>{{ annexe.variableCommission }} %</b></p>
+    <p><b>Livraison
+            :</b>{% for entity in reference %}  {% if loop.first %} {% if entity.shipping ==1 %} {% set livraison = "oui" %} Oui  {% else %} {% set livraison = "non" %} Non  {% endif %}{% endif %}  {% endfor %}
+    </p>
+    {% if livraison=="oui" %}
+        <table width="100%" cellpadding="5" ccellspacing="5" style="border-collapse: collapse;">
+            <tr>
+                <th style="border: 1px solid #000">Référence</th>
+                <th style="border: 1px solid #000">Poid/Volume</th>
+                <th style="border: 1px solid #000">Longueur</th>
+                <th style="border: 1px solid #000">Largeur</th>
+                <th  style="border: 1px solid #000">Hauteur</th>
+                <th style="border: 1px solid #000">Cout livraison</th>
+            </tr>
+            {% for entity in reference %}
+                <tr>
+                    <td style="border: 1px solid #000">{{ entity.title }}</td>
+                    <td style="border: 1px solid #000">{{ entity.weight }}</td>
+                    <td style="border: 1px solid #000">{{ entity.length }}</td>
+                    <td style="border: 1px solid #000">{{ entity.width }}</td>
+                    <td style="border: 1px solid #000">{{ entity.height }}</td>
+                    <td style="border: 1px solid #000">{{ entity.price }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+    {% if annexe.vedio == 1 %}
+        {% if annexe.image == 0 %}
+            <p><u>L’option « Spot Vidéo » vous donne droit à :</u></p>
+        <p>&nbsp;&nbsp;1. Réalisation et montage d’un spot publicitaire (Max 30sec)</p>
+        <p>&nbsp;&nbsp;2. Insertion du spot au corps du deal</p>
+        <p>&nbsp;&nbsp;3. Publication du spot sur la page FB de BIGDeal.tn</p>
+        <p>&nbsp;&nbsp;4. Publication du spot  sur les réseaux sociaux</p>
+        <p>&nbsp;&nbsp;5. Livraison sur support numérique</p>
+    {% else %}
+        <p><u>L’option « Spot Vidéo » vous donne droit à :</u></p>
+    <p>&nbsp;&nbsp;1. Réalisation et montage d’un spot publicitaire (Max 30sec)</p>
+    <p>&nbsp;&nbsp;2. Insertion du spot au corps du deal</p>
+    <p>&nbsp;&nbsp;3. Publication du spot sur la page FB de BIGDeal.tn</p>
+    <p>&nbsp;&nbsp;4. Publication du spot  sur les réseaux sociaux</p>
+    <p>&nbsp;&nbsp;5. Livraison sur support numérique</p>
+    <p><u>L’option « Shooting Photos » vous donne droit à :</u></p>
+<p>&nbsp;&nbsp;1. Réalisation d’un reportage photos (Enseigne-Deal)</p>
+<p>&nbsp;&nbsp;2. Traitement et livraison de photos (Max 50 photos selon besoin)</p>
+<p>&nbsp;&nbsp;3. Livraison sur support numérique</p>
+{% endif %}
+{% else %}
+    {% if annexe.image == 1 %}
+        <p><u>L’option « Shooting Photos » vous donne droit à :</u></p>
+    <p>1. Réalisation d’un reportage photos (Enseigne-Deal)</p>
+    <p>2. Traitement et livraison de photos (Max 50 photos selon besoin)</p>
+    <p>3. Livraison sur support numérique</p>
+
+{% endif %}
+{% endif %}
+
+
+<p>Le partenaire met à la disposition de BIGDEAL un nombre de <b>{{ annexe.nbrGratuite }}</b> gratuité(s) du  service objet de chaque offre sous condition de sa validation.</p>
+<p><u>Informations spécifiques à quelques catégories de deal</u></p>
+<p><u>Catégorie : </u> <b>{{ user.category }}</b></p>
+    {% set questions = getListeQuestion(user.category) %}
+    {% for entity in questions %}
+<p>{{ loop.index }} - {{ entity.question }}</p>
+{% set reponse = getListeReponse(entity.id,annexe.id) %}
+<p>&nbsp;&nbsp;<b>{{ reponse }}</b></p>
+{% endfor %}
+
+<p><b>Remarque : </b>{{ annexe.remark|raw }}</p>
+
+</div>
+</body>
+</html>

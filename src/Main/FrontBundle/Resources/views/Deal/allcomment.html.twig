@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    {% block stylesheets %}
+
+    <!-- Font-awesome Icons -->
+    <link rel="stylesheet" href="{{ asset('public/css/font-awesome.min.css') }}">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="{{ asset('public/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('public/css/storelocator.css') }}" />
+    <link rel="stylesheet" href="{{ asset('public/css/flexslider.css') }}">
+    <link rel="stylesheet" href="{{ asset('public/css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('bundles/dcsrating/css/rating.css') }}"/>
+<style>
+        .fa {
+            color: #de0e79;
+            font-size: 1.3em;
+
+        }
+
+    </style>
+    {% endblock %}
+
+    </head>
+<body>
+<div id="content">
+<div class="row offre-comments comments-modal">
+    {% for item in pagination %}
+
+        <div class="row comments">
+            <div class="col-md-1 col-sm-1 col-xs-3 text-left">
+                                                            {% if item.voter.fbid!="" %}
+                                                                <img src="https://graph.facebook.com/v2.3/{{ item.voter.fbid }}/picture?width=80&height=80"
+                                                                     alt="">
+                                                            {% else %}
+                                                                <img src="{{ asset('public/images/profile-no-picture.png') }}"
+                                                                     alt="">
+                                                            {% endif %}
+            </div>
+            <div class="col-md-11 col-sm-11 col-xs-9">
+                <div class="row">
+                    <div class="col-sm-12 col-xs-12">
+                        <strong>{{ item.voter }}</strong>
+                    </div>
+                    <div class="col-sm-12 col-xs-12">
+                        <strong>Avis</strong>
+						{%set maxValue = 5 %}
+						{%set rate = item.value %}
+						<div class="stars clearfix">
+						{% spaceless %}
+
+						{% for i in 1..maxValue %}
+							{% set style = 'fa fa-star-o' %}
+							{% if i <= rate %}
+								{% set style = 'fa fa-star' %}
+							{% else %}
+								{% set style = rate|isHalfStar(i) ? 'fa fa-star-half-o' %}
+							{% endif %}
+							{% if style == '' %}
+								{% set style = 'fa fa-star-o' %}
+							{% endif %}
+							<span class="{{ style }}"></span>
+							
+						{% endfor %}
+					</div>
+					<div class="col-sm-12 col-xs-12">{{ item.dcr|date('d/m/Y') }}</div>
+                </div>
+{% endspaceless %}
+                </div>
+                <p> {{ item.rating.id|getdeal }}</p>
+                <br><p>{{ item.comment|raw }}</p>
+            </div>
+        </div>
+
+
+    {% endfor %}
+</div>
+    <div class="pagination pagination-large" style="text-align: center">
+        {{ knp_pagination_render(pagination) }}
+    </div>
+</div>
+<script src="{{ asset('public/js/jquery-1.11.3.min.js') }}"></script>
+<script src="{{ asset('public/js/jquery-migrate-1.2.1.min.js') }}"></script>
+<script>
+    $('.pagination a').attr('target','_self')
+</script>
+</body>

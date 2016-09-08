@@ -1,0 +1,216 @@
+{% extends '::base.html.twig' %}
+{% block stylesheets %}
+{% endblock %}
+{% block body %}
+    <div class="informations">
+        <h2>Mon compte</h2>
+        <!-- Profile Menu -->
+        {{ render(controller('MainFrontBundle:Client:menuclient')) }}
+        {% set reponse = listeMessage(ticket.id) %}
+        {% set lastReply = getLastReply( ticket.id ) %}
+        {% set nombreMessage = getNumberReply( ticket.id ) %}
+
+        <!-- Nav -->
+        <div class="row">
+            <div class="col-md-12">
+                <ol class="breadcrumb">
+                    <li><a href="{{ path('ticket_manager') }}">Liste des tickets</a></li>
+                    <li class="active">{{ ticket.code }}</li>
+                </ol>
+            </div>
+        </div>
+        <!-- Détail de ticket -->
+        <div class="row">
+            <div class="col-md-6 col-sm-12">
+                <div class="headline"><h3>Ticket</h3></div>
+                <div class="marg-bottom-40"><span>Ticket #{{ ticket.code }}</span></div>
+            </div>
+            <div class="col-md-6 col-sm-12">
+                <div class="headline"><h3>Date de création</h3></div>
+                <div class="marg-bottom-40"><span><i class="fa fa-calendar pr-10"></i>{{ ticket.dcr|date('d-m-Y H:i:s') }}</span></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 col-sm-12">
+                <div class="headline"><h3>Objet</h3></div>
+                <div class="marg-bottom-40"><span>{{ ticket.object }}</span></div>
+            </div>
+            <div class="col-md-6 col-sm-12">
+                <div class="headline bg-color-light"><h3>dernière réponse</h3></div>
+                <div class="marg-bottom-40"><span><i class="fa fa-calendar pr-10"></i>{% if nombreMessage !=1 %}{{ lastReply|date('d-m-Y H:i:s') }} {% else %} N.A {% endif %}</span></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 col-sm-12">
+                <div class="headline"><h3>Commande</h3></div>
+                <div class="marg-bottom-40"><span>{{ "%09d"|format(ticket.commande.id ) }}</span></div>
+            </div>
+            <div class="col-md-6 col-sm-12">
+                <div class="headline"><h3>Statut</h3></div>
+                <div class="marg-bottom-40"><span class="badge">{% if ticket.status ==1 %} Ouvert {% elseif  ticket.status ==2 %}En cours {% else %} Cloturé {% endif %}</span></div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="headline"><h3>Liste des messages</h3></div>
+            <section class="comment-list">
+                {% for item in reponse|sortticket %}
+                    {% if item.client!=null %}
+                <!-- Client Message -->
+                <article class="row">
+                    <div class="col-md-2 col-sm-2 hidden-xs">
+                        <figure class="thumbnail pull-right">
+                            {% if item.client.fbid!="" %}
+                                <img class="img-responsive" src="http://graph.facebook.com/v2.3/{{ item.client.fbid }}/picture?width=100&height=100"
+                                     alt="">
+                            {% else %}
+                                <img class="img-responsive" src="{{ asset('public/images/avatar.jpg') }}"
+                                     alt="">
+                            {% endif %}
+                            <figcaption class="text-center">{{  item.client }}</figcaption>
+                        </figure>
+                    </div>
+                    <div class="col-md-9 col-sm-10">
+                        <div class="panel panel-default arrow left">
+                            <div class="panel-body">
+								<strong class="dark-blue hidden-md hidden-sm">{{  item.client }} :</strong>
+                                <div class="comment-post">
+                                    <p>{{ item.message|nl2br }}</p>
+                                    <span><i class="fa fa-calendar pr-10"></i>{{ item.dpa|date('d-m-Y H:i:s') }}</span>
+                                    {% if item.path!='' %}
+                                    <a target="_blank" href="{{ asset('uploads/ticket/'~item.path) }}" title="télecharger" class="dark-blue pull-right"><i class="fa fa-paperclip fa-lg"></i></a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+                    {% else %}
+                <!-- Service Client Message -->
+                <article class="row">
+                    <div class="col-md-offset-1 col-md-9 col-sm-10">
+                        <div class="panel panel-default arrow right">
+                            <div class="panel-body">
+								<strong class="dark-blue hidden-md hidden-sm">Service clients :</strong>
+                                <div class="comment-post">
+                                    <p>{{ item.message|nl2br }}</p>
+                                    <span class="pull-left"><i class="fa fa-calendar pr-10"></i>{{ item.dpa|date('d-m-Y H:i:s') }}</span>
+                                    {% if item.path!='' %}
+                                        <a target="_blank" href="{{ asset('uploads/ticket/'~item.path) }}" title="télecharger" class="dark-blue pull-right"><i class="fa fa-paperclip fa-lg"></i></a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-sm-2 hidden-xs">
+                        <figure class="thumbnail">
+                        {% if item.user.profilePicturePath!="" %}
+                            <img class="img-responsive" src="{{ asset('uploads/user/'~item.user.profilePicturePath)|imagine_filter('serviceclient') }}" />
+                        {% else %}
+                            <img class="img-responsive" src="{{ asset('public/images/avatar.jpg') }}"
+                                 alt="">
+                        {% endif %}
+                            <figcaption class="text-center">Service clients</figcaption>
+                        </figure>
+                    </div>
+                </article>
+                {% endif %}
+                {% endfor %}
+
+
+                        {% if ticket.status!= 3 %}
+
+                <div class="row">
+                	<!-- Réponse Form -->
+                    <div class="col-md-offset-1 col-md-9 col-sm-10 red error-text">                                        {{ form_errors(form.file) }}
+                    </div>
+                    <div class="col-md-2 col-sm-10"><a href="#"  id="btn-reply" class="btn btn-primary"><i class="fa fa-reply"></i> Répondre</a></p>
+                    </div>
+                    
+                    <div id="reply-form">
+                        <div class="row">
+                            {{ form_start(form, {'enctype': 'multipart/form-data','method': 'POST','attr': {'class': 'form-horizontal','name':'form'}}) }}
+
+
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="email">Votre message</label>
+                                    <div class="col-sm-7">
+
+                                        {{ form_widget(form.message,{'attr':{'class':'form-control','rows':'12','cols':'80'}}) }}
+
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+
+                                    <div class="input-file-container col-sm-offset-3 col-sm-7">
+
+                                        {{ form_widget(form.file,{'attr':{'class':'input-file','id':'my-file'}}) }}
+                                        <label for="my-file" class="input-file-trigger" tabindex="0">Parcourir...</label>
+
+                                    </div>
+                                    <p class="file-return">Aucun fichier seléctionner</p>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-offset-9 col-sm-1">
+                                        <input type="submit" value="Envoyer" class="btn btn-primary">
+                                    </div>
+                                </div>
+                            {{ form_row(form._token) }}
+                            {{ form_end(form) }}
+                        </div><!-- /.row -->
+                    </div><!-- /.reply-form -->
+
+            </section>
+        </div>
+		{% endif %}
+    </div>
+
+{% endblock %}
+{% block javascripts %}
+    <script type="text/javascript" src="{{ asset('public/js/jQuery.easing.js') }}"></script>
+    <script>
+        $(document).ready(function () {
+            $("#reply-form").hide(10);
+            $("#btn-reply").click(function(e){
+                if ($(this).html() == '<i class="fa fa-reply"></i> Répondre' ) {
+                    $("#reply-form").slideDown("fast"); //Slide Down Effect
+                    $(this).html('<i class="fa fa-times"></i>');
+                } else {
+                    $("#reply-form").slideUp("fast");  //Slide Up Effect
+                    $(this).html('<i class="fa fa-reply"></i> Répondre');
+                }
+                e.preventDefault();
+            });
+        })
+    </script>
+    <script>
+        $(document).ready(function () {
+            // ajout de la classe JS à HTML
+            document.querySelector("html").classList.add('js');
+
+            // initialisation des variables
+            var fileInput = document.querySelector(".input-file"),
+                    button = document.querySelector(".input-file-trigger"),
+                    the_return = document.querySelector(".file-return");
+
+            // action lorsque la "barre d'espace" ou "Entrée" est pressée
+            button.addEventListener("keydown", function (event) {
+                if (event.keyCode == 13 || event.keyCode == 32) {
+                    fileInput.focus();
+                }
+            });
+
+            // action lorsque le label est cliqué
+            button.addEventListener("click", function (event) {
+                fileInput.focus();
+                return false;
+            });
+
+            // affiche un retour visuel dès que input:file change
+            fileInput.addEventListener("change", function (event) {
+                the_return.innerHTML = this.value;
+            });
+        });</script>
+{% endblock %}

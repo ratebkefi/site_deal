@@ -1,0 +1,116 @@
+deal_detail:
+    path: /{region}/{categorie}/{id}/{name}.html
+    defaults: { _controller: MainFrontBundle:Deal:index}
+    requirements:
+        id: \d+
+jachetelist:
+    path: /{deal}/{id}/jachete.html
+    defaults: { _controller: MainFrontBundle:Deal:jachete}
+    requirements:
+        id: \d+
+
+paybox_show:
+    path: /paybox.html
+    defaults: { _controller: MainFrontBundle:Deal:paybox}
+
+api_url:
+    path:     /apiurl/{id}
+    defaults: { _controller: BackCommandeBundle:Command:apiurl }
+
+confirm_command:
+    path:     /{id}/confirm.html
+    defaults: { _controller: MainFrontBundle:Deal:confirm }
+    requirements:
+        id: \d+
+
+deal_validation_commande:
+    path: /{id}/confirmationcommande.html
+    defaults: { _controller: MainFrontBundle:Deal:confirmation}
+deal_validation_commande_gpg:
+    path: /confirmationcommandegpg.html
+    defaults: { _controller: MainFrontBundle:Deal:confirmationGpg}
+deal_validation_commande_Bigfid:
+    path: /{id}/confirmationcommandeBigfid.html
+    defaults: { _controller: MainFrontBundle:Deal:confirmationBigfid}
+
+deal_ajx_list:
+    path: /dealajxlist
+    defaults: { _controller: MainFrontBundle:Deal:ajxlist}
+deal_passe:
+    path: /dealspasses.html
+    defaults: { _controller: MainFrontBundle:Deal:dealpasse}
+dealpasseajx:
+    path: /passedajx/{page}
+    defaults: { _controller: MainFrontBundle:Deal:dealpasseajx}
+deal_listpassed_page:
+    path: /dealspasses/{page}/{cat}
+    defaults: { _controller: MainFrontBundle:Deal:dealpassepage}
+    requirements:
+        page: \d+
+#category
+deal_list:
+    path: /{region}/{id}/{name}.html
+    defaults: { _controller: MainFrontBundle:Deal:List}
+    requirements:
+        id: \d+
+deal_list_page:
+    path: a/{name}/{id}/{page}/{price}
+    defaults: { _controller: MainFrontBundle:Deal:Listpage}
+deal_list_region:
+    path: /{id}/regions/{name}.html
+    defaults: { _controller: MainFrontBundle:Deal:region}
+    requirements:
+        id: \d+
+
+deal_list_parregion:
+    path: /{id}/laregions
+    defaults: { _controller: MainFrontBundle:Deal:dealparregion}
+    requirements:
+        id: \d+
+
+add_adress:
+    path: /{ref}/ajouter_adresse.html
+    defaults: { _controller: MainFrontBundle:Deal:ajouterAdress}
+    requirements:
+        id: \d+
+
+add_adress_livraison:
+    path: /{ref}/ajouter_adresse_livraison.html
+    defaults: { _controller: MainFrontBundle:Deal:ajouterAdresslivraison}
+    requirements:
+        id: \d+
+
+add_phone:
+    path: /{ref}/ajouter_phone.html
+    defaults: { _controller: MainFrontBundle:Deal:ajouterPhone}
+    requirements:
+        id: \d+
+
+ajxdealtop:
+    path: /dealajxtop
+    defaults: { _controller: MainFrontBundle:Deal:dealajxtop}
+ajxdeallink:
+    path: /ajxdeallink
+    defaults: { _controller: MainFrontBundle:Deal:ajxdeallink}
+pager_deal_comment:
+    path: /pagedealcomment/{id}/{page}
+    defaults: { _controller: MainFrontBundle:Deal:commentpager}
+pager_deal_allcomment:
+    path: /pagedealallcomment/{id}
+    defaults: { _controller: MainFrontBundle:Deal:allcommentpager}
+deal_problem_commande:
+    path: /problemcommande.html
+    defaults: { _controller: MainFrontBundle:Deal:annulation}
+notification:
+    path: /notification.html
+    defaults: { _controller: MainFrontBundle:Deal:notification}
+#ajax region home
+ajx_region_deal:
+    path: /ajxregiondeal
+    defaults: { _controller: MainFrontBundle:Default:ajxregiondeal}
+ajxregiontop:
+    path: /ajxregiontop
+    defaults: { _controller: MainFrontBundle:Default:ajxregiontop}
+ajxsetregion:
+    path: /ajxsetregion
+    defaults: { _controller: MainFrontBundle:Default:ajxsetregion}

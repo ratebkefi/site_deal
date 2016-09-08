@@ -1,0 +1,152 @@
+{% form_theme form 'form_table_layout.html.twig' %}
+
+<link href="{{ asset('RessourcesBack/css/bootstrap-responsive.min.css') }}" type="text/css" rel="stylesheet"/>
+<link href="{{ asset('RessourcesBack/css/styles.css') }}" type="text/css" rel="stylesheet"/>
+<link href="{{ asset('RessourcesBack/css/fancy-style.css') }}" type="text/css" rel="stylesheet"/>
+<div class="row-fluid">
+    <div class="span12">
+        <!-- ==================== TEXT INPUTS HEADLINE ==================== -->
+        <div class="containerHeadline">
+            <i class="icon-dollar"></i>
+            <h2>Rembourser coupon </h2>
+        </div>
+        <!-- ==================== END OF TEXT INPUTS HEADLINE ==================== -->
+        <!-- ==================== TEXT INPUTS FLOATING BOX ==================== -->
+        <div class="floatingBox">
+            <!-- ==================== WIDGETS CONTAINER ==================== -->
+            <div class="container-fluid">
+                <div class="container-fluid">
+                    <form class="form-horizontal contentForm" method="POST"
+                          action="{{ path('remboursement_virement',{'id' : virement.id}) }}" target="_parent"
+                          enctype="multipart/form-data">
+                        <div class="control-group">
+                            <label class="control-label">Montant : </label>
+
+                            <div class="controls">
+                                {{ form_widget(form.montant, { 'attr': {'class': "span4"} }) }}
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">Rib : </label>
+
+                            <div class="controls">
+                                {{ form_widget(form.rib, { 'attr': {'class': "span4"} }) }}
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">Accepter réfuser remboursement : </label>
+
+                            <div class="controls">
+                                {{ form_widget(form.etat) }}
+                            </div>
+                        </div>
+                        <div class="control-group" id="accepet1" {% if virement.etat %} style="display: block" {% else %} style="display: none" {% endif %}>
+                            <label class="control-label">Date rembourcemment  : </label>
+
+                            <div class="controls">
+                                {{ form_widget(form.dcr, { 'attr': {'class': "span4 datepickerField"} }) }}
+
+                            </div>
+                        </div>
+                        <div class="control-group" id="accepet" {% if virement.etat %} style="display: block" {% else %} style="display: none" {% endif %}>
+                            <label class="control-label">Fichier : </label>
+
+                            <div class="controls">
+                                {{ form_widget(form.file, { 'attr': {'required': "required"} }) }}
+                                {% if virement.path %}<br/>
+                                <a target="_blank" href="{{ asset('uploads/virement/'~virement.path) }}" title="télecharger"><i class="icon-paperclip icon-2x"></i></a>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="control-group" id="remarque"  {% if virement.etat %} style="display: none" {% else %} style="display: block" {% endif %}>
+                            <label class="control-label">Remarque : </label>
+
+                            <div class="controls">
+                                {{ form_widget(form.remarque, { 'attr': {'class': "form-control span9",'rows':"10"} }) }}
+                            </div>
+                        </div>
+
+                        <div class="formFooter">
+                            <button type="submit" class="btn btn-success"><i class="icon-ok"> </i>
+                                Valider
+                            </button>
+                            <button type="reset" class="btn btn-danger"><i class="icon-remove"> </i>
+                                Effacer
+                            </button>
+
+                            {{ form_widget(form._token) }}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+{% block javascripts%}
+
+    <script src="{{ asset('RessourcesBack/js/jquery.js') }}"></script>                   <!-- bootstrap slider plugin -->
+    <!-- masked inputs -->
+    <script src="{{ asset('RessourcesBack/js/jquery-1.10.1.min.js') }}"></script>
+    <script>window.jQuery || document.write('<script src="{{ asset('js/jquery-1.10.1.min.js') }}"><\/script>')</script>
+    <!-- masked inputs -->
+    <script src="{{ asset('RessourcesBack/js/lib/jquery-inputmask/jquery.inputmask.min.js') }}"></script>
+    <script src="{{ asset('RessourcesBack/js/lib/jquery-inputmask/jquery.inputmask.extensions.js') }}"></script>
+    <script src="{{ asset('RessourcesBack/js/lib/jquery-inputmask/jquery.inputmask.date.extensions.js') }}"></script>
+    {% javascripts '@BackPlanningBundle/Resources/public/js/jquery.form-validator.js' %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    <script>
+           $("#back_commandebundle_virement_etat").change(function() {
+
+           var check = $("#back_commandebundle_virement_etat").val();
+            if (check==1) {
+                $("#accepet").show();
+                $("#accepet1").show();
+                $("#remarque").hide();
+                $("#back_commandebundle_virement_remarque").removeAttr("required");
+                $('#back_commandebundle_virement_file').attr('required', 'required');
+
+            } else if (check==0) {
+
+                $("#remarque").show();
+                $("#accepet").hide();
+                $("#accepet1").hide();
+                $("#back_commandebundle_virement_file").removeAttr("required");
+                $("#back_commandebundle_virement_dcr").removeAttr("required");
+                $('#back_commandebundle_virement_remarque').attr('required', 'required');
+            }
+
+
+        });
+
+
+           $(document).ready(function () {
+               {% if virement.etat ==1 %}
+               $('#back_commandebundle_virement_file').attr('required', 'required');
+               $('#back_commandebundle_virement_dcr').attr('required', 'required');
+               $("#back_commandebundle_virement_remarque").removeAttr("required");
+
+
+               {% endif %}
+               {% if virement.etat ==0 %}
+               $('#back_commandebundle_virement_remarque').attr('required', 'required');
+               $("#back_commandebundle_virement_file").removeAttr("required");
+               $("#back_commandebundle_virement_dcr").removeAttr("required");
+
+               {% endif %}
+               $("#back_commandebundle_virement_rib").attr({
+                   'data-validation': 'number',
+                   'data-validation-allowing': 'range[00000000000000000001;99999999999999999999]'
+               });
+               $("#back_commandebundle_virement_montant").attr({
+                   'data-validation': 'number',
+                   'data-validation-allowing': 'float'
+               });
+               $.validate();
+           });
+
+           $(".datepickerField").inputmask("date");
+    </script>
+{% endblock %}

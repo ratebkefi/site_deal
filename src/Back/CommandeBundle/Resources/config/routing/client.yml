@@ -1,0 +1,63 @@
+#client
+back_client:
+    path:     /
+    defaults: { _controller: BackCommandeBundle:Client:index }
+
+back_client_livraison:
+    path:     /listlivraiosn
+    defaults: { _controller: BackCommandeBundle:Command:commandelivraison}
+
+view_client_manager:
+    path:     /show/{id}
+    defaults: { _controller: BackCommandeBundle:Client:show}
+    requirements:
+        id: \d+
+
+block_client_manager:
+    path:     /block/{id}
+    defaults: { _controller: BackCommandeBundle:Client:block}
+    requirements:
+        id: \d+
+unblock_client_manager:
+    path:     /unblock/{id}
+    defaults: { _controller: BackCommandeBundle:Client:unblock}
+    requirements:
+        id: \d+
+search_client_manager:
+    path:     /search
+    defaults: { _controller: BackCommandeBundle:Client:search}
+    requirements:
+        id: \d+
+bigfid_client:
+    path:     /bigfid/{id}
+    defaults: { _controller: BackCommandeBundle:Client:bigFid}
+    requirements:
+        id: \d+
+back_client_adresse:
+    path:     /adresse/{id}
+    defaults: { _controller: BackCommandeBundle:Client:addresse}
+    requirements:
+        id: \d+
+back_client_adresse_modifier:
+    path:     /modifadresse/{id}/{client}
+    defaults: { _controller: BackCommandeBundle:Client:editaddresse}
+    requirements:
+        id: \d+
+back_client_edit:
+    path:     /edit/{id}
+    defaults: { _controller: BackCommandeBundle:Client:edit}
+    requirements:
+        id: \d+
+list_client_par_nom:
+    path:     /namefilter
+    defaults: { _controller: BackCommandeBundle:Client:listparnom }
+list_client_par_prenom:
+    path:     /fnamefilter
+    defaults: { _controller: BackCommandeBundle:Client:listparprenom }
+
+list_client_par_tel:
+    path:     /telfilter
+    defaults: { _controller: BackCommandeBundle:Client:listpartel }
+list_client_par_email:
+    path:     /emailfilter
+    defaults: { _controller: BackCommandeBundle:Client:listparemail }

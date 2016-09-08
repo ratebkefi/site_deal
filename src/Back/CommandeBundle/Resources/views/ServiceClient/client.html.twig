@@ -1,0 +1,198 @@
+{% block body -%}
+    <link href="{{ asset('RessourcesBack/css/bootstrap-responsive.min.css') }}" type="text/css" rel="stylesheet"/>
+    <link href="{{ asset('RessourcesBack/css/styles.css') }}" type="text/css" rel="stylesheet"/>
+    <link rel="stylesheet" href="{{ asset('RessourcesBack/css/jquery.fancybox.css') }}">
+    {% block stylesheets %}
+    {% endblock %}
+
+    <!-- ==================== PAGE CONTENT ==================== -->
+    <div class="content">
+        <!-- ==================== WIDGETS CONTAINER ==================== -->
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span12">
+                    <div class="containerHeadline">
+                        <i class="icon-zoom-in"></i>
+
+                        <h2>Filtre de recherche</h2>
+
+                        <div class="controlButton pull-right"><i class="icon-caret-down minimizeElement"></i></div>
+                    </div>
+                    <div class="floatingBox table ">
+                        <div class="container-fluid" style="padding: 10px">
+                            {{ form_start(form, {'method': 'GET','attr': {'class': 'form-horizontal contentForm','style':'padding:0; margin:0'}}) }}
+                            <div class="span2">
+                                <label>Nom</label>
+                                                               {{ form_widget(form.nom,{'attr':{'autocomplete':'off','class':'span10'}}) }}
+
+                            </div>
+<div class="span2">
+                                <label>Prénom</label>
+                                                               {{ form_widget(form.prenom,{'attr':{'autocomplete':'off','class':'span10'}}) }}
+
+                            </div>
+                            <div class="span2">
+                                <label>Téléphone</label>
+                                {{ form_widget(form.phone,{'attr':{'autocomplete':'off','class':'span10 selectpicker','data-live-search':'true'}}) }}
+                            </div>
+                            <div class="span2">
+                                <label>E-mail</label>
+                                {{ form_widget(form.email,{'attr':{'autocomplete':'off','class':'span10 selectpicker','data-live-search':'true'}}) }}
+                            </div>
+
+                            <div class="span2">
+                                <label>&Eacute;tat</label>
+                                {{ form_widget(form.stat,{'attr':{'class':'span10 selectpicker','data-live-search':'true'}}) }}
+                            </div>
+                            <div class="span1">
+                                <label>&nbsp;</label>
+                                <input type="submit" value="Rechercher" class="btn btn-success"/>
+                            </div>
+                            {{ form_end(form) }}
+                        </div>
+
+                    </div>
+
+                    <!-- ==================== END OF ROW ==================== -->
+                    <div class="row-fluid">
+                        <div class="span12">
+                            <!-- ==================== DEFAULT TABLE HEADLINE ==================== -->
+                            <div class="containerHeadline">
+                                <i class="icon-table"></i>
+
+                                <h2>Liste des clients</h2>
+                            </div>
+                            <!-- ==================== END OF DEFAULT TABLE HEADLINE ==================== -->
+
+                            <!-- ==================== DEFAULT TABLE FLOATING BOX ==================== -->
+                            <div class="floatingBox table">
+                                <div class="container-fluid">
+                                    <table class="table">
+                                        <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Nom et Prénom</th>
+                                            <th>Téléphone</th>
+                                            <th>Email</th>
+                                            <th>C.I.N.</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for entity in pagination %}
+                                            <tr{% if entity.stat==0 %} class="error"{% endif %}>
+                                                <td><a href="javascript:post_value({{ entity.id }})">{{ entity.id }}</a> </td>
+                                                <td>{{ entity.fname }} {{ entity.name }}</td>
+                                                <td>{{ entity.phone }}</td>
+                                                <td>{{ entity.email }}</td>
+                                                <td>{{ entity.cin }}</td>                                             
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                    {# display navigation #}
+                                    <div class="pagination pagination-large" style="text-align: center">
+                                        {{ knp_pagination_render(pagination) }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- ==================== END OF WIDGETS CONTAINER ==================== -->
+            </div>
+        </div>
+    </div>
+    <link rel="stylesheet" type="text/css" href="{{ asset('RessourcesBack/css/bootstrap-select.css') }}">
+
+{% endblock %}
+    {% block javascripts %}
+	
+<script src="{{ asset('RessourcesBack/js/jquery-1.10.1.min.js') }}"></script>
+<script>window.jQuery || document.write('<script src="{{ asset('js/jquery-1.10.1.min.js') }}"><\/script>')</script>
+<script src="{{ asset('RessourcesBack/js/vendor/bootstrap-slider.js') }}"></script>
+<!-- bootstrap slider plugin -->
+<script src="{{ asset('RessourcesBack/js/vendor/jquery.sparkline.min.js') }}"></script>
+<!-- small charts plugin -->
+<script src="{{ asset('RessourcesBack/js/vendor/bootstrap-multiselect.js') }}"></script>
+<!-- multiselect plugin -->
+<script src="{{ asset('RessourcesBack/js/vendor/parsley.min.js') }}"></script>
+<!-- parsley validator plugin -->
+
+<script src="{{ asset('RessourcesBack/js/vendor/bootstrap.min.js') }}"></script>
+<script src="{{ asset('RessourcesBack/js/thekamarel.js') }}"></script>
+<!-- main project js file -->
+<script src="{{ asset('RessourcesBack/js/jquery.fancybox.js') }}"></script>
+<!-- bootbox -->
+<script src="{{ asset('RessourcesBack/js/lib/bootbox/bootbox.min.js') }}"></script>
+{% javascripts '@BackPlanningBundle/Resources/public/js/jquery.form-validator.js' %}
+<script type="text/javascript" src="{{ asset_url }}"></script>
+{% endjavascripts %}
+        {% javascripts '@MainFrontBundle/Resources/public/js/bootstrap-typeahead.min.js' %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+        {% endjavascripts %}
+        <script src="{{ asset('RessourcesBack/js/bootstrap-select.js') }}"></script>
+        <script>
+		function post_value(id){
+		var url = '{{ path('add_ticket') }}?client='+id;
+		window.opener.location.href  = url;
+		window.close();
+}
+            $('#back_commandebundle_clientfilter_nom').typeahead({
+
+                ajax: {
+                    url: '{{ path('list_client_par_nom') }}',
+                    triggerLength: 1,
+                    items: 10
+                },
+                afterSelect: function (item) {
+                    //save the id value into the hidden field
+
+                },
+                displayField: 'full_name'
+
+            })
+			
+			$('#back_commandebundle_clientfilter_prenom').typeahead({
+
+                ajax: {
+                    url: '{{ path('list_client_par_prenom') }}',
+                    triggerLength: 1,
+                    items: 10
+                },
+                afterSelect: function (item) {
+                    //save the id value into the hidden field
+
+                },
+                displayField: 'full_name'
+
+            })
+            $('#back_commandebundle_clientfilter_phone').typeahead({
+
+                ajax: {
+                    url: '{{ path('list_client_par_tel') }}',
+                    triggerLength: 1,
+                    items: 10
+                },
+                afterSelect: function (item) {
+                    //save the id value into the hidden field
+
+                },
+                displayField: 'full_name'
+
+            })
+            $('#back_commandebundle_clientfilter_email').typeahead({
+
+                ajax: {
+                    url: '{{ path('list_client_par_email') }}',
+                    triggerLength: 1,
+                    items: 10
+                },
+                afterSelect: function (item) {
+                    //save the id value into the hidden field
+
+                },
+                displayField: 'full_name'
+
+            })
+        </script>
+    {% endblock %}

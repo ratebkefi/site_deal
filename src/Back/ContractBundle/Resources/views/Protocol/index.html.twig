@@ -1,0 +1,176 @@
+{% extends '::baseBack.html.twig' %}
+{% block body -%}
+    <!-- ==================== PAGE CONTENT ==================== -->
+    <div class="content">
+
+        <!-- ==================== WIDGETS CONTAINER ==================== -->
+        <div class="container-fluid">
+            <a href="{{ path('add_protocol_manager') }}">
+                <button class="btn btn-danger" type="button">Ajouter</button>
+            </a>
+
+            <!-- ==================== END OF ROW ==================== -->
+            <div class="row-fluid">
+                <div class="span12">
+                    {% for type, flashMessages in app.session.flashbag.all() %}
+                        {% for flashMessage in flashMessages %}<br/>
+                            <div class="alert {{ type }}" >
+                                <button data-dismiss="alert" class="close" type="button">×</button>
+                                {{ flashMessage|trans }}
+                            </div>
+
+                        {% endfor %}
+                    {% endfor %}
+                    <div class="containerHeadline">
+                        <i class="icon-zoom-in"></i>
+
+                        <h2>Filtre de recherche</h2>
+                        <div class="controlButton pull-right"><i class="icon-caret-down minimizeElement"></i></div>
+                    </div>
+                    <div class="floatingBox table ">
+                        <div class="container-fluid" style="padding: 10px">
+                            {{ form_start(form, {'method': 'GET','attr': {'class': 'form-horizontal contentForm','style':'padding:0; margin:0'}}) }}
+                            <div class="span2">
+                                <label>Date de</label>
+                                {{ form_widget(form.datepd,{'attr':{'class':'span10 datetimepicker'}}) }}
+                            </div>
+                            <div class="span2">
+                                <label>Date à</label>
+                                {{ form_widget(form.datepf,{'attr':{'class':'span10 datetimepicker'}}) }}
+                            </div>
+                            <div class="span2">
+                                <label>Etat</label>
+                                {{ form_widget(form.status,{'attr':{'class':'span10'}}) }}
+                            </div>
+                            <div class="span3">
+                                <label>Partenaire</label>
+                                {{ form_widget(form.user,{'attr':{'class':'span10'}}) }}
+                            </div>
+
+                            <div class="span2">
+                                <label>&nbsp;</label>
+                                <input type="submit" value="Rechercher" class="btn btn-success" />
+                            </div>
+
+                            {{ form_end(form) }}
+                        </div>
+
+                    </div>
+
+                    <!-- ==================== DEFAULT TABLE HEADLINE ==================== -->
+                    <div class="containerHeadline">
+                        <i class="icon-table"></i>
+
+                        <h2>Liste des protocoles</h2>
+                    </div>
+                    <!-- ==================== END OF DEFAULT TABLE HEADLINE ==================== -->
+
+                    <!-- ==================== DEFAULT TABLE FLOATING BOX ==================== -->
+                    <div class="floatingBox table">
+                        <div class="container-fluid">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Actif?</th>
+                                    <th>Partenaire</th>
+                                    <th>Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for entity in pagination %}
+                                    {% if (entity.status == 0) or ("now"|date('Ymd')  > entity.datep|date_modify("+1 year")|date('Ymd')) %}
+                                        <tr class="error"> {% else %}  <tr class="success">{% endif %}
+
+                                    <td>{{ entity.datep|date("d/m/Y") }}</td>
+                                        <td>{% if entity.status == 1 %}Activé{% else %}Désactivé{% endif %}
+                                            {% if "now"|date('Ymd')  > entity.datep|date_modify("+1 year")|date('Ymd') %}| Expiré{% endif %}
+                                            {% if (entity.status == 0) or ("now"|date('Ymd')  > entity.datep|date_modify("+1 year")|date('Ymd')) %}
+
+                                            {% else %}
+                                                {# endDate and startDate are strings or DateTime objects #}
+                                                {% set startDate =  "now"|date('Y-m-d') %}
+                                                {% set endDate =  entity.datep|date_modify("+1 year")|date('Y-m-d') %}
+                                                {% set difference = date(endDate).diff(date(startDate)) %}
+                                                {% set leftDays = difference.days %}
+                                                {% if leftDays == 1 %}
+                                                    | Expire dans   1 jour
+                                                {% else %}
+                                                    |  Expire dans   {{ leftDays }} jours
+                                                {% endif %}
+                                            {% endif %}
+
+                                        </td>
+                                        <td>{{ entity.user.name }}</td>
+                                        <td>
+                                            <div class="btn-toolbar" style="margin: 0;">
+                                                <div class="btn-group">
+                                                    <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                                        Action <span
+                                                                class="caret"></span></button>
+                                                    <ul class="dropdown-menu pull-right">
+
+                                                        <li>
+                                                            <a href="{{ path('back_annexe_homepage', { 'protocol_id': entity.id }) }}">Liste des
+                                                                Annexe </a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="{{ path('add_annexe_manager', { 'protocol_id': entity.id }) }}">Ajouter
+                                                                Annexe </a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="{{ path('dash_protocol_show', { 'id': entity.id }) }}">Afficher</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="{{ path('update_protocol_manager', { 'id': entity.id }) }}">Modifier</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="{{ path('print_protocol_manager', { 'id': entity.id }) }}">Protocole D’accord</a>
+                                                        </li>
+                                                        {% if app.user.roles[0]=='ROLE_SUPER_ADMIN' %}
+
+                                                            <li>
+                                                                <a href="javascript:confirmdeletbox('{{ path('delete_protocol_manager', { 'id': entity.id }) }}')">Supprimer</a>
+                                                            </li>
+                                                        {% endif %}
+
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                            {# display navigation #}
+                            <div class="pagination pagination-large" style="text-align: center">
+                                {{ knp_pagination_render(pagination) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ==================== END OF WIDGETS CONTAINER ==================== -->
+    </div>
+
+    <!-- ==================== END OF PAGE CONTENT ==================== -->
+{% endblock %}
+{% block javascripts %}
+<!-- masked inputs -->
+<script src="{{ asset('RessourcesBack/js/lib/jquery-inputmask/jquery.inputmask.min.js') }}"></script>
+<script src="{{ asset('RessourcesBack/js/lib/jquery-inputmask/jquery.inputmask.extensions.js') }}"></script>
+<script src="{{ asset('RessourcesBack/js/lib/jquery-inputmask/jquery.inputmask.date.extensions.js') }}"></script>
+    <script>
+        $(function () {
+            $(".datetimepicker").inputmask("date");
+
+        });
+        $(document).ready(function () {
+            $('.alert-error').delay(5000).fadeOut();
+        });
+        $(document).ready(function () {
+            $('.alert-success').delay(5000).fadeOut();
+        });
+    </script>
+{% endblock %}

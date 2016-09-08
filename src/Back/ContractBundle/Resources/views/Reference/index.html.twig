@@ -1,0 +1,97 @@
+{% extends '::baseBack.html.twig' %}
+{% block body -%}
+    <!-- ==================== PAGE CONTENT ==================== -->
+    <div class="content">
+
+        <!-- ==================== WIDGETS CONTAINER ==================== -->
+        <div class="container-fluid">
+            <a href="{{ path('add_reference_manager',{'protocol_id':protocol_id,'annexe_id':annexe_id}) }}">
+                <button class="btn btn-danger" type="button">Ajouter</button>
+            </a>
+            <a class="btn btn-inverse pull-right"
+               href="{{ path('back_annexe_homepage', { 'protocol_id':protocol_id}) }}"><i class="icon-list"></i> Retour</a>
+
+            <!-- ==================== END OF ROW ==================== -->
+            <div class="row-fluid">
+                <div class="span12">
+                    <!-- ==================== DEFAULT TABLE HEADLINE ==================== -->
+                    <div class="containerHeadline">
+                        <i class="icon-table"></i>
+
+                        <h2>liste des référence </h2>
+                    </div>
+                    <!-- ==================== END OF DEFAULT TABLE HEADLINE ==================== -->
+
+                    <!-- ==================== DEFAULT TABLE FLOATING BOX ==================== -->
+                    <div class="floatingBox table">
+                        <div class="container-fluid">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>Titre</th>
+                                    <th>Prix boutique</th>
+                                    <th>Prix BIGDeal</th>
+                                    <th>Stock</th>
+
+                                    <th>Livraison</th>
+                                    <th>Annexe</th>
+                                    <th>Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for entity in pagination %}
+                                    <tr>
+                                        <td>{{ entity.title }}</td>
+                                        <td>{{ entity.shopPrice }}</td>
+                                        <td>{{ entity.bigdealPrice }}</td>
+                                        <td>{{ entity.maxCoupon }}</td>
+
+                                        <td>{% if entity.shipping ==1 %} Oui {% else %} Non {% endif %}</td>
+                                        <td>{{ entity.annexe }}</td>
+                                        <td>
+                                            <div class="btn-toolbar" style="margin: 0;">
+                                                <div class="btn-group">
+                                                    <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                                        Action <span
+                                                                class="caret"></span></button>
+                                                    <ul class="dropdown-menu pull-right">
+
+                                                        <li>
+                                                            <a href="{{ path('dash_reference_show', { 'id': entity.id ,'protocol_id':protocol_id,'annexe_id':annexe_id}) }}">Afficher</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="{{ path('update_reference_manager', { 'id': entity.id ,'protocol_id':protocol_id,'annexe_id':annexe_id}) }}">Modifier</a>
+                                                        </li>
+
+                                                        {% if app.user.roles[0]=='ROLE_SUPER_ADMIN' %}
+
+                                                            <li>
+                                                                <a href="javascript:confirmdeletbox('{{ path('delete_reference_manager', { 'id': entity.id ,'protocol_id':protocol_id,'annexe_id':annexe_id}) }}')">Supprimer</a>
+                                                            </li>
+                                                        {% endif %}
+
+                                                    </ul>
+                                                </div>
+                                            </div>
+
+
+
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                            {# display navigation #}
+                            <div class="pagination pagination-large" style="text-align: center">
+                                {{ knp_pagination_render(pagination) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ==================== END OF WIDGETS CONTAINER ==================== -->
+    </div>
+
+    <!-- ==================== END OF PAGE CONTENT ==================== -->
+{% endblock %}

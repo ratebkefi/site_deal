@@ -1,0 +1,213 @@
+{% extends '::baseBack.html.twig' %}
+{% block body -%}
+
+
+    <!-- ==================== PAGE CONTENT ==================== -->
+    <div class="content">
+        <!-- ==================== WIDGETS CONTAINER ==================== -->
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span12">
+                    <div class="containerHeadline">
+                        <i class="icon-zoom-in"></i>
+
+                        <h2>Filtre de recherche</h2>
+
+                        <div class="controlButton pull-right"><i class="icon-caret-down minimizeElement"></i></div>
+                    </div>
+                    <div class="floatingBox table ">
+                        <div class="container-fluid" style="padding: 10px">
+                            {{ form_start(form, {'method': 'GET','attr': {'class': 'form-horizontal contentForm','style':'padding:0; margin:0'}}) }}
+                            <div class="span2">
+                                <label>Nom</label>
+                                {{ form_widget(form.nom,{'attr':{'autocomplete':'off','class':'span10'}}) }}
+                            </div>
+                            <div class="span2">
+                                <label>Prénom</label>
+                                {{ form_widget(form.prenom,{'attr':{'autocomplete':'off','class':'span10'}}) }}
+                            </div>
+                            <div class="span2">
+                                <label>Téléphone</label>
+                                {{ form_widget(form.phone,{'attr':{'autocomplete':'off','class':'span10 selectpicker','data-live-search':'true'}}) }}
+                            </div>
+                            <div class="span2">
+                                <label>E-mail</label>
+                                {{ form_widget(form.email,{'attr':{'autocomplete':'off','class':'span10 selectpicker','data-live-search':'true'}}) }}
+                            </div>
+
+                            <div class="span2">
+                                <label>&Eacute;tat</label>
+                                {{ form_widget(form.stat,{'attr':{'class':'span10 selectpicker','data-live-search':'true'}}) }}
+                            </div>
+                            <div class="span1">
+                                <label>&nbsp;</label>
+                                <input type="submit" value="Rechercher" class="btn btn-success"/>
+                            </div>
+
+                            {{ form_end(form) }}
+                        </div>
+
+                    </div>
+
+                    <!-- ==================== END OF ROW ==================== -->
+                    <div class="row-fluid">
+                        <div class="span12">
+                            <!-- ==================== DEFAULT TABLE HEADLINE ==================== -->
+                            <div class="containerHeadline">
+                                <i class="icon-table"></i>
+
+                                <h2>Liste des clients</h2>
+                            </div>
+                            <!-- ==================== END OF DEFAULT TABLE HEADLINE ==================== -->
+
+                            <!-- ==================== DEFAULT TABLE FLOATING BOX ==================== -->
+                            <div class="floatingBox table">
+                                <div class="container-fluid">
+                                    <table class="table">
+                                        <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Nom et Prénom</th>
+                                            <th>Téléphone</th>
+                                            <th>Email</th>
+                                            <th>C.I.N.</th>
+                                            <th>Derniére connexion</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for entity in pagination %}
+                                            <tr{% if entity.stat==0 %} class="error"{% endif %}>
+                                                <td><a href="{{ path('view_client_manager', { 'id': entity.id }) }}">{{ entity.id }}</a> </td>
+                                                <td><a href="{{ path('view_client_manager', { 'id': entity.id }) }}"> {{ entity.name }} {{ entity.fname }}</a></td>
+                                                <td>{{ entity.phone }}</td>
+                                                <td>{{ entity.email }}</td>
+                                                <td>{{ entity.cin }}</td>
+                                                <td>{% if entity.lastLogin %}{{ entity.lastLogin|date('d-m-Y H:i:s') }} {% endif %}</td>
+
+                                                <td>
+                                                    <div class="btn-toolbar" style="margin: 0;">
+                                                        <div class="btn-group">
+                                                            <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                                                Action <span
+                                                                        class="caret"></span></button>
+                                                            <ul class="dropdown-menu pull-right">
+                                                                <li><a
+                                                                            href="{{ path('back_client_edit', { 'id': entity.id }) }}">Modifier</a>
+                                                                </li>
+                                                                <li><a
+                                                                            href="{{ path('back_client_adresse', { 'id': entity.id }) }}">Adresse</a>
+                                                                </li>
+                                                                <li><a
+                                                                            href="{{ path('view_client_manager', { 'id': entity.id }) }}">Afficher</a>
+                                                                </li>
+                                                                {% if  app.user.roles[0]!= 'DAF' %}
+
+                                                                    {% if entity.stat==1 %}
+
+                                                                        <li><a
+                                                                                    href="{{ path('block_client_manager', { 'id': entity.id }) }}">Bannir</a>
+                                                                        </li>
+                                                                    {% else %}
+                                                                        <li><a
+                                                                                    href="{{ path('unblock_client_manager', { 'id': entity.id }) }}">Autorisé</a>
+                                                                        </li>
+                                                                    {% endif %}
+                                                                {% endif %}
+                                                                {% if  app.user.roles[0]!= 'DIRECTEURCOMMERCIAL' %}
+
+                                                                    <li><a
+                                                                                href="{{ path('bigfid_client', { 'id': entity.id }) }}">Historique BigFid</a>
+                                                                    </li>
+                                                                {% endif %}
+
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                    {# display navigation #}
+                                    <div class="pagination pagination-large" style="text-align: center">
+                                        {{ knp_pagination_render(pagination) }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- ==================== END OF WIDGETS CONTAINER ==================== -->
+            </div>
+        </div>
+    </div>
+    <link rel="stylesheet" type="text/css" href="{{ asset('RessourcesBack/css/bootstrap-select.css') }}">
+
+{% endblock %}
+    {% block javascripts %}
+
+        {% javascripts '@MainFrontBundle/Resources/public/js/bootstrap-typeahead.min.js' %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+        {% endjavascripts %}
+        <script src="{{ asset('RessourcesBack/js/bootstrap-select.js') }}"></script>
+        <script>
+            $('#back_commandebundle_clientfilter_nom').typeahead({
+
+                ajax: {
+                    url: '{{ path('list_client_par_nom') }}',
+                    triggerLength: 1,
+                    items: 10
+                },
+                afterSelect: function (item) {
+                    //save the id value into the hidden field
+
+                },
+                displayField: 'full_name'
+
+            })
+
+            $('#back_commandebundle_clientfilter_prenom').typeahead({
+
+                ajax: {
+                    url: '{{ path('list_client_par_prenom') }}',
+                    triggerLength: 1,
+                    items: 10
+                },
+                afterSelect: function (item) {
+                    //save the id value into the hidden field
+
+                },
+                displayField: 'full_name'
+
+            })
+            $('#back_commandebundle_clientfilter_phone').typeahead({
+
+                ajax: {
+                    url: '{{ path('list_client_par_tel') }}',
+                    triggerLength: 1,
+                    items: 10
+                },
+                afterSelect: function (item) {
+                    //save the id value into the hidden field
+
+                },
+                displayField: 'full_name'
+
+            })
+            $('#back_commandebundle_clientfilter_email').typeahead({
+
+                ajax: {
+                    url: '{{ path('list_client_par_email') }}',
+                    triggerLength: 1,
+                    items: 10
+                },
+                afterSelect: function (item) {
+                    //save the id value into the hidden field
+
+                },
+                displayField: 'full_name'
+
+            })
+        </script>
+    {% endblock %}

@@ -1,0 +1,6 @@
+
+#booking
+
+front_booking:
+   resource: "@MainBookingBundle/Resources/config/routing/booking.yml"
+   prefix:   /

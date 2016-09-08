@@ -1,0 +1,36 @@
+list_caissier:
+    path:     /
+    defaults: { _controller: BackCommandeBundle:Caissier:index }
+mon_caisse:
+    path:     /caisse/
+    defaults: { _controller: BackCommandeBundle:Caissier:caisse }
+
+update_caissier_manager:
+    path:     /update/{id}
+    defaults: { _controller: BackCommandeBundle:Caissier:edit}
+    requirements:
+        id: \d+
+view_caissier_manager:
+    path:     /view/{id}
+    defaults: { _controller: BackCommandeBundle:Caissier:view}
+    requirements:
+        id: \d+
+add_caissier_manager:
+    path:     /add
+    defaults: { _controller: BackCommandeBundle:Caissier:add}
+
+activate_caissier_manager:
+    path:     /act/{id}
+    defaults: { _controller: BackCommandeBundle:Caissier:activate}
+    requirements:
+        id: \d+
+unactivate_caissier_manager:
+    path:     /unact/{id}
+    defaults: { _controller: BackCommandeBundle:Caissier:unactivate}
+    requirements:
+        id: \d+
+delete_caissier_manager:
+    path:     /unact/{id}
+    defaults: { _controller: BackCommandeBundle:Caissier:unactivate}
+    requirements:
+        id: \d+

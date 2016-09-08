@@ -1,0 +1,63 @@
+{% extends '::baseBack.html.twig' %}
+{% block body -%}
+<!-- ==================== PAGE CONTENT ==================== -->
+<div class="content">
+
+    <!-- ==================== WIDGETS CONTAINER ==================== -->
+    <div class="container-fluid">
+
+
+        <!-- ==================== END OF ROW ==================== -->
+        <div class="row-fluid">
+            <div class="span12">
+
+                <!-- ==================== DEFAULT TABLE HEADLINE ==================== -->
+                <div class="containerHeadline">
+                    <i class="icon-table"></i><h2>Historique rétrait Caisse : <strong>{% if resp %}{{ resp.name }} {% endif %}</strong></h2>
+                </div>
+                <!-- ==================== END OF DEFAULT TABLE HEADLINE ==================== -->
+                <!-- ==================== DEFAULT TABLE FLOATING BOX ==================== -->
+                <div class="floatingBox table">
+                    <div class="container-fluid">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Mode de payement</th>
+                                    <th>Montant</th>
+                                    <th>Date</th>
+                                    <th>Caissier</th>
+                                    <th>Directeur administratif et financier</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                    {% for entity in pagination  %}
+                                <tr  {% if entity.daf %}  class="alert alert-error" {% else %} class="alert alert-success" {% endif %}>
+                                    <td>{{ entity.modepayement.name }}</td>
+                                    <td>{{ entity.montant }}</td>
+                                    <td>{{ entity.dcr|date("d/m/Y H:i:s") }}</td>
+                                    <td>{% if entity.caisse %}{{ entity.caisse.name }}{% endif %}</td>
+                                    <td>{% if entity.daf %}{{ entity.daf.name }}{% endif %}</td>
+                                </tr>
+                                    {% endfor %}
+                            </tbody>
+                        </table>  
+                            {# display navigation #}
+                        <div class="pagination pagination-large" style="text-align: center">
+                            {{ knp_pagination_render(pagination) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ==================== END OF WIDGETS CONTAINER ==================== -->
+</div>
+    <link rel="stylesheet" type="text/css" href="{{ asset('RessourcesBack/css/bootstrap-select.css') }}">
+
+<!-- ==================== END OF PAGE CONTENT ==================== -->
+{% endblock %}
+{% block javascripts %}
+    <script src="{{ asset('RessourcesBack/js/bootstrap-select.js') }}"></script>
+
+
+{% endblock %}

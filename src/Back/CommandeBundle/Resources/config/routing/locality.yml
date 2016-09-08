@@ -1,0 +1,13 @@
+back_locality:
+    path:     /
+    defaults: { _controller: BackCommandeBundle:Localite:index }
+
+
+update_locality_manager:
+    path:     /update/{id}
+    defaults: { _controller: BackCommandeBundle:Localite:edit}
+    requirements:
+        id: \d+
+add_locality_manager:
+    path:     /add
+    defaults: { _controller: BackCommandeBundle:Localite:add}

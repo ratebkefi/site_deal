@@ -1,0 +1,42 @@
+{% extends '::base.html.twig' %}
+{% block stylesheets %}
+{% endblock %}
+{% block body %}
+	<div class="row">
+		<div class="col-md-12 entry">
+			<h1>Mon compte</h1>
+		</div>
+	</div>
+    <div class="informations">
+        <!-- Profile Menu -->
+        {{ render(controller('MainFrontBundle:Client:menuclient')) }}
+        <!-- Modifier adresse Modal -->
+        <div class="row">
+			<div class="col-sm-12">
+				<div class="mb10"><strong class="teal">TOTAL : </strong><strong> {{ totalBigFid }} <sup>B</sup></strong></div>
+				<div class="table-responsive">
+					<table class="table table-striped">
+						<thead>
+						<tr>
+							<th>Montant </th>
+							<th>Date / Heure </th>
+							<th>Motif</th>
+						</tr>
+						</thead>
+						<tbody>
+						{% for item in pagination %}
+							<tr>
+                                <td><strong>{% if item.operation ==1%} + {% else %} - {% endif %}{{ item.montant }} <sub>B</sub></strong></td>
+								<td>{{ item.dcr|date('d-m-Y H:i:s') }}</td>
+								<td>{{ item.motif }}</td>
+							</tr>
+                        {% endfor %}
+						</tbody>
+					</table>
+				</div>
+				<div class="text-center">                {{ knp_pagination_render(pagination) }}
+				</div>
+			</div>
+        </div><!-- /.row -->
+    </div>
+    {% endblock %}

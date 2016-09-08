@@ -1,0 +1,259 @@
+{% extends '::baseBack.html.twig' %}
+{% block body -%}
+    <!-- ==================== PAGE CONTENT ==================== -->
+    <div class="content">
+        <!-- ==================== WIDGETS CONTAINER ==================== -->
+        <div class="container-fluid">
+            <!-- ==================== END OF ROW ==================== -->
+            <div class="row-fluid">
+                <div class="span12">
+                    <!-- ==================== END OF DEFAULT TABLE HEADLINE ==================== -->
+                    <!-- ==================== DEFAULT TABLE FLOATING BOX ==================== -->
+                       <div class="containerHeadline">
+                        <i class="icon-zoom-in"></i>
+                        <h2>Filtre de recherche</h2>
+                        <div class="controlButton pull-right"><i class="icon-caret-down minimizeElement"></i></div>
+                    </div>
+                        <div class="floatingBox">
+                            <div class="container-fluid"  style="padding: 10px">
+                            <form class="form-horizontal contentForm" method="get" action="">
+                                <div class="row">
+                                    <div class="span3">
+                                        <div class="control-group ">
+                                            <label class="control-label" style="width: 160px;"
+                                                   for="back_dashbundle_sms_Gouvernerat">Gouvernerat</label>
+
+                                            <div class="controls" >
+                                                <select multiple="multiple" name="locality[]">
+                                                    {% for item in locality %}
+    <option value="{{ item.id }}" {% if item.id in localite %} selected {% endif %}>{{ item.name }}</option>
+{% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="span3">
+                                    <div class="control-group ">
+                                            <label class="control-label" style="width: 160px;" for="back_dashbundle_sms_Sexe">Sexe</label>
+                                            <div class="controls" style="margin-left: 170px;">
+                                                <select name="sexe">
+                                                    <option value="" {% if sexe=="" %} selected {% endif %}>Hommes et Femmes</option>
+                                                    <option value="Femme"  {% if sexe=="Femme" %} selected {% endif %}>Femmes</option>
+                                                    <option value="Homme"  {% if sexe=="Homme" %} selected {% endif %}>Hommes</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                <div class="span3">
+                                        <div class="control-group">
+                                            <label class="control-label" style="width: 160px;"
+                                                   for="back_dashbundle_sms_Ageentre">Age entre</label>
+                                            <div class="controls" style="margin-left: 170px;">
+                                                <input type="text" value="{{ agefrom }}" name="agefrom"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="span3">
+                                        <div class="control-group ">
+                                            <label class="control-label required" style="width: 160px;"
+                                                   for="back_dashbundle_sms_ageto">Et</label>
+                                            <div class="controls" style="margin-left: 170px;">
+                                                <input type="text" name="ageto" value="{{ ageto }}"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                      <div class="span3">
+                                    <div class="control-group ">
+                                        <label class="control-label required" for="back_dashbundle_sms_Deal">status</label>
+                                        <div class="controls">
+                                            <select multiple="status" size="4"  name="status[]"  multiple="multiple" id="status">
+                                                <option value="1" {% if 1 in status %} selected {% endif %}>Payé</option>
+                                                <option value="0" {% if 0 in status %} selected {% endif %}>En attente</option>
+                                                <option value="3" {% if 3 in status %} selected {% endif %}>Annulé</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                </div>
+
+
+                                <div class="row" >
+                                    <div class="span3">
+                                        <div class="control-group ">
+                                            <label class="control-label required" for="back_dashbundle_sms_categoris">Categories</label>
+                                            <div class="controls">
+                                                <select multiple="multiple" name="categorie[]"  id="categorie" class="categorie">
+                                                    {% for item in category %}
+                                                        {% if item.category|length>0 %}
+                                                            <optgroup label="{{ item.name }}">
+                                                                {% for item2 in item.category %}
+                                                                    <option value="{{ item2.id }}"  {% if item2.id in categorie %} selected {% endif %}>{{ item2.name }}</option>
+                                                                {% endfor %}
+                                                            </optgroup>
+                                                        {% else %}
+                                                            <option value="{{ item.id }}" {% if item.id in categorie %} selected {% endif %}>{{ item.name }}</option>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="span9">
+                                            <div class="control-group ">
+                                                <label class="control-label required"
+                                                       for="back_dashbundle_sms_Deal">Deals</label>
+                                                <div class="controls">
+                                                    <select multiple="multiple" class="span12 deals" name="deals[]"
+                                                            id="deals" >
+
+                                                            {% for item in deal %}
+                                                                <option value="{{ item.id }}" {% if item.id in deals %} selected {% endif %}>{{ item.title }}</option>
+                                                            {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                </div>
+                                <div class="deal_container"></div>
+
+                                <div class="row">
+                                <div class="span3" >
+                                    <label class="control-label">&nbsp;</label>
+                                    <input type="submit" class="btn btn-success" name="button" value="Rechercher">
+                                </div>
+                                <div class="span3" >
+                                    <input type="submit" class="btn btn-success" name="button" value="Exporter">
+                                </div>
+								{% if is_granted('ROLE_SUPER_ADMIN') %}
+								<div class="span3" >
+                                    <input type="submit" class="btn btn-success" name="button" value="Exporter tous">
+                                </div>
+								{% endif %}
+                            </div>
+</form>
+                            </div>
+                        </div>
+
+                        <div class="floatingBox table">
+                            <!-- ==================== DEFAULT TABLE HEADLINE ==================== -->
+                            <div class="containerHeadline">
+                                <i class="icon-table"></i>
+                                <h2>Liste des compagne SMS</h2>
+                            </div>
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>Nom</th>
+                                    <th>Prenom</th>
+                                    <th>E-mail</th>
+                                    <th>Date de naissance</th>
+                                    <th>Sexe</th>
+                                    <th>Tel</th>
+                                    <th>Adresse</th>
+                                    <th>CP</th>
+                                    <th>Ville</th>
+                                    <th>Indication adresse</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for entity in pagination %}
+    <tr>
+        <td>{{ entity.name }}</td>
+        <td>{{ entity.fname }}</td>
+        <td>{{ entity.email }}</td>
+        <td>
+			{% if entity.datebirth %}
+				{{ entity.datebirth|date('d-m-Y') }} 
+			{%endif%}</td>
+        <td>{{ entity.sex }}</td>
+        <td>{{ entity.phone }}</td>
+
+        <td>
+            {% for item in entity.adresses %}
+                {{ item.adress }}
+            {% endfor %}
+        </td>
+        <td></td>
+        <td>
+            {% for item in entity.adresses %}
+                {{ item.localite }}
+            {% endfor %}
+        </td>
+        <td>
+            {% for item in entity.adresses %}
+                {{ item.indcation }}
+            {% endfor %}
+        </td>
+        <td></td>
+    </tr>
+{% endfor %}
+                                </tbody>
+                            </table>
+                            {# display navigation #}
+                            <div class="pagination pagination-large" style="text-align: center">
+                                {{ knp_pagination_render(pagination) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ==================== END OF WIDGETS CONTAINER ==================== -->
+    </div>
+
+    <!-- ==================== END OF PAGE CONTENT ==================== -->
+{% endblock %}
+{% block javascripts %}
+    <script src="{{ asset('RessourcesBack/js/vendor/bootstrap-multiselect.js') }}"></script>              <!-- multiselect plugin -->
+    <script src="{{ asset('RessourcesBack/js/vendor/parsley.min.js') }}"></script>                        <!-- parsley validator plugin -->
+    <script type="text/javascript">
+
+        $(".categorie").change(function () {
+            $.ajax({
+                type: "POST",
+                url: "{{ path('get_all_deal_categorie') }}",
+                data: "id=" + $("#categorie").val(),
+                success: function (msg) {
+                    $(".deals").html(msg);
+                    // $('#deals').multiselect();
+                }
+            });
+        });
+        $(function () {
+
+            // $('#categorie').multiselect();
+            //$('#deals').multiselect();
+
+
+        });
+
+        function AjouterblockCategorie()
+        {
+            //var backup =document.getElementById('deal_container').innerHTML;
+
+            $.ajax({
+                type: "POST",
+                url: "{{ path('sendind_cat_sms') }}",
+
+                success: function (msg) {
+                    $('.deal_container').append(msg);
+
+                }
+            });
+
+        }
+
+        function countChar(val) {
+            var len = val.value.length;
+            if (len >= 160) {
+                val.value = val.value.substring(0, 160);
+                $('#charNum').text("Reste 0 caractére");
+            } else {
+                $('#charNum').text("Reste " + (160 - len) + " caractére(s)");
+            }
+        }
+        ;
+    </script>
+{% endblock %}

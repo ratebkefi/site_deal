@@ -1,0 +1,63 @@
+<link href="{{ asset('RessourcesBack/css/bootstrap-responsive.min.css') }}" type="text/css" rel="stylesheet"/>
+<link href="{{ asset('RessourcesBack/css/thekamarel.css') }}" type="text/css" rel="stylesheet"/>
+<link href="{{ asset('RessourcesBack/css/styles.css') }}" type="text/css" rel="stylesheet"/>
+<link href="{{ asset('RessourcesBack/css/fancy-style.css') }}" type="text/css" rel="stylesheet"/>
+
+{% block body -%}
+
+    <div class="content">
+        <div class="container-fluid">
+
+            <!-- ==================== COMMON ELEMENTS ROW ==================== -->
+            <div class="row-fluid">
+                <div class="span12">
+                    <!-- ==================== TEXT INPUTS HEADLINE ==================== -->
+                    <div class="containerHeadline">
+                        <i class="icon-edit"></i>
+
+                        <h2>Ajouter une note</h2>
+
+                        <div class="controlButton pull-right"><i class="icon-remove removeElement"></i></div>
+                        <div class="controlButton pull-right"><i class="icon-caret-down minimizeElement"></i></div>
+                    </div>
+                    <!-- ==================== END OF TEXT INPUTS HEADLINE ==================== -->
+
+                    <!-- ==================== TEXT INPUTS FLOATING BOX ==================== -->
+                    <div class="floatingBox">
+                        <div class="container-fluid">
+
+                            <div class="container-fluid">
+                                <form action="{{ path('note_ticket_add',{'id':id}) }}" method="post">
+                                    <div class="control-group">
+                                        <label class="control-label">Message : </label>
+
+                                        <div class="controls">
+                                            <textarea class="required invalid span9" rows="12"
+                                                      name="message" aria-required="true" required="required"
+                                                      aria-invalid="true"></textarea>
+                                        </div>
+                                    </div>
+
+
+                                <div class="formFooter">
+                                    <button type="submit" class="btn btn-success"><i class="icon-ok"> </i> Valider
+                                    </button>
+                                    <button type="reset" class="btn btn-danger"><i class="icon-remove"> </i> Effacer
+                                    </button>
+                                    <a href="{{ path('note_ticket',{'id':id}) }}">
+                                        <button class="btn btn-inverse" type="button"><i class="icon-list"></i> Liste
+                                        </button>
+                                    </a>
+                                </div>
+                                </form>
+
+                            </div>
+
+                        </div>
+                    </div>
+                    <!-- ==================== END OF TEXT INPUTS FLOATING BOX ==================== -->
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,8 @@
+#deal
+back_reportdeal:
+    path:     /
+    defaults: { _controller: BackDealBundle:ReportDeal:index }
+
+back_reportdealcsv:
+    path:     /export
+    defaults: { _controller: BackDealBundle:ReportDeal:export }

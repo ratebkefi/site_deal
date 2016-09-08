@@ -1,0 +1,57 @@
+{% extends '::base.html.twig' %}
+{% block stylesheets %}
+{% endblock %}
+{% block title %} Nos Paybox {% endblock %}
+{% block body %}
+    <div id="content" class="marg-50">
+        <div class="row">
+            <div class="col-md-12 entry">
+            <h2 class="title">Nos Paybox</h2>
+            </div>
+        </div>
+        <!-- Methode de paiement -->
+        <div class="bg">
+
+            <div class="bh-sl-container">
+                <div id="map-container" class="bh-sl-map-container">
+                    <div class="bh-sl-loc-list">
+                        <ul class="list"></ul>
+                    </div>
+                    <div id="bh-sl-map" class="bh-sl-map"></div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+
+{% endblock %}
+{% block javascripts %}
+    <script src="{{ asset('public/js/handlebars.min.js') }}"></script>
+    <script src="{{ asset('public/js/plugins/storeLocator/jquery.storelocator.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('public/js/sweet-alert.js') }}"></script>
+    <script type="text/javascript">
+
+
+
+        $(document).ready(function () {
+
+            $('#map-container').storeLocator({
+                'dataRaw': {{ data|json_encode()|raw }}
+            });
+
+
+
+        });
+
+
+
+
+
+
+
+    </script>
+
+{% endblock %}
+

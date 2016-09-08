@@ -1,0 +1,13 @@
+#regle
+back_regle:
+    path:     /
+    defaults: { _controller: BackDashBundle:Regle:index }
+
+add_regle_manager:
+    path:     /add
+    defaults: { _controller: BackDashBundle:Regle:add }
+update_regle_manager:
+    path:     /update/{id}
+    defaults: { _controller: BackDashBundle:Regle:edit}
+    requirements:
+        id: \d+

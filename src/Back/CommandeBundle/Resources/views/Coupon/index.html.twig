@@ -1,0 +1,91 @@
+{% extends '::baseBack.html.twig' %}
+{% block body -%}
+    <!-- ==================== PAGE CONTENT ==================== -->
+    <div class="content">
+        <!-- ==================== WIDGETS CONTAINER ==================== -->
+        <div class="container-fluid">
+            <!-- ==================== END OF ROW ==================== -->
+            <div class="row-fluid">
+                <div class="span12">
+                    <!-- ==================== DEFAULT TABLE HEADLINE ==================== -->
+                    <div class="containerHeadline">
+                        <i class="icon-table"></i>
+
+                        <h2>Liste des coupons : commande N° {{ numCommande }}</h2>
+                    </div>
+                    <!-- ==================== END OF DEFAULT TABLE HEADLINE ==================== -->
+
+                    <!-- ==================== DEFAULT TABLE FLOATING BOX ==================== -->
+                    <div class="floatingBox table">
+                        <div class="container-fluid">
+
+
+                            <table class="table ">
+                                <thead>
+                                <tr>
+                                    <th>Code </th>
+                                    <th>Prix</th>
+                                    <th>Client</th>
+                                    <th>Etat de vente</th>
+                                    <th>Etat de reception</th>
+                                    {% if consomm==1 %}
+                                    <th>Date de consommation</th>
+                                    {%  endif %}
+
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for entity in entities %}
+                                    <tr>
+                                        <td>{{ entity.code }}</td>
+                                        <td>{{ entity.price }} <sup>TND</sup></td>
+                                        <td>{{ entity.client }}</td>
+                                        <td>{{ entity.vendu|getVenduCoupon }}</td>
+                                        <td>{{ entity.recu|getRecuCoupon }}</td>
+                                        <td> {% if entity.recu==2 %}
+
+                                                {% set break = false %}
+                                          {% for date in dates if not break %}
+                                              {%  if date.coupon.code == entity.code %}
+                                           {{ date.dcr|date("d/m/Y H:i:s")  }}
+                                                  {% set break = true %}
+                                              {%  endif %}
+                                        {% endfor %}
+
+
+                                        {%  endif %}
+
+                                        </td>
+
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+
+
+
+                        </div>
+
+                  </div>
+                </div>
+            </div>
+        </div>
+        <!-- ==================== END OF WIDGETS CONTAINER ==================== -->
+    </div>
+
+    <!-- ==================== END OF PAGE CONTENT ==================== -->
+{% endblock %}
+{% block javascripts %}
+    <script src="{{ asset('RessourcesBack/js/vendor/jquery-ui-1.10.2.custom.min.js') }}"></script>        <!-- jquery ui dragging -->
+    <script>
+        $(function () {
+            // fancybox
+            $('.paye').fancybox({
+                'height': 'auto',
+                'width': 990,
+                'type': 'iframe',
+                'autoScale': false
+            });
+        })
+    </script>
+{% endblock %}

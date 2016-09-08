@@ -1,0 +1,21 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<form action="https://clictopay.monetiquetunisie.com/payment/rest/register.do" method="POST" name="paiment">
+    <input type="hidden" name="userName" value="{{ userName }}">
+    <input type="hidden" name="password" value="{{ password }}">
+    <input type="hidden" name="clientId" value="{{ clientId }}">
+    <input type="hidden" name="language" value="{{ language }}">
+    <input type="hidden" name="description" value="{{ description }}">
+    <input type="hidden" name="failUrl" value="{{ failUrl }}">
+    <input type="hidden" name="returnUrl" value="{{ returnUrl }}">
+    <input type="hidden" name="currency" value="{{ currency }}">
+    <input type="hidden" name="orderNumber" value="{{ orderNumber }}">
+    <input type="hidden" name="amount" value="{{ amount }}">
+</form>
+{% block javascripts %}
+    <script>
+        document.paiment.submit();
+    </script>
+{% endblock %}

@@ -1,0 +1,70 @@
+#deal
+back_deal:
+    path:     /
+    defaults: { _controller: BackDealBundle:Deal:index }
+
+update_deal_manager:
+    path:     /update/{id}
+    defaults: { _controller: BackDealBundle:Deal:edit}
+    requirements:
+        id: \d+
+back_change_redactor_deal:
+    path:     /change/{id}
+    defaults: { _controller: BackDealBundle:Deal:changeredactor}
+    requirements:
+        id: \d+
+
+show_deal_manager:
+    path:     /show/{id}
+    defaults: { _controller: BackDealBundle:Deal:show}
+    requirements:
+        id: \d+
+
+#ajax invoice
+back_deal_ajax_invoice:
+    path:     /ajxgetdeal
+    defaults: { _controller: BackDealBundle:Deal:ajxgetdeal }
+#ajax coupon
+back_coupon_ajax_invoice:
+    path:     /ajxgetcoupon
+    defaults: { _controller: BackDealBundle:Deal:coupon }
+#ajax total facture
+back_total_ajax_invoice:
+    path:     /ajxgettotal
+    defaults: { _controller: BackDealBundle:Deal:total }
+
+# rout pour le user redactor
+redactordeal_deal:
+    path:     /alldeal
+    defaults: { _controller: BackDealBundle:Deal:alldeal }
+update_deal_manager2:
+    path:     /update/{id}/{type}
+    defaults: { _controller: BackDealBundle:Deal:edit}
+    requirements:
+        id: \d+
+        type: \d{1}
+redactordeal_mydeal:
+    path:     /mydeal
+    defaults: { _controller: BackDealBundle:Deal:mydeal }
+
+detail_deal_view:
+    path:     /detaildeal/{id}
+    defaults: { _controller: BackDealBundle:Deal:detaildeal }
+    requirements:
+            id: \d+
+
+apercu_deal_view:
+    path:     /appercu/{id}
+    defaults: { _controller: BackDealBundle:Deal:apercu }
+    requirements:
+            id: \d+
+
+ajxdealback:
+    path: /dealajxtop
+    defaults: { _controller: BackDealBundle:Deal:dealajx}
+get_all_deal_categorie:
+    path: /getalldealcategorie
+    defaults: { _controller: BackDealBundle:Deal:getalldealcategorie}
+homeredacteur:
+    path: /homeredacteur
+    defaults: { _controller: BackDealBundle:Deal:homeredacteur}

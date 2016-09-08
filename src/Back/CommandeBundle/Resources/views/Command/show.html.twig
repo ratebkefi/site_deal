@@ -1,0 +1,103 @@
+{% extends '::baseBack.html.twig' %}
+{% block body -%}
+<!-- ==================== PAGE CONTENT ==================== -->
+<div class="content">
+    <!-- ==================== WIDGETS CONTAINER ==================== -->
+    <div class="container-fluid">
+        <a href="{{ path('update_deal_manager', { 'id': entity.id }) }}"><button class="btn btn-info" type="button"><i class="icon-pencil"></i> Modifier</button></a>
+        <a href="{{ path('back_deal') }}"><button class="btn btn-inverse pull-right" type="button" id="form_submit"><i class="icon-list"></i> Liste</button></a>
+        <a class="btn btn-danger" href="javascript:confirmdeletbox('{{ path('delete_deal_manager', {'id': entity.id}) }}')"><i class="icon-remove"> </i> Supprimer</a>
+
+        <!-- ==================== END OF ROW ==================== -->
+        <div class="row-fluid">
+            <div class="span12">
+                <!-- ==================== DEFAULT TABLE HEADLINE ==================== -->
+                <div class="containerHeadline">
+                    <i class="icon-table"></i><h2>Deal {{ entity.title }}</h2>
+                </div>
+                <!-- ==================== END OF DEFAULT TABLE HEADLINE ==================== -->
+                <!-- ==================== DEFAULT TABLE FLOATING BOX ==================== -->
+                <div class="floatingBox table">
+                    <div class="container-fluid">
+                        <table class="table table-bordered">
+                            <tbody>
+                                <tr>
+                                    <th>Identifiant</th>
+                                    <td>{{ entity.id }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Titre</th>
+                                    <td>{{ entity.title }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Description</th>
+                                    <td>{{ entity.description }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Le deal</th>
+                                    <td>{{ entity.deal }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Vous aimer</th>
+                                    <td>{{ entity.youLike }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Soyant claire</th>
+                                    <td>{{ entity.toBeClear }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Auto confirm</th>
+                                    <td>{% if entity.autoConfirm ==1%} Oui {% else %} Non {% endif %}</td>
+                                </tr>
+                                <tr>
+                                    <th>Afficher maps</th>
+                                    <td>{% if entity.maps ==1%} Oui {% else %} Non {% endif %}</td>
+                                </tr>
+                                <tr>
+                                    <th>Date de début de validité de coupon</th>
+                                    <td>{{ entity.startDateValidtyCoupon|date("m/d/Y H:i:s") }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Date de fin de validité de coupon</th>
+                                    <td>{{ entity.endDateValidtyCoupon|date("m/d/Y H:i:s")  }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Image 1                                   </th>
+                                    <td><img src="{{ asset(entity.image1)|apply_filter('user_profil')}}"></td>
+                                </tr>
+                                <tr>
+                                    <th>Image 2</th>
+                                    <td><img src="{{ asset(entity.image2)|apply_filter('user_profil')}}"></td>
+                                </tr>
+                                <tr>
+                                    <th>Image 3</th>
+                                    <td><img src="{{ asset(entity.image3)|apply_filter('user_profil')}}"></td>
+                                </tr>
+
+                                <tr>
+                                    <th>Accepter payment espèce</th>
+                                    <td>{{ entity.cashPayment }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Max coupon par utilisateur</th>
+                                    <td>{% if entity.cashPayment ==1%} Oui {% else %} Non {% endif %}</td>
+                                </tr>
+                                <tr>
+                                    <th>status</th>
+                                    <td>{% if entity.status ==1%} Publié {% else %} Non Publié {% endif %}</td>
+                                </tr>
+                                <tr>
+                                    <th>Interval payement</th>
+                                    <td>{{ entity.intervalPayment }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ==================== END OF WIDGETS CONTAINER ==================== -->
+</div>
+<!-- ==================== END OF PAGE CONTENT ==================== -->
+{% endblock %}

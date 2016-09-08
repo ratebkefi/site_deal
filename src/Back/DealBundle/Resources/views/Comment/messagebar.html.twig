@@ -1,0 +1,38 @@
+<div id="messagesContent">
+    <div class="sidebarDivider"></div>
+    <div class="sidebarContent">
+        <a href="#collapsedSidebarContent" class="showCollapsedSidebarMenu"><i class="icon-chevron-sign-left"></i>
+
+            <h1> Commentaires</h1></a>
+
+        <h1>Commentaires</h1>
+
+        <div class="sidebarInfo">
+            <div><span class="label">{{ comment|length }}</span> Commentaires</div>
+            <div><span class="label red">{{ unreaded|length }}</span> Commentaires non approuvés</div>
+        </div>
+        <ul class="messagesList">
+            {% for item in unreaded %}
+            <li class="unreaded">
+                <div class="messageAvatar">
+                    {#{% if item.voter.fbid %}
+                        <img src="http://graph.facebook.com/v2.3/{{ item.voter.fbid }}/picture?width=50&height=50"
+                             alt="">
+                    {% else %}
+                        <img width="50" height="50" src="{{ asset('public/images/profile-no-picture.png') }}"
+                             alt="">
+                    {% endif %}#}<img width="50" height="50" src="{{ asset('public/images/profile-no-picture.png') }}"
+                                       alt="">
+                </div>
+                <h3>{{ item.voter }}</h3>
+                    <span class="messageDate">{{ item.dcr|date('d/m/Y') }} <span
+                                class="pull-right messageStatus">non approuvé</span></span>
+
+                <div class="messageContent">"{{ item.comment|getshort }}"
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+        <a href="{{ path('back_comment') }}" class="btn btn-primary">Tout voir</a>
+    </div>
+</div>

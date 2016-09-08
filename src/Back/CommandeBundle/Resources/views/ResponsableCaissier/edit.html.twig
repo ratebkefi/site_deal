@@ -1,0 +1,83 @@
+{% extends '::baseBack.html.twig' %}
+{% form_theme form 'form_table_layout.html.twig' %}
+{% block body -%}
+    <div class="content">
+        <div class="container-fluid">
+
+            <!-- ==================== COMMON ELEMENTS ROW ==================== -->
+            <div class="row-fluid">
+                <div class="span12">
+                    <!-- ==================== TEXT INPUTS HEADLINE ==================== -->
+                    <div class="containerHeadline">
+                        <i class="icon-edit"></i>
+                        <h2>Modifier un responsable caisse</h2>
+                        <div class="controlButton pull-right"><i class="icon-remove removeElement"></i></div>
+                        <div class="controlButton pull-right"><i class="icon-caret-down minimizeElement"></i></div>
+                    </div>
+                    <!-- ==================== END OF TEXT INPUTS HEADLINE ==================== -->
+                    <!-- ==================== TEXT INPUTS FLOATING BOX ==================== -->
+                    <div class="floatingBox">
+                        <div class="container-fluid">
+                            <h2>Responsable : {{ partner.name }}</h2>
+                            <div class="container-fluid">
+                                {{ form_start(form, {'method': 'POST','attr': {'class': 'form-horizontal contentForm'}}) }}
+                                {{ form_row(form.name) }}
+                                {{ form_row(form.datenaisse) }}
+                                {{ form_row(form.email) }}
+                                {{ form_row(form.cin) }}
+                                {{ form_row(form.datecin) }}
+                                {{ form_row(form.bank) }}
+                                {{ form_row(form.agency) }}
+                                {{ form_row(form.rib) }}
+                                {{ form_row(form.address) }}
+                                {{ form_row(form.phone) }}
+                                {{ form_row(form.profilePictureFile) }}
+                                {{ form_row(form.phoneurg) }}
+                                {{ form_row(form.adresseurg) }}
+                                <div class="formFooter">
+                                    <button type="submit" class="btn btn-success"><i class="icon-ok"> </i> Valider
+                                    </button>
+                                    <button type="reset" class="btn btn-danger"><i class="icon-remove"> </i> Effacer
+                                    </button>
+                                    <a href="{{ path('list_caissier') }}">
+                                        <button class="btn btn-inverse" type="button"><i class="icon-list"></i> Liste
+                                        </button>
+                                    </a>
+                                    {{ form_row(form._token) }}
+                                </div>
+                                {{ form_end(form) }}
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ==================== END OF TEXT INPUTS FLOATING BOX ==================== -->
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+ {% block javascripts %}
+     <script type="text/javascript" src="{{ asset('tinymce/tinymce.min.js') }}"></script>
+     <script>
+         $(document).ready(function () {
+             $("#back_commandebundle_responsablecassier_name").attr({
+                 'data-validation': 'length',
+                 'data-validation-length': 'min4'
+             });
+
+             $("#back_commandebundle_responsablecassier_datenaisse").attr({
+                 'data-validation': 'birthdate',
+                 'data-validation-format': 'dd/mm/yyyy'
+             });
+             $("#back_commandebundle_responsablecassier_email").attr('data-validation', 'email');
+             $("#back_commandebundle_responsablecassier_cin").attr({'data-validation': 'length number', 'data-validation-length': '8-8'});
+             $("#back_commandebundle_responsablecassier_datecin").attr({
+                 'data-validation': 'birthdate',
+                 'data-validation-format': 'dd/mm/yyyy'
+             });
+             $("#back_commandebundle_responsablecassier_rib").attr({'data-validation': 'length number', 'data-validation-length': '20-20'});
+             $("#back_commandebundle_responsablecassier_phone").attr({'data-validation': 'length number', 'data-validation-length': '8-8'});
+             $("#back_commandebundle_responsablecassier_phoneurg").attr({'data-validation': 'length number', 'data-validation-length': '8-8'});
+             $.validate();
+         });
+     </script>
+ {% endblock %}

@@ -1,0 +1,18 @@
+list_financier:
+    path:     /
+    defaults: { _controller: BackCommandeBundle:Financier:index }
+
+update_financier_manager:
+    path:     /update/{id}
+    defaults: { _controller: BackCommandeBundle:Financier:edit}
+    requirements:
+        id: \d+
+view_financier_manager:
+    path:     /view/{id}
+    defaults: { _controller: BackCommandeBundle:Financier:view}
+    requirements:
+        id: \d+
+add_financier_manager:
+    path:     /add
+    defaults: { _controller: BackCommandeBundle:Financier:add}
+

@@ -1,0 +1,6 @@
+{% include 'MainFrontBundle:Email:header.html.twig' %}
+Bonjour{{ user.name }}, </br>
+vous avez une ticket à traiter
+<br>
+Vous pouvez voir votre ticket ici: {{ ticket.code }}
+{% include 'MainFrontBundle:Email:footer.html.twig' %}

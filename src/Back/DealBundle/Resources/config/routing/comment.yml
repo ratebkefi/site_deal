@@ -1,0 +1,19 @@
+#deal
+back_comment:
+    path:     /
+    defaults: { _controller: BackDealBundle:Comment:index }
+countcomment:
+    path:     /countcomment
+    defaults: { _controller: BackDealBundle:Comment:countcomment }
+
+activate_deal_manager:
+    path:     /activate/{id}
+    defaults: { _controller: BackDealBundle:Comment:activate}
+    requirements:
+        id: \d+
+
+delete_deal_manager:
+    path:     /delete/{id}
+    defaults: { _controller: BackDealBundle:Comment:delete}
+    requirements:
+        id: \d+

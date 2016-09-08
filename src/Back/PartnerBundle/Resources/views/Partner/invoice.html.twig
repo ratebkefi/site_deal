@@ -1,0 +1,125 @@
+{% extends '::baseBack.html.twig' %}
+{% block body %}
+    <!-- ==================== PAGE CONTENT ==================== -->
+    <div class="content">
+
+        <!-- ==================== WIDGETS CONTAINER ==================== -->
+        <div class="container-fluid">
+
+
+            <!-- ==================== END OF ROW ==================== -->
+            <div class="row-fluid">
+                <div class="span12">
+
+                    {% for type, flashMessages in app.session.flashbag.all() %}
+                        {% for flashMessage in flashMessages %}
+                            <br/><div class="alert {{type}}" >
+                                <button data-dismiss="alert" class="close" type="button">×</button>
+                                {{ flashMessage|trans }}
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
+                    <!-- ==================== DEFAULT TABLE HEADLINE ==================== -->
+                    <div class="containerHeadline">
+                        <i class="icon-table"></i>
+
+                        <h2>Liste factures</h2>
+                    </div>
+                    <!-- ==================== END OF DEFAULT TABLE HEADLINE ==================== -->
+
+                    <!-- ==================== DEFAULT TABLE FLOATING BOX ==================== -->
+                    <div class="floatingBox table">
+                        <div class="container-fluid">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>N°</th>
+                                        <th>Entreprise</th>
+                                        <th>Deal</th>
+                                        <th>Etat</th>
+                                        <th>Date de création</th>
+                                        <th>Commission fixe</th>
+                                        <th>Commission variable</th>
+                                        <th>Chiffre d'affaire</th>
+                                        <th>Virement</th>
+                                        <th>Date de paiement</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for entity in pagination %}
+                                        <tr>
+                                            <td>{% if entity.numfacture !=null %}{{(entity.numfacture)}}{% else %}{{ "%08d"|format(entity.id) }}{% endif %}</td>
+                                            <td>{{ entity.deal.planning.defaultannexe.protocol.entreprise }}</td>
+                                            <td>{{ entity.deal }}</td>
+                                            <td>{% if entity.etat==1 %} En attente {% else %} Payée {% endif %}</td>
+                                            <td>{{ entity.dcr|date("d-m-Y H:i:s") }}</td>
+                                            <td>{{ entity.comFixe }} TND</td>
+                                            <td>{{ entity.comVariable }} TND</td>
+                                            <td>{{ entity.ca }} TND</td>
+                                            <td>{{ entity.virement -0.5 }} TND
+                                                {% if entity.path %}
+                                                    <a style="margin-right: 5px" target="_blank"
+                                                       href="{{ asset('uploads/facture/'~entity.path) }}"
+                                                       title="Télecharger"
+                                                       class="dark-blue"><i
+                                                            class="icon-paperclip icon-2x"></i></a>
+                                                    {% endif %}
+                                            </td>
+                                            <td>{% if entity.etat==2 %}{{ entity.dvir|date("d-m-Y") }}{% endif %}</td>
+
+                                            <td>
+                                                <div class="btn-toolbar" style="margin: 0;">
+                                                    <div class="btn-group">
+                                                        <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                                            Action <span
+                                                                class="caret"></span></button>
+                                                        <ul class="dropdown-menu pull-right">
+                                                            <li>
+                                                                <a target="_blank" href="{{ path('dash_invoice_pdf', { 'id': entity.id }) }}">Imprimer</a>
+                                                            </li>
+
+                                                        </ul>
+                                                    </div>
+                                                </div>
+
+
+
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            {# display navigation #}
+                            <div class="pagination pagination-large" style="text-align: center">
+                                {{ knp_pagination_render(pagination) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ==================== END OF WIDGETS CONTAINER ==================== -->
+    </div>
+
+
+    <!-- ==================== END OF PAGE CONTENT ==================== -->
+{% endblock %}
+{% block stylesheets %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('RessourcesBack/css/bootstrap-select.css') }}">
+{% endblock %}
+
+
+{% block javascripts %}
+    <script src="{{ asset('RessourcesBack/js/bootstrap-select.js') }}"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('.alert-success').delay(5000).fadeOut();
+        });
+        $(document).ready(function () {
+            $('.alert-error').delay(5000).fadeOut();
+        });
+
+    </script>
+{% endblock %}

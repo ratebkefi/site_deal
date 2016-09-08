@@ -1,0 +1,7 @@
+parameters:
+#    main_ratingclient.example.class: Main\RatingclientBundle\Example
+
+services:
+#    main_ratingclient.example:
+#        class: %main_ratingclient.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]

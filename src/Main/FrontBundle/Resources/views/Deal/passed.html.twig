@@ -1,0 +1,243 @@
+{% extends '::base.html.twig' %}
+{% block stylesheets %}
+    <style>
+		.panel-group .panel {
+			border-radius: 0;
+		}
+       .panel-default>.panel-heading {
+			color: #fff;
+			background-color: #de0e79;
+			border-color: #f9dde8;
+			border-radius: 0;
+			text-align: center;
+		}
+		.panel-default>.panel-heading a {
+			text-decoration: none;
+			color: #fff !important;
+		}
+		.panel-group .panel-title {
+			text-transform: uppercase;
+			font-size: 17px;    
+		}
+    </style>
+{% endblock %}
+{% block javascripts %}
+	<!-- infinite scroll script -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+	<script src="{{ asset('public/js/jquery-ias.min.js') }}"></script>
+	<script>
+	
+
+	 $(document).ready(function () {
+		var ias = $.ias({
+		  container:  ".ddcontainer",
+		  item:       ".dditem",
+		  pagination: ".pagination",
+		  next:       ".next a",
+		  delay:      1250  
+		});
+
+		//ias.extension(new IASSpinnerExtension());            // shows a spinner (a.k.a. loader)
+		ias.extension(new IASSpinnerExtension({src: '/public/images/loading.gif' }));
+		//ias.extension(new IASTriggerExtension({})); // shows a trigger after page 3
+		ias.extension(new IASTriggerExtension({html: '<div class="ias-trigger ias-trigger-next" style="text-align: center; cursor: pointer;"><a class="btn btn-primary">Afficher plus</a></div>', offset: 4})); // override text show more
+		/*
+		ias.extension(new IASNoneLeftExtension({
+		  text: 'Plus aucun deal à afficher'      // override text when no pages left
+		}));*/
+	});
+	</script>
+
+    <script>
+	/*
+        $( ".checkcat" ).click(function() {
+		
+            var tab=[]
+            $(".checkcat:checked").each(function(){
+                tab.push($(this).val());
+            });
+            $.ajax({
+                type: "POST",
+                url: "{{ path("dealpasseajx",{'page':1}) }}",
+                data: "cat="+tab,
+                success: function(msg){
+                    $('#shows').html(msg);
+                    lien=$(".last a").attr('href');
+                    //lien +="/"+tab;
+                    $(".last a").attr('href',lien);
+                    console.log(lien)
+                    $('#shows').jscroll({
+                        loadingHtml: '<div class="row"><div class="col-md-12 col-sm-12"><div id="loading"><img src="{{ asset('public/images/loading.gif') }}" alt="Loader"></div></div></div>',
+                        nextSelector: '.last a'
+
+                    });
+                }
+            });
+			
+        });*/
+
+ /*       $(function () {
+
+            $('#shows').jscroll({
+                loadingHtml: '<div class="row"><div class="col-md-12 col-sm-12"><div id="loading"><img src="{{ asset('public/images/loading.gif') }}" alt="Loader"></div></div></div>',
+
+                nextSelector: '.last a'
+
+            });*/
+        
+    </script>
+	
+{% endblock %}
+{% block body %}
+
+<form action="" method="get">
+    {% if deal|length>0 %}
+    <div class="col-md-3 col-sm-12 hidden-xs">
+        {# Filter #}
+        {% for item in allcategory %}
+            {% if item.category|length>0 %}
+		<div class="cat">
+			<h4 class="bold">{{ item.name }}</h4>
+            {% for item2 in item.category %}
+			<div class="checkbox">
+				<label><input type="checkbox" name="categorie[]" class="checkcat" value="{{ item2.id }}"   {% if item2.id in categorieSelectionner %} checked {% endif%}> {{ item2.name }}</label>
+			</div>
+                {% endfor %}
+
+		</div>
+                {% else %}
+                    <div class="cat">
+                    <h4 class="bold">{{ item.name }}</h4>
+                    <div class="checkbox">
+                        <label><input type="checkbox" name="categorie[]"  class="checkcat" value="{{ item.id }}"     {% if item.id in categorieSelectionner %} checked {% endif%}> {{ item.name }}</label>
+                    </div></div>
+                    {% endif %}
+		<div class="rules"></div>
+            {% endfor %}
+			<button class="btn btn-primary" type="submit">
+			<i class="fa fa-info-search"></i>Rechercher
+			</button>
+			{# /Filter #}
+		</div>
+		{# Filter in mobile #}
+			<div class="col-md-3 col-sm-12 hidden-md hidden-sm">
+				<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+				  <div class="panel panel-default">
+					<div class="panel-heading" role="tab" id="headingOne">
+					  <h4 class="panel-title">
+						<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+						  Recherche par filtre
+						</a>
+					  </h4>
+					</div>
+					
+						<div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+						  <div class="panel-body">
+									
+										{# Filter #}
+										{% for item in allcategory %}
+											{% if item.category|length>0 %}
+											<div class="cat">
+												<h4 class="bold">{{ item.name }}</h4>
+												{% for item2 in item.category %}
+												<div class="checkbox">
+													<label><input type="checkbox" name="categorie[]" class="checkcat" value="{{ item2.id }}"   {% if item2.id in categorieSelectionner %} checked {% endif%}> {{ item2.name }}</label>
+												</div>
+													{% endfor %}
+
+											</div>
+												{% else %}
+													<div class="cat">
+													<h4 class="bold">{{ item.name }}</h4>
+													<div class="checkbox">
+														<label><input type="checkbox" name="categorie[]"  class="checkcat" value="{{ item.id }}"     {% if item.id in categorieSelectionner %} checked {% endif%}> {{ item.name }}</label>
+													</div></div>
+													{% endif %}
+											<div class="rules"></div>
+											{% endfor %}
+											<button class="btn btn-primary" type="submit">
+											<i class="fa fa-info-search"></i>Rechercher
+											</button>
+											{# /Filter #}
+										
+						  </div>
+						</div>
+					</div>
+				  </div>
+				</div>
+		{# end filter mobile #}
+		<div class="col-md-9 col-sm-12">
+			{# listedeals  passés #}
+	        <div id="shows" class="row shows-passed ddcontainer">
+	            {% for item in pagination %}
+				{% if item.seoLink %}
+{% set permelink = item.seoLink %}
+{% else %}
+{% set permelink = item.title %}
+{%endif%}
+	                {% set link = path('deal_detail',  {'region':(app.session.get('region')|getAlias),'categorie':(item.planning.categoryId|getAlias),'id': item.id ,'name':(permelink|getAlias)}) %}
+	                <div class="col-md-12 show dditem">
+	                	<div class="row">
+	                		<div class="col-md-3 col-sm-12">
+		                    	<a href="{{ path('deal_detail',  {'region':(item.planning.regionId|getAlias),'categorie':(item.planning.categoryId|getAlias),'id': item.id ,'name':(permelink|getAlias)}) }}"> <img src="{{ asset(item.image1| imagine_filter('homedeal')) }}" class="img-responsive" alt="{{ item.title }}" /></a>
+		                    </div>
+		                    <div class="col-md-9 col-sm-12">
+			                    <div class="details">
+			                        <p><a href="{{ path('deal_detail',  {'region':(item.planning.regionId|getAlias),'categorie':(item.planning.categoryId|getAlias),'id': item.id ,'name':(permelink|getAlias)}) }}">{{ item.title }}</a></p>
+			                        
+			
+			                        {% set ref=item.planning.defaultannexe.reference[0] %}
+			                        <p><i class="fa fa-tags teal"></i><span class="dark-gray">
+				{% set pointVente=item.planning.defaultannexe.protocol.user.sellingpoint %}
+				
+			{% if pointVente|length != 0 %}
+						{% if pointVente[0].visible == 0 %}
+						{{ pointVente[0].name }} 
+						{% else %}
+							{{ pointVente[0].visibleAdress }} 
+						{% endif %}  
+						{% endif %}  
+						</span>  <i class="fa fa-map-marker teal"></i><span class="dark-gray">{{ item.planning.regionId }}</span></p>
+			                        {#
+			                        <a href="{{ path('deal_detail',  {'region':(item.planning.regionId|getAlias),'categorie':(item.planning.categoryId|getAlias),'id': item.id ,'name':(permelink|getAlias)}) }}" class="btn pull-right">Voir le Deal</a>
+			                        <div class="price teal bold pull-right"><div class="pull-left">{{ ref.bigdealPrice }}<sup>DT</sup><span class="bottom gray"> {{ ref.shopPrice }}<sup>DT</sup></span></div>
+			                            <div class="pull-right">{{ item.id|nombreAcheteurs }} <img src="{{ asset('public/images/buyer.png') }}" alt="acheteurs" /></div> </div>
+			                         
+			                        <div class="price teal bold">
+			                                <div class="pull-left">{{ ref.bigdealPrice }}<sup>DT</sup><span class="bottom gray"> {{ ref.shopPrice }}<sup>DT</sup></span></div>
+			                                <div class="pull-right"><i class="flaticon-group2 dark-gray"></i> {{ item.id|nombreAcheteurs }}</div>
+			                        </div>
+			                        #} 
+			                       <div class="pull-right">
+		                                    <div class="teal bold pull-left">
+		                                        <div class="btn btn-white">{{ ref.bigdealPrice }}<sup>DT</sup><span class="bottom gray"> {{ ref.shopPrice }}<sup>DT</sup></span></div>
+		                                        <div class="btn btn-white border"><i class="flaticon-group2"></i>{{ item.id|nombreAcheteurs }}</div>
+		                                    </div>
+		                                    <a href="{{ path('deal_detail',  {'region':(item.planning.regionId|getAlias),'categorie':(item.planning.categoryId|getAlias),'id': item.id ,'name':(permelink|getAlias)}) }}" class="btn pull-right"><i class="fa fa-arrow-circle-right hidden-md hidden-sm"></i><span class="hidden-xs">Voir le Deal</span></a>
+		                           </div>
+			                        
+			                    </div>
+		                    </div>
+	                    </div>
+	                </div>
+	                {% if loop.index%2==0 %}<div class="clearfix"></div>{% endif %}
+	            {% endfor %}
+<div style="clear: both;"></div>
+	
+	            <div class="row col-sm-12">
+            <div class="pagination col-sm-12" style="text-align: center">
+                {{ knp_pagination_render(pagination) }}
+            </div>
+        </div>
+	
+	
+	        </div>
+
+	        {# /liste deals passés #}
+        </div>
+    {% else %}
+        <div class="alert alert-danger">Cette rubrique ne contient pas des deals</div>
+    {% endif %}
+</form>	
+
+{% endblock %}

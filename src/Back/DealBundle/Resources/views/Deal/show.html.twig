@@ -1,0 +1,93 @@
+{% extends '::baseBack.html.twig' %}
+{% block body -%}
+    <!-- ==================== PAGE CONTENT ==================== -->
+    <div class="content">
+        <!-- ==================== WIDGETS CONTAINER ==================== -->
+        <div class="container-fluid">
+            {% if not  is_granted('CAISSIER') and not  is_granted('ROLE_USER') %}
+            <a href="{{ path('update_deal_manager', { 'id': entity.id }) }}"><button class="btn btn-info" type="button"><i class="icon-pencil"></i> Modifier</button></a>
+            {% endif %}
+            <a href="{{ path('back_deal') }}"><button class="btn btn-inverse pull-right" type="button" id="form_submit"><i class="icon-list"></i> Liste</button></a>
+
+            <!-- ==================== END OF ROW ==================== -->
+            <div class="row-fluid">
+                <div class="span12">
+                    <!-- ==================== DEFAULT TABLE HEADLINE ==================== -->
+                    <div class="containerHeadline">
+                        <i class="icon-table"></i>
+                    </div>
+                    <!-- ==================== END OF DEFAULT TABLE HEADLINE ==================== -->
+                    <!-- ==================== DEFAULT TABLE FLOATING BOX ==================== -->
+                    <div class="floatingBox table">
+                        <div class="container-fluid">
+                            <table class="table table-bordered">
+                                <tbody>
+
+                                <tr>
+                                    <th>Titre</th>
+                                    <td>{{ entity.title }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Description</th>
+                                    <td>{{ entity.description|raw }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Le deal</th>
+                                    <td>{{ entity.deal|raw }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Vous aimer</th>
+                                    <td>{{ entity.youLike|raw }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Conditions du deal</th>
+                                    <td>{{ entity.toBeClear|raw }}</td>
+                                </tr>
+                               
+
+                                <tr>
+                                    <th>Date de début de validité de coupon</th>
+                                    <td>{{ entity.startDateValidtyCoupon|date("m/d/Y H:i:s") }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Date de fin de validité de coupon</th>
+                                    <td>{{ entity.endDateValidtyCoupon|date("m/d/Y H:i:s")  }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Image 1                                   </th>
+                                    <td><img src="{{ asset(entity.image1)}}"></td>
+                                </tr>
+                                <tr>
+                                    <th>Image 2</th>
+                                    <td><img src="{{ asset(entity.image2)}}"></td>
+                                </tr>
+                                <tr>
+                                    <th>Image 3</th>
+                                    <td>
+                                        <img src="{{asset(entity.image3)}}">
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <th>Accepter payment espèce</th>
+                                    <td>{% if entity.cashPayment ==1%} Oui {% else %} Non {% endif %}
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Max coupon par utilisateur</th>
+                                    <td>{{entity.maxCouponUser}}</td>
+                                </tr>
+
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ==================== END OF WIDGETS CONTAINER ==================== -->
+    </div>
+    <!-- ==================== END OF PAGE CONTENT ==================== -->
+{% endblock %}

@@ -1,0 +1,18 @@
+#region
+back_region:
+    path:     /
+    defaults: { _controller: BackPlanningBundle:Region:index }
+
+add_region_manager:
+    path:     /add
+    defaults: { _controller: BackPlanningBundle:Region:add }
+update_region_manager:
+    path:     /update/{id}
+    defaults: { _controller: BackPlanningBundle:Region:edit}
+    requirements:
+        id: \d+
+delete_region_manager:
+    path:     /delete/{id}
+    defaults: { _controller: BackPlanningBundle:Region:delete}
+    requirements:
+        id: \d+

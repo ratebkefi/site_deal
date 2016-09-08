@@ -1,0 +1,100 @@
+{% extends '::base.html.twig' %}
+{% block stylesheets %}
+{% endblock %}
+
+{% block body %}
+    <div class="informations">
+        <h2>Mon compte</h2>
+        <!-- Profile Menu -->
+        {{ render(controller('MainFrontBundle:Client:menuclient')) }}
+        <!-- Nav -->
+        <div class="row">
+            <div class="col-md-12">
+                <ol class="breadcrumb">
+                    <li><a href="{{ path('ticket_manager') }}">Liste des tickets</a></li>
+                    <li class="active">Nouveau Ticket</li>
+                </ol>
+            </div>
+        </div>
+        <!-- Modifier compte -->
+        <div class="">
+            <form class="form-horizontal" action="{{ path('ajouter_ticket') }}" enctype="multipart/form-data"
+                  method="POST" role="form">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label" for="objet">Objet</label>
+
+                    <div class="col-sm-7">
+                        {{ form_widget(form.object, { 'attr': {'class': "form-control"} }) }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label" for="msg">Commande</label>
+
+                    <div class="col-sm-7">
+						{{ form_widget(form.commande, { 'attr': {'class': "form-control" ,'required':"required"} }) }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label" for="msg">Message</label>
+                    <div class="col-sm-7">
+                        <textarea name="message" rows="12" cols="80" class="form-control"></textarea>
+                    </div>
+               
+                {% for item in form.message %}
+                                    <div class="form-group">
+									
+				{% if erreurMessage %}					 
+				<div class="col-md-offset-3 col-md-7 col-sm-10 red">  
+				<div class="alert alert-danger">{{ erreurMessage }}</div>
+				</div>
+				{% endif %}
+                                        <div class="input-file-container col-sm-offset-3 col-sm-7">
+                                            {{ form_widget(item.file,{'attr':{'class':'input-file','id':'my-file'}}) }}
+											 <label for="my-file" class="input-file-trigger" tabindex="0">Parcourir...</label>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                <div class="form-group">
+                    <div class="col-sm-offset-8 col-sm-2">
+                        <input type="submit" value="Soumettre" class="btn btn-primary pull-right">
+                    </div>
+                </div>
+                {{ form_widget(form._token) }}
+            </form>
+        </div>
+        <!-- /.row -->
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript" src="{{ asset('public/js/jQuery.easing.js') }}"></script>
+
+    <script>
+        $(document).ready(function () {
+            // ajout de la classe JS à HTML
+            document.querySelector("html").classList.add('js');
+
+            // initialisation des variables
+            var fileInput = document.querySelector(".input-file"),
+                    button = document.querySelector(".input-file-trigger"),
+                    the_return = document.querySelector(".file-return");
+
+            // action lorsque la "barre d'espace" ou "Entrée" est pressée
+            button.addEventListener("keydown", function (event) {
+                if (event.keyCode == 13 || event.keyCode == 32) {
+                    fileInput.focus();
+                }
+            });
+
+            // action lorsque le label est cliqué
+            button.addEventListener("click", function (event) {
+                fileInput.focus();
+                return false;
+            });
+
+            // affiche un retour visuel dès que input:file change
+            fileInput.addEventListener("change", function (event) {
+                the_return.innerHTML = this.value;
+            });
+        });</script>
+{% endblock %}

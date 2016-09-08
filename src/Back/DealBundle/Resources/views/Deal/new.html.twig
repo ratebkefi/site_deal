@@ -1,0 +1,119 @@
+{% extends '::baseBack.html.twig' %}
+{% block body -%}
+    <div class="content">
+        <div class="container-fluid">
+            <a href="{{ path('dash_deal') }}"><button class="btn btn-inverse pull-right" type="button"><i class="icon-list"></i> Liste</button></a>
+            <!-- ==================== COMMON ELEMENTS ROW ==================== -->
+            <div class="row-fluid">
+                <div class="span12">
+                    <!-- ==================== TEXT INPUTS HEADLINE ==================== -->
+                    <div class="containerHeadline">
+                        <i class="icon-edit"></i><h2>Ajouter un deal</h2>
+                    </div>
+                    <!-- ==================== END OF TEXT INPUTS HEADLINE ==================== -->
+                    <!-- ==================== TEXT INPUTS FLOATING BOX ==================== -->
+                    <div class="floatingBox">
+                        <div class="container-fluid">
+                            <form class="form-horizontal contentForm" method="POST" action="{{path('dash_deal_create')}}">
+                                <div class="control-group">
+                                        <label class="control-label">Titre : </label>
+                                        <div class="controls">
+                                            {{ form_widget(form.title) }}
+                                        </div>
+                                    <br/>
+                                        <label class="control-label">Description : </label>
+                                        <div class="controls">
+                                            {{ form_widget(form.description) }}
+                                        </div>
+                                         <br/>
+                                        <label class="control-label">Le deal : </label>
+                                        <div class="controls">
+                                            {{ form_widget(form.deal) }}
+                                        </div>  
+                                        <br/>
+                                        <label class="control-label">Vous aimer : </label>
+                                        <div class="controls">
+                                            {{ form_widget(form.youLike) }}
+                                        </div>  
+                                        <br/>
+                                        <label class="control-label">Soyons clair : </label>
+                                        <div class="controls">
+                                            {{ form_widget(form.toBeClear) }}
+                                        </div>
+                                        
+                                        <br/>
+
+                                        <label class="control-label">Date de début de validité de coupon  : </label>
+                                        <div class="controls">
+                                            {{ form_widget(form.startDateValidtyCoupon) }}
+                                        </div> 
+                                        
+                                        <br/>
+                                        <label class="control-label">Date de fin de validité de coupon  : </label>
+                                        <div class="controls">
+                                            {{ form_widget(form.endDateValidtyCoupon) }}
+                                        </div> 
+                                        <br/>
+                                        <label class="control-label">Image 1  : </label>
+                                        <div class="controls">
+                                            {{ form_widget(form.image1) }}
+                                        </div> 
+                                        <br/>
+                                        <label class="control-label">Image 2  : </label>
+                                        <div class="controls">
+                                            {{ form_widget(form.image2) }}
+                                        </div> 
+                                        <br/>
+                                        <label class="control-label">image 3 : </label>
+                                        <div class="controls">
+                                            {{ form_widget(form.image3) }}
+                                        </div> 
+                                        <br/>
+                                        <label class="control-label">Accepter payment espéce  : </label>
+                                        <div class="controls">
+                                            {{ form_widget(form.cashPayment) }}
+                                        </div>
+                                        <br/>
+                                        <label class="control-label">Max coupon par utilisateur  : </label>
+                                        <div class="controls">
+                                            {{ form_widget(form.maxCouponUser) }}
+                                        </div> 
+                                        <br/>
+                                        <label class="control-label">Status  : </label>
+                                        <div class="controls">
+                                            {{ form_widget(form.status) }}
+                                        </div> 
+                                        <br/>
+                                        <label class="control-label">Interval payment  : </label>
+                                        <div class="controls">
+                                            {{ form_widget(form.intervalPayment) }}
+                                        </div> 
+                                    </div>
+                                <div class="formFooter">
+                                    <button type="submit" class="btn btn-success"><i class="icon-ok"> </i> Valider</button>
+                                    <button type="reset" class="btn btn-danger"><i class="icon-remove"> </i> Effacer</button>
+
+                                    {{ form_widget(form._token) }}
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <!-- ==================== END OF TEXT INPUTS FLOATING BOX ==================== -->
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    <script>
+
+        $(document).ready(function () {
+            $("#back_dealbundle_deal_title").attr({
+                'data-validation': 'length',
+                'data-validation-length': 'max150'
+            });
+
+            $.validate();
+        });
+    </script>
+{% endblock %}

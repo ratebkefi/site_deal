@@ -1,0 +1,19 @@
+list_directeurcommercial:
+    path:     /
+    defaults: { _controller: BackCommandeBundle:DirecteurCommercial:index }
+
+update_directeurcommercial_manager:
+    path:     /update/{id}
+    defaults: { _controller: BackCommandeBundle:DirecteurCommercial:edit}
+    requirements:
+        id: \d+
+view_directeurcommercial_manager:
+    path:     /view/{id}
+    defaults: { _controller: BackCommandeBundle:DirecteurCommercial:view}
+    requirements:
+        id: \d+
+add_directeurcommercial_manager:
+    path:     /add
+    defaults: { _controller: BackCommandeBundle:DirecteurCommercial:add}
+
+

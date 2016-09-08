@@ -1,0 +1,30 @@
+{% extends '::baseBack.html.twig' %}
+{% block body %}
+    <div class="container-fluid">
+
+        <!-- ==================== MASTER ACTIONS ROW ==================== -->
+        <div class="row-fluid">
+            <!-- ==================== MASTER ACTIONS LIST ==================== -->
+            <ul class="masterActions">
+                <li onclick="$(location).attr('href','{{ path('redactordeal_deal') }}');">
+                    <i class="icon-book redText"></i>
+                    <h1 class="redText">Deals planifiés</h1>
+                    <p>Tous les deals planifiés</p>
+                    <div class="notifyCircle red">{{ alldeal }}</div>
+                </li>
+
+                <li onclick="$(location).attr('href','{{ path('redactordeal_mydeal') }}');">
+                    <i class="icon-book greenText"></i>
+                    <h1 class="greenText">Deals Rédigés</h1>
+                    <p>Mes deals rédigés</p>
+                    <div class="notifyCircle green">{{ mydeal }}</div>
+                </li>
+
+            </ul>
+            <!-- ==================== END OF MASTER ACTIONS LIST ==================== -->
+        </div>
+        <!-- ==================== END OF MASTER ACTIONS ROW ==================== -->
+
+    </div>
+
+{% endblock %}

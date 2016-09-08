@@ -1,0 +1,177 @@
+{% extends '::baseBack.html.twig' %}
+
+{% block body -%}
+    <div class="content">
+        <div class="container-fluid">
+
+            <!-- ==================== COMMON ELEMENTS ROW ==================== -->
+            <div class="row-fluid">
+                <div class="span12">
+                    <!-- ==================== TEXT INPUTS HEADLINE ==================== -->
+                    <div class="containerHeadline">
+                        <i class="icon-edit"></i>
+                        <h2>Vente supplémentaire</h2>
+					</div>
+                    <!-- ==================== END OF TEXT INPUTS HEADLINE ==================== -->
+
+                    <!-- ==================== TEXT INPUTS FLOATING BOX ==================== -->
+                    <div class="floatingBox">
+                        <div class="container-fluid">
+
+                            <div class="container-fluid">
+
+
+                                <form class="form-horizontal contentForm" method="POST"
+                                      action="{{ path('add_commande_manager',{'id' : id}) }}">
+
+
+                                    <div class="control-group">
+                                        <label class="control-label">Deal</label>
+
+                                        <div class="controls">
+                                            {{ form_widget(form.deal,{'attr':{'class':'span12 selectpicker','data-live-search':'true'}}) }}
+
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label">Référence</label>
+
+                                        <div class="controls">
+                                            {{ form_widget(form.reference,{'attr':{'class':'span4'}}) }}
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label">Quantité</label>
+
+                                        <div class="controls">
+                                            {{ form_widget(form.qte,{'attr':{'class':'span4'}} ) }}
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label">Adresse</label>
+
+                                        <div class="controls">
+                                            {{ form_widget(form.adresse,{'attr':{'class':'span4'}}) }}
+                                        </div>
+                                    </div>
+
+                                    <div class="formFooter">
+                                        <button type="submit" id="submitform" class="btn btn-success"><i
+                                                    class="icon-ok"> </i> Valider
+                                        </button>
+                                        <button type="reset" class="btn btn-danger"><i class="icon-remove"> </i>
+                                            Effacer
+                                        </button>
+                                        <a href="{{ path('back_commande') }}">
+                                            <button class="btn btn-inverse" type="button"><i class="icon-list"></i>
+                                                Liste
+                                            </button>
+                                        </a>
+                                        {{ form_widget(form._token) }}
+                                    </div>
+                                </form>
+                            </div>
+
+                        </div>
+                    </div>
+                    <!-- ==================== END OF TEXT INPUTS FLOATING BOX ==================== -->
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+    {% block stylesheets %}
+        <link rel="stylesheet" type="text/css" href="{{ asset('RessourcesBack/css/bootstrap-select.css') }}">
+    {% endblock %}
+    {% block javascripts %}
+        <script src="{{ asset('RessourcesBack/js/bootstrap-select.js') }}"></script>
+
+        <script>
+            var qtedata;
+            $(function () {
+                $('#back_commandebundle_command_reference').html('');
+                $('#back_commandebundle_command_adresse').attr("disabled", true);
+                $('#back_commandebundle_command_reference').attr('required', 'required');
+                $("#back_commandebundle_command_deal").change(function () {
+                    if ($('#back_commandebundle_command_deal').val() != "") {
+                        $.ajax({
+                            type: "POST",
+                            dataType: "json",
+                            async: false,
+                            url: "{{ path('back_ajx_reference') }}",
+                            data: "deal=" + $('#back_commandebundle_command_deal').val()+"&client={{ id }}",
+                            success: function (data) {
+                                qtedata = data;
+                                console.log(data)
+                                html = '<option value=""></option>';
+                                $.each(data, function (key, val) {
+                                    html += '<option value="' + val.id + '">' + val.name + '</option>';
+                                    if(val.livraison ==true)
+                                    {
+                                        $("#back_commandebundle_command_adresse").removeAttr('disabled');
+
+                                   }
+                                    else
+                                        $('#back_commandebundle_command_adresse').attr("disabled", true);
+
+                                });
+
+
+                                $('#back_commandebundle_command_reference').html(html)
+
+                            }
+                        });
+                    }
+                });
+                $("#back_commandebundle_command_reference").change(function () {
+                    id = $("#back_commandebundle_command_reference").val();
+                    nbr = 0;
+                    maxcoupon = 0;
+                    $.each(qtedata, function (key, val) {
+                        if (id == val.id) {
+                            nbr = val.qte;
+                            maxcoupon = val.maxcoupon;
+                            rest = val.rest
+                        }
+                    });
+                    console.log(rest)
+                    html = '';
+                    if (rest == 0) {
+                        nb = 0
+                    }
+                    else if (maxcoupon > rest) {
+                        nb = rest;
+                    } else {
+                        nb = maxcoupon
+                    }
+                    for (i = 1; i <= rest; i++) {
+                        html += '<option value="' + i + '">' + i + '</option>';
+                    }
+                    if (rest > 0) {
+                        $("#submitform").removeAttr('disabled');
+                    } else {
+
+                        bootbox.dialog({
+                            message: "Le stock de la référence que vous avez choisi est épuisée.<br> Veuillez choisir une autre référence ",
+                            title: "Référence épuisée !!",
+                            buttons: {
+
+                                danger: {
+                                    label: "OK!",
+                                    className: "btn-danger"
+                                }
+
+                            }
+                        });
+
+
+                        $("#submitform").attr('disabled', 'disabled');
+                    }
+                    $('#back_commandebundle_command_qte').html(html)
+                });
+            })
+
+
+        </script>
+    {% endblock %}
+

@@ -1,0 +1,170 @@
+<table class="table table-bordered" style="border:0">
+    <tr>
+        <td class="visible-print"><h2>Liste Réservation : {{ date|date('d-m-Y') }}</h2></td>
+    </tr>
+</table>
+<table width="100%" class="table table-bordered" style="border:0">
+    <tr>
+        <td>
+            {% set i =0 %}
+            {% set len = morning|length %}
+            <table width="100%">
+                <tr>
+                     <th class="visible-print"> Matin</th>
+                </tr>
+            </table>
+            <table width="100%">
+                {% for key,value in morning %}
+                    {% if i != len-1 %}
+                        {% set starHoure = afficherLeMonth(value) %}
+                        {% set bookDate = date~" "~starHoure~":"~"00:00" %}
+                        {% set capacite = capaciteParHeure(deal) %}
+                        {% set nombreReservation = numberBook(bookDate,deal) %}
+                        {% set listReservation = listeBookingPerHoure(bookDate,deal) %}
+
+                        <tr>
+                                <td><span class="btn btn-danger">De {{ afficherLeMonth(value) }} à {{ afficherLeMonth(value +1) }} :</span>
+                                    {% if nombreReservation >0 %}<span class="badge label-success">{{ nombreReservation }} </span>
+                                        <a href="javascript:void()" id="bt-{{ loop.index }}"
+                                           onclick="afficher({{ loop.index }})">
+                                            <span class="label peterRiver " data-original-title=""
+                                                  title="Liste des operations">
+                                                <i class="icon-angle-down edit " style="opacity: 1;"></i>
+                                            </span></a>
+                                    {% endif %}
+
+                                </td>
+                            </tr>
+                        <tr class="greenSea whiteText text-right" style="display: none;"
+                            id="box-{{ loop.index }}">
+                            <td  class="type last ">
+                                {% for entity in listReservation %}
+                                    {% if nombreReservation >0 %}
+                                        <span class="text-right brandBold"></span> Client : {{ entity.coupon.command.client }} - Tel : {{ entity.coupon.command.client.phone }} <br>
+
+                                    {% endif %}
+                                {% endfor %}
+
+                            </td>
+                        </tr>
+                    {% endif %}
+                    {% set i = i +1 %}
+                {% endfor %}
+            </table>
+        </td>
+        <td>
+            <table width="100%">
+                {% set i =0 %}
+                {% set len = afternon|length %}
+                <tr>
+                    <th class="visible-print"> Après midi</th>
+                </tr>
+            </table>
+            <table class="fc-border-separate">
+
+                {% for key,value in afternon %}
+                    {% if i != len-1 %}
+                        {% set starHoure = afficherLeMonth(value) %}
+                        {% set bookDate = date~" "~starHoure~":"~"00:00" %}
+                        {% set capacite = capaciteParHeure(deal) %}
+                        {% set nombreReservation = numberBook(bookDate,deal) %}
+                        {% set listReservation = listeBookingPerHoure(bookDate,deal) %}
+
+                        <tr>
+                            <td>
+                                <span class="btn btn-danger">De {{ afficherLeMonth(value) }} à {{ afficherLeMonth(value +1) }} :</span>
+                                {% if nombreReservation >0 %}<span class="badge label-success">{{ nombreReservation }} </span>
+                                    <a href="javascript:void()" id="bt-Afternon-{{ loop.index }}"
+                                       onclick="afficherAfternon({{ loop.index }})">
+                                            <span class="label peterRiver " data-original-title=""
+                                                  title="Liste des réservations">
+                                                <i class="icon-angle-down edit " style="opacity: 1;"></i>
+                                            </span></a>
+                                {% endif %}
+
+                            </td>
+                        </tr>
+                        <tr class="greenSea whiteText text-right" style="display: none;"
+                            id="box-Afternon-{{ loop.index }}">
+                            <td class="type last ">
+                                {% for entity in listReservation %}
+                                    {% if nombreReservation >0 %}
+                                        <span class="text-right brandBold"></span> Client : {{ entity.coupon.command.client }} - Tel : {{ entity.coupon.command.client.phone }}
+                                        <br>
+
+                                    {% endif %}
+                                {% endfor %}
+
+                            </td>
+                        </tr>
+                    {% endif %}
+                    {% set i = i +1 %}
+
+
+                {% endfor %}
+            </table>
+        </td></tr>
+</table>
+<link href="{{ asset('public/css/agenda.css') }}" type="text/css" rel="stylesheet"/>
+<link href="{{ asset('RessourcesBack/css/styles.css') }}" type="text/css" rel="stylesheet" />
+<style>
+	body { background: #ffffff; }
+	.visible-print {
+		border-bottom: 1px solid #e5e5e5;
+		border-radius: 0;
+    	padding: 4px 8px;
+	}
+	.visible-print h2 { 
+		margin:0;
+		font-size: 16px;
+    	font-weight: 400; 
+	}
+</style>
+<script src="{{ asset('RessourcesBack/js/jquery-1.10.1.min.js') }}"></script>
+<script>window.jQuery || document.write('<script src="{{ asset('js/jquery-1.10.1.min.js') }}"><\/script>')</script>
+<script src="{{ asset('RessourcesBack/js/vendor/bootstrap-slider.js') }}"></script>                   <!-- bootstrap slider plugin -->
+<script src="{{ asset('RessourcesBack/js/vendor/jquery.sparkline.min.js') }}"></script>               <!-- small charts plugin -->
+<script src="{{ asset('RessourcesBack/js/vendor/bootstrap-multiselect.js') }}"></script>              <!-- multiselect plugin -->
+<script src="{{ asset('RessourcesBack/js/vendor/parsley.min.js') }}"></script>                        <!-- parsley validator plugin -->
+
+<script src="{{ asset('RessourcesBack/js/vendor/bootstrap.min.js') }}"></script>
+<script src="{{ asset('RessourcesBack/js/thekamarel.js') }}"></script>                            <!-- main project js file -->
+<script src="{{ asset('RessourcesBack/js/jquery.fancybox.js') }}"></script>
+<!-- bootbox -->
+<script src="{{ asset('RessourcesBack/js/lib/bootbox/bootbox.min.js') }}"></script>
+<script>
+    function afficher(id) {
+        $("#box-" + id).fadeIn();
+        $("#bt-" + id).attr('onclick', "unshow(" + id + ")");
+        $("#bt-" + id + " span i").removeClass("icon-angle-down");
+        $("#bt-" + id + " span i").addClass("icon-angle-up");
+        $("#bt-" + id + " span").removeClass("peterRiver");
+        $("#bt-" + id + " span").addClass("red");
+    }
+    function unshow(id) {
+        $("#box-" + id).fadeOut();
+        $("#bt-" + id).attr('onclick', "afficher(" + id + ")")
+        $("#bt-" + id + " span i").removeClass("icon-angle-up");
+        $("#bt-" + id + " span i").addClass("icon-angle-down");
+        $("#bt-" + id + " span").removeClass("red");
+        $("#bt-" + id + " span").addClass("peterRiver");
+    }
+
+
+    function afficherAfternon(id) {
+        $("#box-Afternon-" + id).fadeIn();
+        $("#bt-Afternon-" + id).attr('onclick', "unshowAfternon(" + id + ")");
+        $("#bt-Afternon-" + id + " span i").removeClass("icon-angle-down");
+        $("#bt-Afternon-" + id + " span i").addClass("icon-angle-up");
+        $("#bt-Afternon-" + id + " span").removeClass("peterRiver");
+        $("#bt-Afternon-" + id + " span").addClass("red");
+    }
+    function unshowAfternon(id) {
+        $("#box-Afternon-" + id).fadeOut();
+        $("#bt-Afternon-" + id).attr('onclick', "afficherAfternon(" + id + ")")
+        $("#bt-Afternon-" + id + " span i").removeClass("icon-angle-up");
+        $("#bt-Afternon-" + id + " span i").addClass("icon-angle-down");
+        $("#bt-Afternon-" + id + " span").removeClass("red");
+        $("#bt-Afternon-" + id + " span").addClass("peterRiver");
+    }
+</script>

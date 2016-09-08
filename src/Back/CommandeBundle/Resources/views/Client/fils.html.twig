@@ -1,0 +1,13 @@
+
+{% block body -%}
+    {% for entity in entities %}
+        <tr class="info">
+            <td style="padding-left: 27px;" nowrap><strong>- {{ entity.montant }} <sup>B</sup></strong> </td>
+            <td style="padding-left: 10px;"> {{ entity.dcr|date('d-m-Y H:i:s') }} </td>
+            <td style="padding-left: 10px;"> {{ entity.motif }} </td>
+
+        </tr>
+
+    {% endfor %}
+
+{% endblock %}

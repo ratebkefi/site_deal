@@ -1,0 +1,55 @@
+{% extends '::baseBack.html.twig' %}
+{% form_theme form 'form_table_layout.html.twig' %}
+{% block body -%}
+<div class="content">
+    <div class="container-fluid">
+
+        <!-- ==================== COMMON ELEMENTS ROW ==================== -->
+        <div class="row-fluid">
+            <div class="span12">
+                <!-- ==================== TEXT INPUTS HEADLINE ==================== -->
+                <div class="containerHeadline">
+                    <i class="icon-edit"></i>
+
+                    <h2>Réassignation de rédaction</h2>
+
+                    <div class="controlButton pull-right"><i class="icon-remove removeElement"></i></div>
+                    <div class="controlButton pull-right"><i class="icon-caret-down minimizeElement"></i></div>
+                </div>
+                <!-- ==================== END OF TEXT INPUTS HEADLINE ==================== -->
+
+                <!-- ==================== TEXT INPUTS FLOATING BOX ==================== -->
+                <div class="floatingBox">
+                    <div class="container-fluid">
+                        <div class="container-fluid">
+
+                            <form class="form-horizontal contentForm" method="POST"
+                                  action="{{ path('back_change_redactor_deal',{'id' : deal.id}) }}">
+
+                                {{ form_row(form.redacteur,{'attr':{'class':'span11'}}) }}
+
+                                <div class="formFooter">
+                                    <button type="submit" class="btn btn-success"><i class="icon-ok"> </i>
+                                        Enregistrer
+                                    </button>
+                                    <button type="reset" class="btn btn-danger"><i class="icon-remove"> </i>
+                                        Effacer
+                                    </button>
+                                    <a href="{{ path('back_deal') }}">
+                                        <button class="btn btn-inverse" type="button"><i class="icon-list"></i>
+                                            Liste
+                                        </button>
+                                    </a>
+                                    {{ form_widget(form._token) }}
+                                </div>
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+                <!-- ==================== END OF TEXT INPUTS FLOATING BOX ==================== -->
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

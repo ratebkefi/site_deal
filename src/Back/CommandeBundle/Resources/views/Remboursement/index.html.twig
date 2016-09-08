@@ -1,0 +1,221 @@
+{% extends '::baseBack.html.twig' %}
+{% block body -%}
+<!-- ==================== PAGE CONTENT ==================== -->
+<div class="content">
+
+    <!-- ==================== WIDGETS CONTAINER ==================== -->
+    <div class="container-fluid">
+        <!-- ==================== END OF ROW ==================== -->
+        <div class="row-fluid">
+            <div class="span12">
+                <div class="containerHeadline">
+                   <i class="icon-zoom-in"></i>
+
+                        <h2>Filtre de recherche</h2>
+                        <div class="controlButton pull-right"><i class="icon-caret-down minimizeElement"></i></div>
+                    </div>
+                    <div class="floatingBox  ">
+                        <div class="container-fluid" style="padding: 10px">
+                            {{ form_start(form, {'method': 'GET','attr': {'class': 'form-horizontal contentForm','style':'padding:0; margin:0'}}) }}
+                            <div class="span3">
+                                <label>Code coupon</label>
+                                {{ form_widget(form.coupon,{'attr':{'class':'span10 selectpicker','data-live-search':'true'}}) }}
+                            </div>
+                            <div class="span3">
+                                <label>N° Commande</label>
+                                {{ form_widget(form.commande,{'attr':{'class':'span10 selectpicker','data-live-search':'true'}}) }}
+                            </div>
+
+                            <div class="span3" >
+                                <label>Mode de remboursement</label>
+                                {{ form_widget(form.remboursement,{'attr':{'class':'span10'}}) }}
+                            </div>
+                            <div class="span3" >
+                                <label>Client</label>
+                                {{ form_widget(form.pnamec,{'attr':{'class':'span10 selectpicker','data-live-search':'true'}}) }}
+                            </div>
+</div>
+                        <div class="container-fluid" style="padding: 10px">
+
+
+                            <div class="span3">
+                                <label>&nbsp;</label>
+                                <input type="submit" value="Rechercher" class="btn btn-success" />
+                            </div>
+
+                            {{ form_end(form) }}
+                        </div>
+
+                    </div>
+                <div class="containerHeadline">
+                    <i class="icon-flag"></i>
+
+                    <h2>Légende</h2>
+
+                   <div class="controlButton pull-right"><i class="icon-caret-down minimizeElement"></i></div>
+                </div>
+                <div class="floatingBox table ">
+                    <div class="container-fluid">
+                        <div class="span4">
+                            <div class="alert alert-success">
+                                <strong>Remboursement accepté.</strong>
+                            </div>
+                        </div>
+                        <div class="span4">
+                            <div class="alert alert-error">
+                                <strong>Remboursement annulé.</strong>
+                            </div>
+                        </div>
+                        <div class="span4">
+                            <div class="alert alert-warning">
+                                <strong>En attente de remboursement.</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- ==================== DEFAULT TABLE HEADLINE ==================== -->
+                <div class="containerHeadline">
+
+                    <i class="icon-table"></i><h2>Liste des  coupons à Remboursement</h2>
+                </div>
+                <!-- ==================== END OF DEFAULT TABLE HEADLINE ==================== -->
+
+                <!-- ==================== DEFAULT TABLE FLOATING BOX ==================== -->
+                <div class="floatingBox table">
+                    <div class="container-fluid">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Ticket </th>
+                                    <th>Date demande remboursement</th>
+                                    <th>Date  remboursement </th>
+                                    <th>Code Coupon</th>
+                                    <th>Client</th>
+                                    <th>Etat de remboursement </th>
+                                    <th>Etat de récéption</th>
+                                    <th>BigFid</th>
+                                    <th>Virement</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                    {% for entity in pagination  %}
+                                        {% if is_granted('ROLE_USER') %}
+                                            {#% if entity.historique != null %#}
+                                                {#% if entity.virement == null %#}
+                                <tr {% if entity.virement %}
+                                        {% if entity.virement.etat ==1%}
+                                            class="success" {% elseif entity.virement.etat ==0 %} class="error"
+                                        {% elseif entity.virement.etat ==3 %} class="alert alert-warning"
+                                        {% endif %}
+                                {% else %} class="success"
+                                {% endif %}    >
+                                    <td>{% if entity.ticket %}<a href="{{ path('view_ticket', {'id': entity.ticket.id}) }}" target="_blank">{{ entity.ticket.code }}</a> {% endif %}</td>
+                                    <td>{{ entity.dcr|date('d/m/Y') }}</td>
+                                    <td>{% if entity.virement and entity.virement.etat ==1%} {{ entity.virement.dcr|date('d/m/Y') }} {% endif %}</td>
+                                    <td>{{ entity.coupon.code }}</td>
+                                    <td>{{ entity.coupon.command.client }}</td>
+                                    <td>{{ entity.coupon.vendu|getVenduCoupon }}</td>
+                                    <td>{{ entity.coupon.recu|getRecuCoupon }}</td>
+                                    <td>{% if entity.historique %} {{  entity.historique.montant }} BigFid {% endif %}</td>
+                                    <td>{% if entity.virement %}
+                                            {{  entity.virement.montant }} TND<br>
+                                            {{  entity.virement.rib }}<br>
+                                           {% if entity.virement.etat==1 %} Remboursement accepté {% elseif entity.virement.etat==0 %}  Rembourcemment Annulé {% endif %} <br>
+                                        {% if entity.virement.etat==0 %}{{  entity.virement.remarque }} <br>{% endif %}
+                                            {% if entity.virement.etat==1 %}
+                                                <a target="_blank" href="{{ asset('uploads/virement/'~entity.virement.path) }}" title="télecharger"><i class="icon-paperclip icon-2x"></i></a>
+                                            {% endif %}
+
+                                        {% endif %} </td>
+                                    <td> 
+									    {% if   app.user.roles[0]== 'DAF'%}
+                                        {% if entity.virement %} 
+                                        {% if entity.virement.etat !=1 %}
+
+                                        <div class="btn-toolbar" style="margin: 0;">
+                                            <div class="btn-group">
+                                                <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                                    Action <span
+                                                            class="caret"></span></button>
+                                                <ul class="dropdown-menu pull-right">
+                                                    <li>
+                                                        <a class="pay"
+                                                           href="{{ path('remboursement_virement', {'id': entity.virement.id}) }}">Traiter</a>
+                                                    </li>
+                                                    <li class="hide">
+                                                        <a href="javascript:confirmCancelbox('{{ path('remboursement_annuler', { 'id': entity.coupon.id }) }}')">Annuler
+                                                            Remboursement</a>
+
+                                                    </li>
+
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        {% endif %}
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {#% endif %#}
+                                {#% endif %#}
+                                {% endif %}
+                                    {% endfor %}
+                            </tbody>
+                        </table>  
+                            {# display navigation #}
+                        <div class="pagination pagination-large" style="text-align: center">
+                            {{ knp_pagination_render(pagination) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ==================== END OF WIDGETS CONTAINER ==================== -->
+</div>
+    <link rel="stylesheet" type="text/css" href="{{ asset('RessourcesBack/css/bootstrap-select.css') }}">
+
+<!-- ==================== END OF PAGE CONTENT ==================== -->
+{% endblock %}
+{% block javascripts %}
+{% javascripts '@MainFrontBundle/Resources/public/js/bootstrap-typeahead.min.js' %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+        {% endjavascripts %}
+    <script src="{{ asset('RessourcesBack/js/bootstrap-select.js') }}"></script>
+    <script>
+        $(document).ready(function () {
+            $("#back_commandebundle_remboursementfilter_coupon").removeAttr("required");
+            $("#back_commandebundle_remboursementfilter_commande").removeAttr("required");
+            $("#back_commandebundle_remboursementfilter_remboursement").removeAttr("required");
+            $("#back_commandebundle_remboursementfilter_pnamec").removeAttr("required");
+
+        });
+ $('#back_commandebundle_remboursementfilter_pnamec').typeahead({
+
+                ajax: {
+                    url: '{{ path('list_client_par_nom') }}',
+                    triggerLength: 1,
+                    items: 10
+                },
+                afterSelect: function (item) {
+                    //save the id value into the hidden field
+
+                },
+                displayField: 'full_name'
+
+            })
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('.pay').fancybox({
+                'width': 800,
+                'height': 300,
+                'type': 'iframe',
+                'autoScale': false
+            });
+
+        });
+
+    </script>
+{% endblock %}

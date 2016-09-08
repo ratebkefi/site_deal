@@ -1,0 +1,487 @@
+{% extends '::base.html.twig' %}
+{% form_theme form 'form_table_layout.html.twig' %}
+{% block stylesheets %}
+{% endblock %}
+{% block body %}
+	<div class="row">
+		<div class="col-md-12 entry">
+			<h1>Mon compte</h1>
+		</div>
+	</div>
+    <div class="informations">
+        
+        <!-- Profile Menu -->
+        {{ render(controller('MainFrontBundle:Client:menuclient')) }}
+        <!-- Nav -->
+        <div class="row text-center">
+			<div class="col-sm-12">
+				<ul class="nav nav-pills btn-group">
+					<li role="presentation"><a href="{{ path('mon_compte') }}">Compte</a></li>
+					<li role="presentation" class="active"><a href="{{ path('mes_adresse') }}">Mes adresses</a></li>
+				</ul>
+			</div>
+        </div>
+        <!-- Modifier adresse Modal -->
+        {% for item in client.adresses %}
+            <div class="modal fade custom-modal{{ item.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                        aria-hidden="true"><i class="fa fa-close"></i></span></button>
+                            <h4 class="modal-title">Modification de l'adresse</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <form action="{{ path('update_mes_adresse') }}" method="POST"
+                                          class="form-horizontal">
+                                        <fieldset>
+
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label" for="ville">Adresse</label>
+
+                                                <div class="col-sm-10">
+                                                    <input type="text" name="adress" value="{{ item.adress }}"
+                                                           required="required" class="form-control">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label" for="ville">Indication adresse</label>
+
+                                                <div class="col-sm-10">
+                                                    <input type="text" name="indcation" value="{{ item.indcation }}"
+                                                           class="form-control">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label" for="gouvernorat">Gouvernorat /Délegations</label>
+                                                <div class="col-sm-5">
+                                                    <select name="gouvernorat" onChange="javascript:sendData1(''+this.value+'')">
+                                                        <option value=""></option>
+                                                        {% for item in gouvernorat %}
+                                                            <option value="{{ item.id }}">{{ item.name }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                                <div class="col-sm-5">
+                                                    <select name="delegation" id="delegation2_update" class="delegation2_update" onChange="javascript:sendData21(''+this.value+'')">
+
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label" for="ville">Ville / C.P</label>
+
+                                                <div class="col-sm-5">
+                                                    <select name="ville" id="delegation3_update" class="form-control delegation3_update"  onChange="javascript:afficherCodePostale1(''+this.value+'')">
+
+                                                    </select>
+
+                                                </div>
+                                                <div class="col-sm-5">
+                                                    <input type="text" readonly
+                                                           value="{% if item.localite %}{{ item.localite.cp }}{% endif %}"
+                                                           id="cpadd_update"  maxlength="4" autocomplete="off"
+                                                           name="cp" class="form-control cpadd_update"
+                                                           placeholder="Enter votre CP" required="required" readonly>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                        <input type="hidden" name="id" value="{{ item.id }}" required="required"/>
+
+                                </div>
+                                <!-- /.col-lg-12 -->
+                            </div>
+                            <!-- /.row -->
+                        </div>
+
+                        <div class="modal-footer">
+                            <a type="button" class="btn btn-default" data-dismiss="modal">Annuler</a>
+
+                            <input type="submit" class="btn btn-primary" value="Sauvegarder"/>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        <!-- Ajouter adresse Modal -->
+        <div class="modal fade add-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true"><i class="fa fa-close"></i></span></button>
+                        <h4 class="modal-title">Ajout d'une adresse</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                {{ form_start(form, {'method': 'POST','attr': {'class': 'form-horizontal','id':'addform'}}) }}
+                                <fieldset>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label" for="ville">Adresse</label>
+
+                                        <div class="col-sm-10">
+                                            {{ form_widget(form.adress,{'attr': {'class': "form-control",'placeholder':'Enter votre adresse'}}) }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label" for="ville">Indication adresse</label>
+
+                                        <div class="col-sm-10">
+                                            {{ form_widget(form.indcation,{'attr': {'class': "form-control",'placeholder':'Indication d\'adresse (exp: à coté de..., en face de...)' }}) }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label" for="gouvernorat">Gouvernorat / Délegations</label>
+                                        <div class="col-sm-5">
+                                            <select required="required" name="gouvernorat" onChange="javascript:sendData(''+this.value+'')">
+                                                <option value=""></option>
+
+                                                {% for item in gouvernorat %}
+                                                    <option value="{{ item.id }}">{{ item.name }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-5">
+                                            <select required="required" name="delegation" id="delegation2" onChange="javascript:sendData2(''+this.value+'')">
+
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label" for="ville">Ville / C.P </label>
+                                        <div class="col-sm-5">
+                                            <select name="ville" id="delegation3"  required="required" onChange="javascript:afficherCodePostale(''+this.value+'')">
+
+                                            </select>
+
+                                        </div>
+                                        <div class="col-sm-5">
+                                            <input type="text" required="required" id="cpadd" name="cp" class="form-control" readonly>
+                                        </div>
+                                    </div>
+
+
+                                </fieldset>
+
+                                {{ form_row(form._token) }}
+
+                            </div>
+                            <!-- /.col-lg-12 -->
+                        </div>
+                        <!-- /.row -->
+                    </div>
+                    <div class="modal-footer">
+                        <a type="button" class="btn btn-default" data-dismiss="modal">Annuler</a>
+                        <input type="submit" class="btn btn-primary" value="Ajouter"/>
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Liste de mes adresses -->
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Adresse</th>
+                    <th>Ville</th>
+                    <th>CP</th>
+                    <th>Indication</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in client.adresses %}
+                    <tr>
+                        <td>{{ item.adress }}</td>
+                        <td>{% if item.localite %}{{ item.localite.name }}{% endif %}</td>
+                        <td>{% if item.localite %}{{ item.localite.cp }}{% endif %}</td>
+                        <td>{{ item.indcation }}</td>
+                        <td>
+                            <a href="#" title="Modifier" data-toggle="modal" data-target=".custom-modal{{ item.id }}"><i
+                                        class="fa fa-edit dark-gray"></i></a>
+                            <a href="javascript:deleteadresse({{ item.id }})" title="Supprimer" class="delete"><i
+                                        class="fa fa-trash teal"></i></a></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-sm-offset-7 col-sm-5">
+            <a href="#" title="Ajouter une adresse" class="btn btn-infos" data-toggle="modal" data-target=".add-modal">Ajouter
+                une adresse</a>
+        </div>
+    </div>
+
+{% endblock %}
+    {% block javascripts %}
+
+        <!-- Sweet Alert. -->
+        <script type="text/javascript" src="{{ asset('public/js/sweet-alert.js') }}"></script>
+        <script type="text/javascript">
+            function afficherCodePostale(id)
+            {
+                $.ajax({
+                    type: "POST",
+                    dataType: "json",
+                    url: '{{path('viewcp')}}',
+                    data: "id=" + id,
+                    success: function (msg) {
+                        $("#cpadd").val(msg);
+
+
+                    }
+                });
+            }
+
+            function sendData3(id)
+            {
+
+                $.ajax({
+                    type: "POST",
+                    dataType: "json",
+                    url: '{{path('listdelegation')}}',
+                    data: "id=" + id,
+                    success: function (msg) {
+                        var str = "<option value=''></option>";
+                        $("#delegation1").show();
+                        $.each(msg, function(index, value) { // pour chaque noeud JSON
+                            // on ajoute l option dans la liste
+                            //$("delegation2").append('<option value="'+ value.id +'">'+ value.name +'</option>');
+                            str += "<option value='"+ value.id+"'>"+ value.name+"</option>";
+
+                        });
+                        // $('#delegation3').html(str);
+
+                    }
+                });
+            }
+            function sendData2(id)
+            {
+
+                $.ajax({
+                    type: "POST",
+                    dataType: "json",
+                    url: '{{path('listdelegation')}}',
+                    data: "id=" + id,
+                    success: function (msg) {
+                        var str = "<option value=''></option>";
+                        $("#localite").show();
+                        $.each(msg, function(index, value) { // pour chaque noeud JSON
+                            // on ajoute l option dans la liste
+                            //$("delegation2").append('<option value="'+ value.id +'">'+ value.name +'</option>');
+                            str += "<option value='"+ value.id+"'>"+ value.name+"</option>";
+                        });
+                        $('#delegation3').html(str);
+
+                    }
+                });
+            }
+            function sendData(id)
+            {
+
+                $.ajax({
+                    type: "POST",
+                    dataType: "json",
+                    url: '{{path('listdelegation')}}',
+                    data: "id=" + id,
+                    success: function (msg) {
+                        var str = "<option value=''></option>";
+                        $("#delegation").show();
+                        $.each(msg, function(index, value) { // pour chaque noeud JSON
+                            // on ajoute l option dans la liste
+                            //$("delegation2").append('<option value="'+ value.id +'">'+ value.name +'</option>');
+                            str += "<option value='"+ value.id+"'>"+ value.name+"</option>";
+                        });
+                        $('#delegation2').html(str);
+
+                    }
+                });
+            }
+
+
+            function afficherCodePostale1(id)
+            {
+                $.ajax({
+                    type: "POST",
+                    dataType: "json",
+                    url: '{{path('viewcp')}}',
+                    data: "id=" + id,
+                    success: function (msg) {
+                        $(".cpadd_update").val(msg);
+
+
+                    }
+                });
+            }
+
+            function sendData31(id)
+            {
+
+                $.ajax({
+                    type: "POST",
+                    dataType: "json",
+                    url: '{{path('listdelegation')}}',
+                    data: "id=" + id,
+                    success: function (msg) {
+                        var str = "<option value=''></option>";
+                        $("#delegation1_update").show();
+                        $.each(msg, function(index, value) { // pour chaque noeud JSON
+                            // on ajoute l option dans la liste
+                            //$("delegation2").append('<option value="'+ value.id +'">'+ value.name +'</option>');
+                            str += "<option value='"+ value.id+"'>"+ value.name+"</option>";
+                        });
+                        // $('#delegation3').html(str);
+                    }
+                });
+            }
+            function sendData21(id)
+            {
+
+                $.ajax({
+                    type: "POST",
+                    dataType: "json",
+                    url: '{{path('listdelegation')}}',
+                    data: "id=" + id,
+                    success: function (msg) {
+                        var str = "<option value=''></option>";
+
+                        $.each(msg, function(index, value) { // pour chaque noeud JSON
+                            // on ajoute l option dans la liste
+                            //$("delegation2").append('<option value="'+ value.id +'">'+ value.name +'</option>');
+                            str += "<option value='"+ value.id+"'>"+ value.name+"</option>";
+                        });
+                        $('.delegation3_update').html(str);
+                    }
+                });
+            }
+            function sendData1(id)
+            {
+                $.ajax({
+                    type: "POST",
+                    dataType: "json",
+                    url: '{{path('listdelegation')}}',
+                    data: "id=" + id,
+                    success: function (msg) {
+                        var str = "<option value=''></option>";
+
+                        $.each(msg, function(index, value) { // pour chaque noeud JSON
+                            str += "<option value='"+ value.id+"'>"+ value.name+"</option>";
+                        });
+
+                        $('.delegation2_update').html(str);
+
+                    }
+                });
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+            $('#villeadd').typeahead({
+                onSelect: function (item) {
+                    $("#cpadd").val(item.value)
+
+                },
+                ajax: {
+                    url: '{{path('listvilleajx')}}',
+                    triggerLength: 1
+                },
+                afterSelect: function (item) {
+                    //save the id value into the hidden field
+
+                },
+                displayField: 'full_name'
+
+            })
+            {% for item in client.adresses %}
+            var dataupdate{{ item.id }} = [];
+            $('#cp{{ item.id }}').typeahead({
+                onSelect: function (item) {
+                    $("#ville{{ item.id }}").val(item.value)
+
+
+                },
+
+                ajax: {
+                    url: '{{path('listvilleajx')}}',
+
+                },
+
+
+                displayField: 'full_name'
+
+            })
+
+            {% endfor %}
+
+            function checkville(valeur, div, localitediv) {
+
+
+                var cp = $("#" + valeur).val();
+                if (cp.length == 4) {
+                    $.ajax({
+                        type: 'get',
+                        url: '{{ path('ville') }}',
+                        data: "cp=" + cp,
+
+                        success: function (data) {
+                            $("#" + div).val(data.label);
+                            $("#" + localitediv).val(data.id);
+
+
+                        }
+                    });
+                } else {
+                    $(".ville").val('');
+                    $("#localite").val('');
+                }
+            }
+            function deleteadresse(id) {
+                swal({
+                            title: "Voulez vous vraiment supprimer cette adresse?",
+                            text: "",
+                            type: "error",
+                            showCancelButton: true,
+                            confirmButtonClass: 'btn-danger',
+                            confirmButtonText: 'Supprimer'
+
+                        },
+                        function (isConfirm) {
+                            if (isConfirm) {
+                                // ajax delete delete_mes_adresse
+                                $.ajax({
+                                    type: "POST",
+                                    url: "{{ path('delete_mes_adresse') }}",
+                                    data: "id=" + id,
+                                    success: function (msg) {
+                                        $(location).attr('href', "{{ path('mes_adresse') }}");
+                                    }
+                                });
+
+                            } else {
+
+                            }
+                        }
+                )
+                ;
+            }
+            ;
+        </script>
+    {% endblock %}

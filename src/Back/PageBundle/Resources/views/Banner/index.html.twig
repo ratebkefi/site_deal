@@ -1,0 +1,83 @@
+{% extends '::baseBack.html.twig' %}
+{% block body -%}
+    <!-- ==================== PAGE CONTENT ==================== -->
+    <div class="content">
+
+        <!-- ==================== WIDGETS CONTAINER ==================== -->
+        <div class="container-fluid">
+        <a href="{{ path('add_banner_manager') }}"><button class="btn btn-danger" type="button">Ajouter</button></a>
+
+            <!-- ==================== END OF ROW ==================== -->
+            <div class="row-fluid">
+                <div class="span12">
+                    <!-- ==================== DEFAULT TABLE HEADLINE ==================== -->
+                    <div class="containerHeadline">
+                        <i class="icon-table"></i><h2>Bannières publicitaires</h2>
+                    </div>
+                    <!-- ==================== END OF DEFAULT TABLE HEADLINE ==================== -->
+
+                    <!-- ==================== DEFAULT TABLE FLOATING BOX ==================== -->
+                    <div class="floatingBox table">
+                        <div class="container-fluid">
+                            <table class="table">
+                                <thead>
+                                <tr>
+
+                                    <th width="15%">Libellé</th>
+                                    <th>Bannière</th>
+                                    <th width="5%">Zone</th>
+                                    <th width="5%">Activé?</th>
+                                    <th width="10%">Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for entity in pagination %}
+                                    <tr>
+                                        <td>{{ entity.name }}</td>
+                                        <td>                                            {{ (asset(entity.media)|bannershow(entity.target,asset(entity.link),entity.width,entity.height))|raw }}</td>
+                                        <td>{% if  entity.zone==1 %} TOP{% else %} BOTTOM{% endif %}</td>
+                                        <td>{% if  entity.act==1 %} Activé{% else %} Non activé{% endif %}</td>
+                                        <td>
+                                            <div class="btn-toolbar" style="margin: 0;">
+                                                <div class="btn-group">
+                                                    <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                                        Action <span
+                                                                class="caret"></span></button>
+                                                    <ul class="dropdown-menu pull-right">
+
+                                                        <li>
+                                                            <a href="{{ path('update_banner_manager', { 'id': entity.id }) }}">Modifier</a>
+                                                        </li>
+
+                                                        <li>
+                                                            <a href="javascript:confirmdeletbox('{{ path('delete_banner_manager', { 'id': entity.id }) }}')">Supprimer</a>
+                                                        </li>
+
+
+
+                                                    </ul>
+                                                </div>
+                                            </div>
+
+
+
+
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                            {# display navigation #}
+                            <div class="pagination pagination-large" style="text-align: center">
+                                {{ knp_pagination_render(pagination) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ==================== END OF WIDGETS CONTAINER ==================== -->
+    </div>
+
+    <!-- ==================== END OF PAGE CONTENT ==================== -->
+{% endblock %}

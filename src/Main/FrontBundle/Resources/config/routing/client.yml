@@ -1,0 +1,107 @@
+inscription:
+    path: /inscription.html
+    defaults: { _controller: MainFrontBundle:Client:inscription}
+identification:
+    path: /connexion.html
+    defaults: { _controller: MainFrontBundle:Client:identification}
+mon_compte:
+    path: /compte.html
+    defaults: { _controller: MainFrontBundle:Client:compte}
+my_command:
+    path: /commande.html
+    defaults: { _controller: MainFrontBundle:Client:commande}
+detail_commande:
+    path: /{id}/detail-commande.html
+    defaults: { _controller: MainFrontBundle:Client:detcommande}
+    requirements:
+        id: \d+
+mes_adresse:
+    path: /mesadresses.html
+    defaults: { _controller: MainFrontBundle:Client:adresse}
+coupon:
+    path: /{id}/coupon.html
+    defaults: { _controller: MainFrontBundle:Client:coupon}
+mot_de_pass_oublie:
+    path: /mot_de_pass_oublie.html
+    defaults: { _controller: MainFrontBundle:Client:resetPassword}
+reset:
+    path: /reset.html
+    defaults: { _controller: MainFrontBundle:Client:reset}
+#logout_client:
+#    path: /deconnexion.html
+#    defaults: { _controller: MainFrontBundle:Client:deconnexion}
+traking_coupon:
+    path:     /traking/{ref}/{ship}
+    defaults: { _controller: BackCommandeBundle:Coupon:traking}
+confirm_client:
+    path: /{token}/confirm.html
+    defaults: { _controller: MainFrontBundle:Client:confirm}
+viewcp:
+    path:     /viewcop
+    defaults: { _controller: MainFrontBundle:Client:codePostale }
+listdelegation:
+     path:     /delegationlist
+     defaults: { _controller: MainFrontBundle:Client:delegation }
+listvilleajx:
+     path:     /delegationlist
+     defaults: { _controller: BackPartnerBundle:SellingPoint:delegation }
+ville:
+    path: /ville
+    defaults: { _controller: MainFrontBundle:Client:ville}
+
+count_cmd:
+    path: /countcmd
+    defaults: { _controller: BackCommandeBundle:Command:countcmd}
+
+login_check_client:
+    pattern:   /login_check_client
+
+logout_client:
+    pattern:   /logout_client
+
+#adresse
+mes_adresse:
+    path: /mesadresses.html
+    defaults: { _controller: MainFrontBundle:Client:adresse}
+
+delete_mes_adresse:
+    path: /adressedelete
+    defaults: { _controller: MainFrontBundle:Client:deleteadresse}
+
+default_adresse:
+    path: /defaultdresse
+    defaults: { _controller: MainFrontBundle:Client:defaultdresse}
+
+
+coupon_commande_pdf:
+    path:     /printcommand/{id}
+    defaults: { _controller: MainFrontBundle:Client:printliv}
+    requirements:
+        id: \d+
+
+
+update_mes_adresse:
+    path: /adresseupdate
+    defaults: { _controller: MainFrontBundle:Client:updateadresse}
+
+update_mes_adresse_livraison:
+    path: /adresseupdatelivraison
+    defaults: { _controller: MainFrontBundle:Client:updateadresselivraison}
+
+
+mes_bigfid:
+    path: /mes_bigfid.html
+    defaults: { _controller: MainFrontBundle:Client:bigfid}
+
+list_villeajx:
+    path:     /searchlocality
+    defaults: { _controller: MainFrontBundle:Client:searchlocality}
+abonnement:
+    path: /abonnement.html
+    defaults: { _controller: MainFrontBundle:Client:abonnement}
+confirmation_inscription:
+    path: /confirmation_inscription.html
+    defaults: { _controller: MainFrontBundle:Client:confirmation}
+message_inscription:
+    path: /message_inscription.html
+    defaults: { _controller: MainFrontBundle:Client:message}

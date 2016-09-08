@@ -1,0 +1,35 @@
+#protocol
+#back_protocol_homepage:
+#    path:     /
+#    defaults: { _controller: BackContractBundle:Protocol:index }
+
+dash_protocol_show:
+    path:     /view/{id}/{partner}
+    defaults: { _controller: BackContractBundle:Protocol:show}
+    requirements:
+        id: \d+
+        partner: \d+
+        
+#add_protocol_manager:
+#    path:     /add
+#    defaults: { _controller: BackContractBundle:Protocol:add }
+add_protocol_manager_partner:
+    path:     /addpartner/{id}
+    defaults: { _controller: BackContractBundle:Protocol:addpartner }
+update_protocol_manager:
+    path:     /update/{id}/{partner}
+    defaults: { _controller: BackContractBundle:Protocol:edit}
+    requirements:
+        id: \d+
+        partner: \d+
+delete_protocol_manager:
+    path:     /delete/{id}/{partner}
+    defaults: { _controller: BackContractBundle:Protocol:delete}
+    requirements:
+        id: \d+
+        partner: \d+
+print_protocol_manager:
+    path:     /print/{id}
+    defaults: { _controller: BackContractBundle:Protocol:print}
+    requirements:
+        id: \d+

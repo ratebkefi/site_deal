@@ -1,0 +1,204 @@
+{% extends '::baseBack.html.twig' %}
+{% block body -%}
+    <div class="content">
+        <div class="container-fluid">
+
+            <!-- ==================== COMMON ELEMENTS ROW ==================== -->
+            <div class="row-fluid">
+                <div class="span12">
+                    <!-- ==================== TEXT INPUTS HEADLINE ==================== -->
+                    <div class="containerHeadline">
+                        <i class="icon-edit"></i>
+
+                        <h2>Modifier adresse client</h2>
+
+                        <div class="controlButton pull-right"><i class="icon-remove removeElement"></i></div>
+                        <div class="controlButton pull-right"><i class="icon-caret-down minimizeElement"></i></div>
+                    </div>
+                    <!-- ==================== END OF TEXT INPUTS HEADLINE ==================== -->
+
+                    <!-- ==================== TEXT INPUTS FLOATING BOX ==================== -->
+                    <div class="floatingBox">
+                        <div class="container-fluid">
+                            <div class="container-fluid">
+
+                                <form class="form-horizontal contentForm" method="POST"
+                                      action="{{ path('back_client_adresse_modifier',{'id':id,'client':client}) }}">
+								<div class="control-group ">
+										<label for="adress" class="control-label">Adresse</label>
+										<div class="controls">
+											<input type="text" id="adress" value="{{ addresse.adress }}" class="span11" maxlength="255" name="adress">
+										</div>
+								</div>
+								<div class="control-group ">
+										<label for="indcation" class="control-label">Indication adresse</label>
+										<div class="controls">
+											<input type="text" value="{{ addresse.indcation }}" class="span11" id="indcation" name="indcation">
+										</div>
+								</div>
+<div class="control-group">
+                                                <label for="gouvernorat" class="control-label">Gouvernorat</label>
+                                                <div class="controls">
+                                                    <select name="gouvernorat" onChange="javascript:sendData(''+this.value+'')">
+                                                        {% for item in gouvernorat %}
+                                                        <option value="{{ item.id }}">{{ item.name }}</option>
+                                                        {% endfor %}
+
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="control-group" id="delegation" >
+                                                <label for="gouvernorat" class="control-label">Délegations</label>
+                                                <div class="controls" id="delegation1">
+                                                        <select name="delegation" required="required" id="delegation2" onChange="javascript:sendData2(''+this.value+'')">
+
+                                                        </select>
+                                                </div>
+                                            </div>
+                                            <div class="control-group" id="localite" >
+                                                <label for="gouvernorat" class="control-label">Ville</label>
+                                                <div class="controls" id="delegation4">
+                                                    <select name="ville" id="delegation3"  required="required" onChange="javascript:afficherCodePostale(''+this.value+'')">
+
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="control-group ">
+                                                <label for="back_partnerbundle_sellingpoint_nbrEmployee" class="control-label">Code postale</label>
+                                                <div class="controls">
+                                                    <input type="text" name="cpadd" id="cpadd" value="{% if addresse.localite %}{{ addresse.localite.cp }}{% endif %}" required="required" readonly="readonly" >
+                                                </div>
+                                            </div>
+                                    <div class="formFooter">
+                                        <button type="submit" class="btn btn-success"><i class="icon-ok"> </i> Valider
+                                        </button>
+                                        <button type="reset" class="btn btn-danger"><i class="icon-remove"> </i>
+                                            Effacer
+                                        </button>
+                                        <a href="{{ path('back_client_adresse',{'id':client}) }}">
+                                            <button class="btn btn-inverse" type="button"><i class="icon-list"></i>
+                                                Liste
+                                            </button>
+                                        </a>
+                                    </div>
+                                </form>
+                            </div>
+
+                        </div>
+                    </div>
+                    <!-- ==================== END OF TEXT INPUTS FLOATING BOX ==================== -->
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+    {% block stylesheets %}
+
+
+        <style type="text/css">
+
+
+            .pick-a-color {
+                height: 34px !important;
+            }
+
+        </style>
+    {% endblock %}
+    {% block javascripts %}
+        <script type="text/javascript">
+         function afficherCodePostale(id)
+         {
+             $.ajax({
+                 type: "POST",
+                 dataType: "json",
+                 url: '{{path('view_cp')}}',
+                 data: "id=" + id,
+                 success: function (msg) {
+                     $("#cpadd").val(msg);
+
+
+                 }
+             });
+         }
+
+         function sendData3(id)
+         {
+
+             $.ajax({
+                 type: "POST",
+                 dataType: "json",
+                 url: '{{path('listdelegation')}}',
+                 data: "id=" + id,
+                 success: function (msg) {
+                     var str = "<option value=''></option>";
+                     $("#delegation1").show();
+                     $.each(msg, function(index, value) { // pour chaque noeud JSON
+                         // on ajoute l option dans la liste
+                         //$("delegation2").append('<option value="'+ value.id +'">'+ value.name +'</option>');
+                         str += "<option value='"+ value.id+"'>"+ value.name+"</option>";
+
+                     });
+                    // $('#delegation3').html(str);
+
+                 }
+             });
+         }
+         function sendData2(id)
+         {
+
+             $.ajax({
+                 type: "POST",
+                 dataType: "json",
+                 url: '{{path('listdelegation')}}',
+                 data: "id=" + id,
+                 success: function (msg) {
+                     var str = "<option value=''></option>";
+                     $("#localite").show();
+                     $.each(msg, function(index, value) { // pour chaque noeud JSON
+                         // on ajoute l option dans la liste
+                         //$("delegation2").append('<option value="'+ value.id +'">'+ value.name +'</option>');
+                         str += "<option value='"+ value.id+"'>"+ value.name+"</option>";
+                     });
+                     $('#delegation3').html(str);
+
+                 }
+             });
+         }
+         function sendData(id)
+         {
+
+             $.ajax({
+                 type: "POST",
+                 dataType: "json",
+                 url: '{{path('listdelegation')}}',
+                 data: "id=" + id,
+                 success: function (msg) {
+                     var str = "<option value=''></option>";
+                     $("#delegation").show();
+                     $.each(msg, function(index, value) { // pour chaque noeud JSON
+                         // on ajoute l option dans la liste
+                         //$("delegation2").append('<option value="'+ value.id +'">'+ value.name +'</option>');
+                          str += "<option value='"+ value.id+"'>"+ value.name+"</option>";
+                     });
+                     $('#delegation2').html(str);
+
+                 }
+             });
+         }
+
+     
+       
+         
+
+
+     
+            $(document).ready(function () {
+                $("#back_commandebundle_bank_name").attr({
+                    'data-validation': 'required'
+                });
+                $.validate();
+            });
+        </script>
+    {% endblock %}

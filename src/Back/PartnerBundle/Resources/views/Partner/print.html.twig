@@ -1,0 +1,299 @@
+{% extends '::baseBack.html.twig' %}
+{% block body -%}
+    <!-- ==================== PAGE CONTENT ==================== -->
+    <div class="content">
+        <!-- ==================== WIDGETS CONTAINER ==================== -->
+        <div class="container-fluid">
+
+            <a href="{{ path('dash_partner_update', { 'id': entity.id }) }}" class="btn btn-info"><i
+                        class="icon-pencil"></i> Modifier</a>
+
+            <a href="{{ path('back_contact_partner', { 'partid': entity.id }) }}" class="btn btn-info turquoise"><i
+                        class="icon-group"></i> Contact</a>
+
+            <a href="{{ path('back_partner') }}" class="btn btn-inverse pull-right"><i class="icon-list"></i> Liste</a>
+            <a href="{{ path('back_sellingpoint', { 'partid': entity.id }) }}" class="btn btn-inverse pull-right"><i
+                        class="icon-building"></i> Points de vente</a>
+
+
+            <!-- ==================== END OF ROW ==================== -->
+
+            <div class="row-fluid">
+                <div class="span12">
+                    <!-- ==================== DEFAULT TABLE HEADLINE ==================== -->
+                    <div class="containerHeadline">
+                        <i class="icon-table"></i>
+
+                        <h2>Partenaire : {{ entity.name }}</h2>
+                    </div>
+                    <!-- ==================== END OF DEFAULT TABLE HEADLINE ==================== -->
+                    <!-- ==================== DEFAULT TABLE FLOATING BOX ==================== -->
+                    <div class="floatingBox table">
+                        <div class="container-fluid">
+                            <table class="table table-bordered">
+                                <tbody>
+
+                                <tr>
+                                    <th>Banque</th>
+                                    <td>{{ entity.bank }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Agence</th>
+                                    <td>{{ entity.agency }}</td>
+                                </tr>
+                                <tr>
+                                    <th>RIB</th>
+                                    <td>{{ entity.rib }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Adresse</th>
+                                    <td>{{ entity.address }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Téléphone</th>
+                                    <td>{{ entity.phone }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Logo</th>
+                                    <td>{% if entity.profilePicturePath!="" %}<img
+                                            src="{{ asset('uploads/user/'~entity.profilePicturePath)|imagine_filter('user_profil') }}"
+                                            width="200" />{% endif %}</td>
+                                </tr>
+                                <tr>
+                                    <th>Site Web</th>
+                                    <td>{{ entity.webSite }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Page facebook</th>
+                                    <td><a href="{{ entity.fbpage }}" target="_blank">{{ entity.fbpage }}</a></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row-fluid">
+                <div class="span12">
+                    <!-- ==================== DEFAULT TABLE HEADLINE ==================== -->
+                    <div class="containerHeadline">
+                        <i class="icon-building"></i>
+
+                        <h2>Points de vente : {{ entity.name }}</h2>
+                    </div>
+                    <!-- ==================== END OF DEFAULT TABLE HEADLINE ==================== -->
+                    <!-- ==================== DEFAULT TABLE FLOATING BOX ==================== -->
+                    <div class="floatingBox table">
+                        <div class="container-fluid">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>Point de vente</th>
+                                    <th width="25%">Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for listPointDeVente in pointDeVente %}
+                                    <tr>
+                                        <td>{{ listPointDeVente.name }}</td>
+
+                                        <td>
+                                            <div class="btn-toolbar" style="margin: 0;">
+                                                <div class="btn-group">
+                                                    <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                                        Action <span
+                                                                class="caret"></span></button>
+                                                    <ul class="dropdown-menu pull-right">
+
+                                                        <li>
+                                                            <a href="{{ path('dash_sellingpoint_show', { 'id': listPointDeVente.id ,'partid':entity.id}) }}">Afficher</a>
+                                                        </li>
+
+
+                                                        <li>
+                                                            <a href="{{ path('dash_sellingpoint_update', { 'id': listPointDeVente.id,'partid':entity.id }) }}">Modifier</a>
+                                                        </li>
+                                                        {% if app.user.roles[0]=='ROLE_SUPER_ADMIN' %}
+                                                            <li>
+                                                                <a href="javascript:confirmdeletbox('{{ path('dash_sellingpoint_delete', { 'id': listPointDeVente.id,'partid':entity.id }) }}')">Supprimer</a>
+                                                            </li>
+                                                        {% endif %}
+
+                                                    </ul>
+                                                </div>
+                                            </div>
+
+
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+            <div class="row-fluid">
+                <div class="span6">
+                    <!-- ==================== DEFAULT TABLE HEADLINE ==================== -->
+                    <div class="containerHeadline">
+                        <i class="icon-group"></i>
+
+                        <h2>Contact : {{ entity.name }}</h2>
+                    </div>
+                    <!-- ==================== END OF DEFAULT TABLE HEADLINE ==================== -->
+                    <!-- ==================== DEFAULT TABLE FLOATING BOX ==================== -->
+                    <div class="floatingBox table">
+                        <div class="container-fluid">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>Prénom</th>
+                                    <th>Nom</th>
+                                    <th>Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for contact in contact %}
+                                    <tr>
+                                        <td>{{ contact.firstname }}</td>
+                                        <td>{{ contact.lastname }}</td>
+
+                                        <td>
+                                            <div class="btn-toolbar" style="margin: 0;">
+                                                <div class="btn-group">
+                                                    <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                                        Action <span
+                                                                class="caret"></span></button>
+                                                    <ul class="dropdown-menu pull-right">
+
+                                                        <li>
+                                                            <a href="{{ path('dash_contact_partner_show', { 'id': contact.id ,'partid':entity.id}) }}">Afficher </a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="{{ path('dash_contact_partner_update', { 'id': contact.id,'partid':entity.id }) }}">Modifier</a>
+                                                        </li>
+
+                                                        {% if app.user.roles[0]=='ROLE_SUPER_ADMIN' %}
+
+                                                            <li>
+                                                                <a href="javascript:confirmdeletbox('{{ path('dash_contact_partner_delete', { 'id': contact.id,'partid':entity.id }) }}')">Supprimer</a>
+                                                            </li>
+                                                        {% endif %}
+
+                                                    </ul>
+                                                </div>
+                                            </div>
+
+
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="span6">
+                    <!-- ==================== DEFAULT TABLE HEADLINE ==================== -->
+                    <div class="containerHeadline">
+                        <i class="icon-asterisk"></i>
+
+                        <h2>Protocole : {{ entity.name }}</h2>
+                    </div>
+                    <!-- ==================== END OF DEFAULT TABLE HEADLINE ==================== -->
+                    <!-- ==================== DEFAULT TABLE FLOATING BOX ==================== -->
+                    <div class="floatingBox table">
+                        <div class="container-fluid">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Actif?</th>
+                                    <th>Partenaire</th>
+                                    <th>Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for ListProtocol in protocol %}
+                                    {% if (ListProtocol.status == 0) or ("now"|date('Ymd')  > ListProtocol.datep|date_modify("+1 year")|date('Ymd')) %}
+                                        <tr class="alert alert-error"> {% else %}  <tr class="alert alert-success">{% endif %}
+
+                                    <td>{{ ListProtocol.datep|date("d/m/Y") }}</td>
+                                    <td>{% if ListProtocol.status == 1 %}Activé{% else %}Désactivé{% endif %}
+                                    {% if "now"|date('Ymd')  > ListProtocol.datep|date_modify("+1 year")|date('Ymd') %}| Expiré{% endif %}
+                                        {% if (ListProtocol.status == 0) or ("now"|date('Ymd')  > ListProtocol.datep|date_modify("+1 year")|date('Ymd')) %}
+
+                                            {% else %}
+                                                {# endDate and startDate are strings or DateTime objects #}
+                                                {% set startDate =  "now"|date('Y-m-d') %}
+                                                {% set endDate =  ListProtocol.datep|date_modify("+1 year")|date('Y-m-d') %}
+                                                {% set difference = date(endDate).diff(date(startDate)) %}
+                                                {% set leftDays = difference.days %}
+                                                {% if leftDays == 1 %}
+                                               | Expire dans   1 day
+                                                {% else %}
+                                                  |  Expire dans   {{ leftDays }} Jour
+                                                {% endif %}
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ ListProtocol.user }}</td>
+                                    <td>
+                                        <div class="btn-toolbar" style="margin: 0;">
+                                            <div class="btn-group">
+                                                <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                                    Action <span
+                                                            class="caret"></span></button>
+                                                <ul class="dropdown-menu pull-right">
+
+                                                    <li>
+                                                        <a href="{{ path('back_annexe_homepage', { 'protocol_id': ListProtocol.id }) }}">Liste
+                                                            Annexe </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="{{ path('add_annexe_manager', { 'protocol_id': ListProtocol.id }) }}">Ajouter
+                                                            Annexe </a>
+                                                    </li>
+
+                                                    <li>
+                                                        <a href="{{ path('dash_protocol_show', { 'id': ListProtocol.id }) }}">Afficher</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="{{ path('update_protocol_manager', { 'id': ListProtocol.id }) }}">Modifier</a>
+                                                    </li>
+                                                    {% if app.user.roles[0]=='ROLE_SUPER_ADMIN' %}
+
+                                                        <li>
+                                                            <a href="javascript:confirmdeletbox('{{ path('delete_protocol_manager', { 'id': ListProtocol.id }) }}')">Supprimer</a>
+                                                        </li>
+                                                    {% endif %}
+
+                                                </ul>
+                                            </div>
+                                        </div>
+
+
+                                    </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+        <!-- ==================== END OF WIDGETS CONTAINER ==================== -->
+    </div>
+    <!-- ==================== END OF PAGE CONTENT ==================== -->
+{% endblock %}

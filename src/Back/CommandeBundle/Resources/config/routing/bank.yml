@@ -1,0 +1,25 @@
+#banque
+back_bank:
+    path:     /
+    defaults: { _controller: BackCommandeBundle:Bank:index }
+
+
+update_bank_manager:
+    path:     /update/{id}
+    defaults: { _controller: BackCommandeBundle:Bank:edit}
+    requirements:
+        id: \d+
+add_bank_manager:
+    path:     /add
+    defaults: { _controller: BackCommandeBundle:Bank:add}
+
+activate_bank_manager:
+    path:     /act/{id}
+    defaults: { _controller: BackCommandeBundle:Bank:activate}
+    requirements:
+        id: \d+
+unactivate_bank_manager:
+    path:     /unact/{id}
+    defaults: { _controller: BackCommandeBundle:Bank:unactivate}
+    requirements:
+        id: \d+

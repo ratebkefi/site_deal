@@ -1,0 +1,4 @@
+<option value="">Choisissez un deal</option>
+{% for item in entities %}
+    <option value="{{ item.id }}">{{ item.title }}</option>
+{% endfor %}

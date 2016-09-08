@@ -1,0 +1,81 @@
+{% extends '::baseBack.html.twig' %}
+{% block body -%}
+    <!-- ==================== PAGE CONTENT ==================== -->
+    <div class="content">
+        <!-- ==================== WIDGETS CONTAINER ==================== -->
+        <div class="container-fluid">
+            <a href="{{ path('back_invoice') }}">
+                <button class="btn btn-inverse pull-right" type="button" id="form_submit"><i class="icon-list"></i>
+                    Liste
+                </button>
+            </a>
+
+
+            <!-- ==================== END OF ROW ==================== -->
+            <div class="row-fluid">
+                <div class="span12">
+                    <!-- ==================== DEFAULT TABLE HEADLINE ==================== -->
+                    <div class="containerHeadline">
+                        <i class="icon-table"></i>
+
+                        <h2>N° de Facture :{{ "%08d"|format(entity.id) }}</h2>
+                    </div>
+                    <!-- ==================== END OF DEFAULT TABLE HEADLINE ==================== -->
+                    <!-- ==================== DEFAULT TABLE FLOATING BOX ==================== -->
+                    <div class="floatingBox table">
+                        <div class="container-fluid">
+                            <table class="table table-bordered">
+                                <tbody>
+
+                                <tr>
+                                    <th>Entreprise</th>
+                                    <td>{{ entity.deal.planning.defaultannexe.protocol.entreprise }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Partenaire</th>
+                                    <td>{{ entity.user }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Etat du virement</th>
+                                    <td>{% if entity.etat==1 %} En attente {% else %} Payé {% endif %}</td>
+                                </tr>
+                                <tr>
+                                    <th>Deal</th>
+                                    <td>{{ entity.deal }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Coupons</th>
+                                    <td>
+                                        {% for item in coupon %}
+                                            {{ item.code }} Prix
+                                                : {{ item.price }} TND<br/>
+                                        {% endfor %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Chiffre d'affaire</th>
+                                    <td>{{ entity.ca }} TND</td>
+                                </tr>
+                                <tr>
+                                    <th>Commission  Fixe (montant)</th>
+                                    <td>{{ entity.comFixe }} TND</td>
+                                </tr>
+                                <tr>
+                                    <th>Commission Variable (%)</th>
+                                    <td>{{ entity.comVariable }} TND</td>
+                                </tr>
+                                <tr>
+                                    <th>Virement</th>
+                                    <td>{{ entity.virement }} TND</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ==================== END OF WIDGETS CONTAINER ==================== -->
+    </div>
+    <!-- ==================== END OF PAGE CONTENT ==================== -->
+{% endblock %}

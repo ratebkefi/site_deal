@@ -1,0 +1,235 @@
+{% extends '::base.html.twig' %}
+
+{% block stylesheets %}
+{% endblock %}
+{% block body %}
+    {% set CouponAnnuler = commande.id|listCouponAnnuler %}
+	
+	{% set urlFacebook= app.request.schemeAndHttpHost ~ path('deal_detail',  {'region':(app.session.get('region')|getAlias),'categorie':(commande.deal.planning.categoryId|getAlias), 'id': commande.deal.id ,'name':(commande.deal.title|getAlias)}) ~ "?user=" ~ app.user.id %}
+
+	<div class="row">
+		<div class="col-md-12 entry">
+			<h1>Mon compte</h1>
+		</div>
+	</div>
+    <div class="informations">
+        <!-- Profile Menu -->
+        {{ render(controller('MainFrontBundle:Client:menuclient')) }}
+        <!-- Nav -->
+        <div class="row">
+            <div class="col-md-12">
+                <ol class="breadcrumb">
+                    <li><a href="{{ path('my_command') }}">Mes commandes</a></li>
+                    <li class="active">Commande N° {{ "%09d"|format(commande.id) }}</li>
+                </ol>
+            </div>
+        </div>
+        <!-- Détail de commande -->
+        <div class="row">
+            <div class="col-md-6 col-sm-12">
+                <div class="headline"><h3>N° Commande</h3></div>
+                <div class="marg-bottom-40"><span>N° {{ "%09d"|format(commande.id) }}</span></div>
+            </div>
+            <div class="col-md-6 col-sm-12">
+                <div class="headline"><h3>Réference</h3></div>
+                <div class="marg-bottom-40"><span>{{ commande.reference }} </span></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 col-sm-12">
+                <div class="headline"><h3>Date de commande</h3></div>
+                <div class="marg-bottom-40"><i class="fa fa-calendar pr-10"></i>{{ commande.dcr|date('d/m/Y') }}</span>
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-12">
+                <div class="headline bg-color-light"><h3>Prix</h3></div>
+                <div class="marg-bottom-40"><span>{% if commande.caisse.id ==26 %} {% set total = 3 %} {% else %} {%  set total = 3  %}{% endif %}
+                        {% for cop in  commande.coupon %}
+                            {% set total = cop.price + total %}
+                        {% endfor %}
+                        {{ total }} <sup>DT</sup></span></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 col-sm-12">
+                <div class="headline"><h3>Deal</h3></div>
+                <div class="marg-bottom-40"><span>{{ commande.deal }}</span></div>
+            </div>
+            <div class="col-md-6 col-sm-12">
+                <div class="headline"><h3>Etat</h3></div>
+                <div class="marg-bottom-40">
+                    {% if CouponAnnuler %}<span class="badge badge-warning">Annulé</span>
+                    {% elseif commande.etat == 1 %}<span class="badge badge-success">Payé</span>
+                    {% elseif commande.etat == 0 %}<span class="badge badge-danger">En attente</span>
+                    {% elseif commande.etat == 2 %}<span class="badge badge-danger">En attente de confirmation</span>
+                    {% elseif commande.etat == 3 %}<span class="badge badge-danger">Annulé</span>
+                    {% elseif commande.etat == 4 %}<span class="badge badge-danger">Commande confirmé</span>
+                    {% else %}<span class="badge badge-warning">Epuisé</span>{% endif %}
+                </div>
+            </div>
+        </div>
+        {% if commande.etat == 4 %}
+        <div class="row">
+            <div class="col-md-6 col-sm-12">
+                <div class="marg-bottom-40">
+                    <a href="#" title="Suivre ma livraison" class="btn btn-infos pull-left" data-toggle="modal"
+                       data-target=".add-modal">Suivre ma livraison</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        <!-- Liste des coupons -->
+        {% if CouponAnnuler == false and commande.etat != 0 and commande.etat != 3%}
+            <div class="headline"><h3>Liste des coupons</h3></div>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>ID Coupon</th>
+                        <th>Prix</th>
+                        <th>Etat</th>
+                        <th>Date de paiement</th>
+
+                        {%if commande.deal.planning.defaultannexe.booking == 1 %}<th>Réservation</th>{%endif%}
+                    </tr>
+                    </thead>
+                    <tbody>
+					{% set nombreCouponVendu = getCouponVendu(commande.deal.id) %}
+
+					{% if nombreCouponVendu>=commande.deal.planning.defaultannexe.minCoupon %}
+                    {% for item in  commande.coupon %}
+                        {% if item.vendu == 3 %}
+                            <tr>
+                                <td>{{ item.code }}</td>
+                                <td>{{ item.price }} <sup>DT</sup></td>
+                                <td><span class="badge">{{ item.vendu|getVenduCoupon }}</span></td>
+                                <td>{% if item.dcr!='' %}{{ item.dcr|date('d/m/Y') }}{% endif %}</td>
+								{%if commande.deal.planning.defaultannexe.booking == 1 %}
+								<td>
+                                <form method="POST" action="{{ path('front_booking_step3') }}" class="form-horizontal form"  target="_blank">
+                                <input type="hidden" name="code_coupon" value="{{ item.code }}" >
+								<input type="submit" required="required" class="btn btn-primary pull-right" value="Réserver">
+								</form>
+								</td>{%endif%}
+
+
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+					{%endif%}
+                    </tbody>
+                </table>
+            </div>
+
+
+            <div class="row">
+                <div class="col-sm-12">
+                    {% if commande.etat == 1 %}
+                    {% if nombreCouponVendu>=commande.deal.planning.defaultannexe.minCoupon %}
+
+                        <a href="{{ path('coupon',{'id':commande.id}) }}" target="_blank" title="Télecharger coupon"
+                           class="btn btn-primary pull-right"><i class="fa fa-file-pdf-o"></i> Télécharger les
+                            coupons</a>
+					{% else %}
+					Votre coupon n'est pas disponible car le deal que vous avez commandé n'est pas encore validé. Vous pouvez<a href="http://www.facebook.com/dialog/feed?app_id=831428680266309&link={{ urlFacebook }}&name={{ commande.deal.title|replace({'&': 'et'}) }}&caption=bigdeal.tn&picture={{ asset(commande.deal.image1| imagine_filter('sliddetaildeal'))|e('html_attr') }}
+				&redirect_uri={{ app.request.schemeAndHttpHost ~ path('deal_detail',  {'region':(app.session.get('region')|getAlias),'categorie':(commande.deal.planning.categoryId|getAlias), 'id': commande.deal.id ,'name':(commande.deal.title|getAlias)}) }}&display=popup"
+                                                               class="btn btn-facebook">partager</a> le deal avec vos amis sur Facebook afin d'accélérer sa validation.
+                    {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="modal fade add-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true"><i class="fa fa-close"></i></span></button>
+                    <h4 class="modal-title">Tracking</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                    <div class="span12">
+                                        <!-- ==================== DEFAULT TABLE HEADLINE ==================== -->
+
+                                        <!-- ==================== END OF DEFAULT TABLE HEADLINE ==================== -->
+
+                                        <!-- ==================== DEFAULT TABLE FLOATING BOX ==================== -->
+                                        <div class="floatingBox table">
+                                            <div class="container-fluid">
+                                                <table class="table">
+                                                    <thead>
+                                                    <tr>
+                                                        {% if entities!='error' %}
+                                                        <th>id </th>
+                                                        {%  endif %}
+                                                        <th>Status</th>
+                                                        <th>Date</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    {% if entities=='error' %}
+                                                    <tr>
+                                                    <td>Tracking non disponible</td>
+                                                    <td>0000-00-00</td>
+                                                    </tr>
+                                                    {% else %}
+                                                    {% for entity in entities %}
+                                                        <tr>
+                                                            <td>{{ entity.id }}</td>
+                                                            <td>{{ entity.status_label }}</td>
+                                                            <td>{{ entity.update_date }}</td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                    {%  endif %}
+                                                    </tbody>
+                                                </table>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                            </div>
+                            <!-- /.col-lg-12 -->
+                    </div>
+                    <!-- /.row -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <link rel="stylesheet" href="{{ asset('RessourcesBack/css/jquery.fancybox.css') }}">
+
+{% endblock %}
+    {% block javascripts %}
+        <script src="{{ asset('RessourcesBack/js/jquery.fancybox.js') }}"></script>
+
+        <script>
+        $(function () {
+            // fancybox
+            $('.updateplanning').fancybox({
+                'height': 'auto',
+                'width': 880,
+                'type': 'iframe',
+                'scrolling': 'auto',
+                'autoScale': false
+            });
+        });
+            </script>
+
+    {% endblock %}

@@ -1,0 +1,53 @@
+back_dash_json_dc_ca:
+    path:     /dcca
+    defaults: { _controller: BackDashBundle:Default:dcca }
+back_dash_json_dc_deal:
+    path:     /dcdeal
+    defaults: { _controller: BackDashBundle:Default:dcdeal }
+back_dash_json_dc_ca_deal:
+    path:     /dccadeal
+    defaults: { _controller: BackDashBundle:Default:dccadeal }
+liste_deal_dash:
+    path:     /listdealdash
+    defaults: { _controller: BackDashBundle:Default:listdealdash }
+back_dash_json_contrat:
+    path:     /contrat
+    defaults: { _controller: BackDashBundle:Default:contrat }
+back_dash_json_all_deal:
+    path:     /alldeal
+    defaults: { _controller: BackDashBundle:Default:alldeal }
+back_dash_json_deal_cmd:
+    path:     /listdealdashcmd/{type}
+    defaults: { _controller: BackDashBundle:Default:listdealcmddash }
+    requirements:
+        type: \d{1}
+back_ajx_ticket12_json:
+    pattern: /planning/12json
+    defaults: { _controller: "BackPlanningBundle:Planner:dealjson"}
+back_ajx_ticket13_json:
+    pattern: /planning/13json
+    defaults: { _controller: "BackPlanningBundle:Planner:publicationjson"}
+back_dash_ajx_redacteur_cas1:
+    pattern: /planning/etat1deal
+    defaults: { _controller: "BackDashBundle:Default:etat1deal"}
+back_dash_ajx_redacteur_cas2:
+    pattern: /planning/etat2deal
+    defaults: { _controller: "BackDashBundle:Default:etat2deal"}
+back_ajx_ticket14_json:
+    pattern: /planning/14json
+    defaults: { _controller: "BackPlanningBundle:Planner:dealannulerjson"}
+back_ajx_ticket15_json:
+    pattern: /planning/15json
+    defaults: { _controller: "BackPlanningBundle:Planner:comparecontratjson"}
+back_ajx_ticket16_json:
+    pattern: /planning/16json
+    defaults: { _controller: "BackPlanningBundle:Planner:comparecommercialjson"}
+back_ajx_ticket17_json:
+    pattern: /planning/17json
+    defaults: { _controller: "BackPlanningBundle:Planner:contratcommercialjson"}
+back_dash_ajx_redacteur_cas3:
+    pattern: /planning/etat3deal
+    defaults: { _controller: "BackDashBundle:Default:etat3deal"}
+back_dash_ajx_redacteur_cas4:
+    pattern: /planning/etat4deal
+    defaults: { _controller: "BackDashBundle:Default:etat4deal"}

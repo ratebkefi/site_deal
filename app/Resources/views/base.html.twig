@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="fr" class="no-js">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>{% block title %}BIGDeal : tous les deals en Tunisie .{% endblock %} </title>
+    <meta name="description" content="{% block description %}BIGDeal - Les meilleurs deals en Tunisie{% endblock %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+    {% block head %}
+    {% endblock %}
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"/>
+    <!-- Font-awesome Icons -->
+    <link rel="stylesheet" href="{{ asset('public/css/font-awesome.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('public/css/simplemenu.css') }}">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="{{ asset('public/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('public/css/storelocator.css') }}" />
+    <link rel="stylesheet" href="{{ asset('public/css/flexslider.css') }}">
+    <link rel="stylesheet" href="{{ asset('public/css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('public/css/select2.min.css') }}">
+    <link rel="canonical" href="{{ url(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) }}" />
+    
+
+    <style>
+        .dropdown-menu > li > a{
+            white-space: normal;
+        }
+    </style>
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+
+
+    {% block stylesheets %}
+    {% endblock %}
+	
+	
+
+	
+	<!-- Script Pixel Facebook  -->
+	 <script>
+	 (function() {
+			var _fbq = window._fbq || (window._fbq = []);
+			if (!_fbq.loaded) {
+			var fbds = document.createElement('script');
+			fbds.async = true;
+			fbds.src = '//connect.facebook.net/en_US/fbds.js';
+			var s = document.getElementsByTagName('script')[0];
+			s.parentNode.insertBefore(fbds, s);
+			_fbq.loaded = true;
+			}
+			_fbq.push(['addPixelId', '798395716878981']);
+			})();
+			window._fbq = window._fbq || [];
+			window._fbq.push(['track', 'PixelInitialized', {}]);
+	</script>
+	<noscript><img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/tr?id=798395716878981&amp;ev=PixelInitialized" /></noscript>
+	
+
+</head>
+
+
+<body>
+<div class="wrapper container">
+
+    {{ render(controller('MainFrontBundle:Default:header')) }}
+    <!-- END HEADER -->
+    <!--PUB -->
+
+    <div id="content">
+        <div class="row hidden-xs">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+        {% set bann=render(controller('MainFrontBundle:Default:banner', { 'type': 1 })) %}
+        {{ bann|raw }}</div></div>
+        {% spaceless %}{% block body %}{% endblock %}{% endspaceless %}
+    </div>
+</div>
+    {{ render(controller('MainFrontBundle:Default:footer')) }}
+</div>
+<!-- /container -->
+
+<script src="{{ asset('public/js/modernizr-custom.js') }}"></script>
+<script src="{{ asset('public/js/jquery-1.11.3.min.js') }}"></script>
+<script src="{{ asset('public/js/jquery-migrate-1.2.1.min.js') }}"></script>
+<!-- Latest compiled and minified JavaScript -->
+<script src="{{ asset('public/js/bootstrap.min.js') }}"></script>
+<script src="{{ asset('public/js/select2.full.js') }}"></script>
+<!-- Include Thumbelina script. -->
+<script type="text/javascript" src="{{ asset('public/js/jquery.flexslider-min.js') }}"></script>
+<!-- Main JS -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAKO3TfHhcs6aF7q_XFZf8L3QavfVOKRZU&sensor=true"
+        type="text/javascript"></script>
+<script type="text/javascript">
+
+    var pathregion="{{ path('ajx_region_deal') }}";
+</script>
+  
+{% javascripts '@MainFrontBundle/Resources/public/js/bootstrap-typeahead.min.js' %}
+<script type="text/javascript" src="{{ asset_url }}"></script>
+{% endjavascripts %}
+{% if app.session.get('region')|length==0  %}
+{% javascripts '@MainFrontBundle/Resources/public/js/region.js' %}
+<script type="text/javascript" src="{{ asset_url }}"></script>
+{% endjavascripts %}
+{% endif %}
+
+<script type="text/javascript">
+
+    $('#searchtop').typeahead({
+        onSelect: function(item) {
+
+            $.ajax({
+                type: "POST",
+                url: "{{ path('ajxdeallink') }}",
+                data: "id="+item.value,
+                success: function(msg){
+                    $(location).attr('href',msg);
+                }
+            });
+        },
+        ajax: {
+            url: '{{ path('ajxdealtop') }}',
+            triggerLength: 1
+        },
+        afterSelect: function (item) {
+            //save the id value into the hidden field
+
+        },
+        displayField: 'full_name'
+
+    });
+
+    $(document).ready(function() { $("#js-example-basic-single").select2(); });
+    $( "#js-example-basic-single" ).change(function() {
+        $.ajax({
+            type: "POST",
+            url: "{{ path('ajxsetregion') }}",
+            data: "id="+$( "#js-example-basic-single option:selected" ).text(),
+            success: function(msg){
+			var regionId = $( "#js-example-basic-single").val();
+			var regionName = $( "#js-example-basic-single option:selected" ).text();
+			
+		if(regionId==1)
+		{
+			window.location.href ="https://www.bigdeal.tn/1/regions/grand-tunis.html";
+		}
+		if(regionId==2)
+		{
+			window.location.href ="https://www.bigdeal.tn/2/regions/sahel.html";
+		}
+		if(regionId==3)
+		{
+			window.location.href ="https://www.bigdeal.tn/3/regions/cap-bon.html";
+		}
+        if(regionId==4)
+        {
+            window.location.href ="https://www.bigdeal.tn/4/regions/sfax.html";
+        }
+		if(regionId==0)
+		{
+			window.location.href ="https://www.bigdeal.tn/0/regions/toutes-les-regions.html";
+		}
+	
+            }
+
+        });
+    });
+
+    function hidethisadds(id){
+        globan=$('#banner'+id).parent();
+        globan.html("");
+        $.ajax({
+            type: "POST",
+            url: "{{ path('hide_banner') }}",
+            data: "id="+id,
+            success: function(msg){
+
+
+            }
+        });
+    }
+    if (navigator.userAgent.indexOf('Mac OS X') != -1) {
+	  $("body").addClass("mac");
+	} else {
+	  $("body").addClass("pc");
+	}
+    </script>
+    <script src="{{ asset('public/js/simplemenu.js') }}"></script>
+    <script>
+  		$('#mobile-searchtop').typeahead({
+        onSelect: function(item) {
+
+            $.ajax({
+                type: "POST",
+                url: "{{ path('ajxdeallink') }}",
+                data: "id="+item.value,
+                success: function(msg){
+                    $(location).attr('href',msg);
+                }
+            });
+        },
+        ajax: {
+            url: '{{ path('ajxdealtop') }}',
+            triggerLength: 1
+        },
+        afterSelect: function (item) {
+            //save the id value into the hidden field
+
+        },
+        displayField: 'full_name'
+
+    });
+
+    $(document).ready(function() { $("#js-example-basic-single2").select2(); });
+    $( "#js-example-basic-single2" ).change(function() {
+        $.ajax({
+            type: "POST",
+            url: "{{ path('ajxsetregion') }}",
+            data: "id="+$( "#js-example-basic-single2 option:selected" ).text(),
+            success: function(msg){ 
+			var regionId = $( "#js-example-basic-single2").val();
+			var regionName = $( "#js-example-basic-single2 option:selected" ).text();
+			
+		if(regionId==1)
+		{
+			window.location.href ="https://www.bigdeal.tn/1/regions/grand-tunis.html";
+		}
+		if(regionId==2)
+		{
+			window.location.href ="https://www.bigdeal.tn/2/regions/sahel.html";
+		}
+		if(regionId==3)
+		{
+			window.location.href ="https://www.bigdeal.tn/3/regions/cap-bon.html";
+		}
+        if(regionId==4)
+        {
+            window.location.href ="https://www.bigdeal.tn/4/regions/sfax.html";
+        }
+		if(regionId==0)
+		{
+			window.location.href ="https://www.bigdeal.tn/0/regions/toutes-les-regions.html";
+		}
+            }
+
+        });
+    });
+  		
+	</script>
+	
+	
+	<!-- Script Google Analytics  -->
+	<script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-30376566-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+{% block javascripts %}
+{% endblock %}
+<script type="text/javascript">
+/* <![CDATA[ */
+var google_conversion_id = 1019229954;
+var google_custom_params = window.google_tag_params;
+var google_remarketing_only = true;
+/* ]]> */
+</script>
+<script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
+</script>
+<noscript>
+<div style="display:inline;">
+<img height="1" width="1" style="border-style:none;" alt="" src="//googleads.g.doubleclick.net/pagead/viewthroughconversion/1019229954/?value=0&amp;guid=ON&amp;script=0"/>
+</div>
+</noscript>
+</body>
+</html>

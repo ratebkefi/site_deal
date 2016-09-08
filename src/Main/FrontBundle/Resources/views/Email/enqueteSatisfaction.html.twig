@@ -1,0 +1,15 @@
+{% include 'MainFrontBundle:Email:header.html.twig' %}
+
+Bonjour <strong>{{ client }} ,</strong><br>
+Nous vous remercions pour votre récente expérience à l’établissement <strong>{{ partenaire }}</strong>, effectuée via BIGDeal. Afin d'améliorer notre service, nous aimerions connaître votre avis sur cet établissement. Veuillez noter votre expérience en cliquant sur le lien suivant : <br/>
+.<a href="https://www.bigdeal.tn{{ path('deal_detail',  {'region':(defaultregion|getAlias),'categorie':(deal.planning.categoryId|getAlias), 'id': deal.id ,'name':(deal.title|getAlias)}) }}#comment" target="_blank">{{ deal.title }}</a><br/>
+<br/>
+20 points BIGFid vous seront offerts sur votre avis.
+<br/>
+
+Si vous avez des questions, n’hésitez pas à nous contacter au <strong>71 168 444</strong>.
+
+<br/>
+<br/>
+<strong>L’équipe BIGDeal</strong>
+{% include 'MainFrontBundle:Email:footer.html.twig' %}

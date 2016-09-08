@@ -1,0 +1,8 @@
+{% extends '::baseBack.html.twig' %}
+{% block body %}
+{% if app.user.roles[0]=='REDACTEUR' %}
+<script>
+    window.location.replace("{{path("homeredacteur")}}");
+</script>	
+{% endif %}
+{% endblock %}

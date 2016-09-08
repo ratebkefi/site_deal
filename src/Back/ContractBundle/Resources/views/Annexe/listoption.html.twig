@@ -1,0 +1,4 @@
+<option value="">Choisissez un'annexe</option>
+{% for item in entities %}
+<option value="{{ item.id }}">{{ item }} - ({{ item.releaseDate|date('d/m/Y') }})</option>
+{% endfor %}

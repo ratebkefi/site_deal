@@ -1,0 +1,20 @@
+#remboursement
+back_remboursement:
+    path:     /
+    defaults: { _controller: BackCommandeBundle:Remboursement:index }
+back_show_remboursement:
+    path:     /show/{id}
+    defaults: { _controller: BackCommandeBundle:Remboursement:show }
+    requirements:
+        id: \d+
+
+remboursement_virement:
+    path:     /virement/{id}
+    defaults: { _controller: BackCommandeBundle:Remboursement:virement }
+    requirements:
+        id: \d+
+remboursement_annuler:
+    path:     /annuler/{id}
+    defaults: { _controller: BackCommandeBundle:Remboursement:annuler }
+    requirements:
+        id: \d+

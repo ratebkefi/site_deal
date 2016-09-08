@@ -1,0 +1,7 @@
+parameters:
+#    back_page.example.class: Back\PageBundle\Example
+
+services:
+#    back_page.example:
+#        class: %back_page.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]

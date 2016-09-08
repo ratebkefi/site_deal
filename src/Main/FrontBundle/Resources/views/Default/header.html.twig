@@ -1,0 +1,147 @@
+<header> 
+    <div id="top-header" class="row">
+        <div class="col-md-4 col-sm-12 col-xs-12">
+            <a class="navbar-brand" href="{{ path('main_front_homepage') }}"><img src="{{ asset('public/images/logo.png') }}" alt="Big Deal" class="img-responsive" /></a>
+        </div>
+        <div class="col-md-5 col-sm-12 col-xs-12">
+            <form class="navbar-form navbar-left" role="search">
+                <div class="input-group">
+                    <input class="form-control" id="searchtop" placeholder="Que cherchez-vous?" name="search" type="text">
+                    <select class="form-control" id="js-example-basic-single" placeholder="Région" name="city">
+                        {% if app.session.get('region')!="" %}
+                            {% set defaultregion= app.session.get('region') %}
+ <option value="0" {% if app.session.get('region')== "Toutes les régions"   %}selected="selected" {% endif %}>Toutes les régions</option>
+                            {% for item in region %}
+                        <option value="{{ item.id }}" {% if app.session.get('region')== item.name   %}selected="selected" {% endif %}>{{ item.name }}</option>
+                        {% endfor %}
+                        {% else %}
+                            {% set defaultregion= "Grand tunis" %}
+                            {% for item in region %}
+                            
+                                <option value="{{ item.id }}" {% if "Grand tunis"== item.name   %}selected="selected" {% endif %}>{{ item.name }}</option>
+                           
+                            {% endfor %}
+                        {% endif %}
+                    </select>
+
+                    <!--<input class="form-control"  placeholder="Région" name="city" type="text" value="">-->
+                </div>
+            </form>
+        </div>
+        <div class="col-md-3 col-sm-12 col-xs-12">
+        	<div class="row hidden-md hidden-sm">
+        		<div class="col-xs-12 text-center">
+        			<ul class="header-mobile-icon">
+
+		                    {% if app.user and   is_granted('ROLE_CLIENT') %}
+		                        {% set client =app.user  %}
+		                        <li class="first"><a href="{{ path('mon_compte') }}"><span>Bonjour {{ client.title }} {{ client.fname }} {{ client.name }}</span></a></li>
+		
+		                        <li class="bordered"><a href="{{ path('mon_compte') }}"><i class="fa fa-user"></i></a></li>
+                                <li class="bordered"><a href="{{ path('logout_client') }}"><i class="fa fa-sign-out"></i></a></li>
+		                    {% else %}
+		                        <li class="bordered"><a href="{{ path('identification') }}"><i class="fa fa-user"></i></a></li>
+		
+		                        <li class="bordered"><a href="{{ path('inscription') }}"><i class="fa fa-sign-in"></i></a></li>
+		                    {% endif %}
+							     <li class="bordered"><a href="tel:+21671168444"><i class="flaticon-telephone46"></i></a></li>
+		            </ul>
+        		</div>
+        	</div>
+            <ul class="top hidden-xs">
+
+                    {% if app.user and   is_granted('ROLE_CLIENT') %}
+                        {% set client =app.user  %}
+                        <li class="first"><a href="{{ path('mon_compte') }}"><span>{{ client.title }} {{ client.fname }} {{ client.name }}</span></a></li>
+
+                        <li><a href="{{ path('logout_client') }}"><span>Déconnexion</span></a></li>
+                    {% else %}
+                        <li class="first"><a href="{{ path('identification') }}"><span>Connexion</span></a></li>
+
+                        <li><a href="{{ path('inscription') }}"><span>Inscription</span></a></li>
+                    {% endif %}
+
+            </ul>
+            <div class="row bottom hidden-xs">
+                <div class="col-sm-offset-3 col-sm-9 col-xs-12">
+                    <div class="phone"><i class="flaticon-telephone46"></i>71 168 444</div>
+                    <span>Lun-Sam de 08H30 à 18H</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <nav class="navbar">
+            <div class="navbar-header">
+            	<!--<a href="javascript:void(0)" class="mobile-visible mobile-search"><i class="fa fa-search"></i></a>
+            	Search Modal-->
+            	<a href="javascript:void(0)" class="mobile-visible mobile-search"><i class="search-btn fa flaticon-location26"></i></a>
+			    <div class="mobilenav"> 
+			    		<form class="navbar-form navbar-left" role="search">
+						  <li><select class="form-control" id="js-example-basic-single2" placeholder="Région" name="city">
+						 
+						  
+						                        {% if app.session.get('region')!="" %}
+						                            {% set defaultregion= app.session.get('region') %}
+						 <option value="0" {% if app.session.get('region')== "Toutes les régions"   %}selected="selected" {% endif %}>Toutes les régions</option>
+						                            {% for item in region %}
+					<option value="{{ item.id }}" {% if app.session.get('region')== item.name   %}selected="selected" {% endif %}>{{ item.name }}</option>
+						                        {% endfor %}
+						                        {% else %}
+						                            {% set defaultregion= "Grand tunis" %}
+						                            {% for item in region %}
+						                                <option value="{{ item.id }}" {% if "Grand tunis"== item.name   %}selected="selected" {% endif %}>{{ item.name }}</option>
+						                            {% endfor %}
+						                        {% endif %}
+						                    </select>
+						     </li> 
+					   </form>
+				</div> 
+			    
+			    
+			   <!-- <div class="search-open">
+			    	<select class="form-control" id="js-example-basic-single2" placeholder="Région" name="city">
+						                        {% if app.session.get('region')!="" %}
+						                            {% set defaultregion= app.session.get('region') %}
+						
+						                            {% for item in region %}
+						                        <option value="{{ item.name }}" {% if app.session.get('region')== item.name   %}selected="selected" {% endif %}>{{ item.name }}</option>
+						                        {% endfor %}
+						                        {% else %}
+						                            {% set defaultregion= "Grand tunis" %}
+						                            {% for item in region %}
+						                                <option value="{{ item.name }}" {% if "Grand tunis"== item.name   %}selected="selected" {% endif %}>{{ item.name }}</option>
+						                            {% endfor %}
+						                        {% endif %}
+					</select>
+			    </div>-->
+            	<a class="mobile-logo mobile-visible" href="{{ path('main_front_homepage') }}"><img src="{{ asset('public/images/logo.png') }}" alt="Big Deal" class="img-responsive" /></a>
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+					<li><a href="http://www.bigdeal-booking.tn/" target="_blanc" class="booking_button blink">Hotels</a></li>
+                    {% for item in category %}
+
+					<li{% if app.request.server.get('REDIRECT_URL')==path('deal_list',{'region':(defaultregion|getAlias),'id':item.id,'name':(item.name|getAlias)})  %} class="active"{% endif %}><a href="{{ path('deal_list',{'region':(defaultregion|getAlias),'id':item.id,'name':(item.name|getAlias)}) }}" {% if item.id==4 %} class="lifestyles hvr-underline-from-center" {% else %} class="hvr-underline-from-center" {% endif %}>{{ item.name|raw }}</a></li>
+
+                    {% endfor %}
+
+                    <li><a href="{{ path('deal_passe') }}" class="hvr-underline-from-center">Deals passés</a></li>
+					<li><a href="https://www.teskerti.tn/" target="_blanc" class="hvr-underline-from-center">Billetterie</a></li>
+					<li><a href="http://www.bigdeal-shopping.tn" target="_blanc" class="hvr-underline-from-center">Shopping</a></li>
+                </ul>
+            </div><!-- /.navbar-collapse -->
+    </nav>
+</header>
+
+
+
+
+
+
+

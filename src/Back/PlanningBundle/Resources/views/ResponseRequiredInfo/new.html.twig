@@ -1,0 +1,44 @@
+{% extends '::baseBack.html.twig' %}
+{% block body -%}
+    <div class="content">
+        <div class="container-fluid">
+            <a href="{{ path('dash_responserequiredinfo') }}"><button class="btn btn-inverse pull-right" type="button"><i class="icon-list"></i> Liste</button></a>
+            <!-- ==================== COMMON ELEMENTS ROW ==================== -->
+            <div class="row-fluid">
+                <div class="span12">
+                    <!-- ==================== TEXT INPUTS HEADLINE ==================== -->
+                    <div class="containerHeadline">
+                        <i class="icon-edit"></i><h2>Ajouter une réponse à une information requise</h2>
+                    </div>
+                    <!-- ==================== END OF TEXT INPUTS HEADLINE ==================== -->
+                    <!-- ==================== TEXT INPUTS FLOATING BOX ==================== -->
+                    <div class="floatingBox">
+                        <div class="container-fluid">
+                            <form class="form-horizontal contentForm" method="POST" action="{{path('dash_responserequiredinfo_create')}}">
+                                <div class="control-group">
+                                    <label class="control-label">Question</label>
+                                    <div class="controls">
+                                        {{ form_widget(form.requiredInfoId) }}
+                                    </div>
+                                </div>                                
+                                <div class="control-group">
+                                    <label class="control-label">Réponse</label>
+                                    <div class="controls">
+                                        {{ form_widget(form.response) }}
+                                    </div>
+                                </div>
+                                <div class="formFooter">
+                                    <button type="submit" class="btn btn-success"><i class="icon-ok"> </i> Valider</button>
+                                    <button type="reset" class="btn btn-danger"><i class="icon-remove"> </i> Effacer</button>
+
+                                    {{ form_widget(form._token) }}
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <!-- ==================== END OF TEXT INPUTS FLOATING BOX ==================== -->
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

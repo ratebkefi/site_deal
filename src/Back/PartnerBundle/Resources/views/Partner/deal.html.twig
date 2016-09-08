@@ -1,0 +1,92 @@
+{% extends '::baseBack.html.twig' %}
+{% block body -%}
+    <!-- ==================== PAGE CONTENT ==================== -->
+    <div class="content">
+
+        <!-- ==================== WIDGETS CONTAINER ==================== -->
+        <div class="container-fluid">
+
+
+            <!-- ==================== END OF ROW ==================== -->
+            <div class="row-fluid">
+                <div class="span12">
+
+                    <!-- ==================== DEFAULT TABLE HEADLINE ==================== -->
+                    <div class="containerHeadline">
+                        <i class="icon-table"></i>
+
+                        <h2>Liste des deals</h2>
+                    </div>
+                    <!-- ==================== END OF DEFAULT TABLE HEADLINE ==================== -->
+
+                    <!-- ==================== DEFAULT TABLE FLOATING BOX ==================== -->
+                    <div class="floatingBox table">
+                        <div class="container-fluid">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Titre</th>
+
+                                        <th>Date de début de validité des coupons</th>
+                                        <th>Date de fin de validité des coupons</th>
+                                        <!--<th>Accepter paiement par espèce</th>
+                                        <th>Maximum de coupons par client</th>-->
+
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    {% for entity in deal %}
+                                        <tr>
+                                            <td>{{ entity.id }}</td>
+                                            <td>{{ entity.title }}</td>
+
+                                            <td>{{ entity.startDateValidtyCoupon|date("d/m/Y") }}</td>
+                                            <td>{{ entity.endDateValidtyCoupon|date("d/m/Y") }}</td>
+                                            <!--<td>{% if entity.cashPayment ==1 %} Oui {% else %} Non {% endif %}</td>
+                                            <td>{{ entity.maxCouponUser }}</td>-->
+                                            <td>
+                                                <div class="btn-toolbar" style="margin: 0;">
+                                                    <div class="btn-group">
+                                                        <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                                            Action <span
+                                                                class="caret"></span></button>
+                                                        <ul class="dropdown-menu pull-right">
+{% if entity.planning.defaultannexe.booking == 1 %}
+                                                            <li>
+                                                                <a href="{{ path('dash_partner_booking', { 'deal': entity.id ,'month': entity.startDateValidtyCoupon|date('m'),'year': entity.startDateValidtyCoupon|date('Y')}) }}">Liste des réservations</a>
+                                                            </li>
+															
+                                                            <li>
+                                                                <a href="{{ path('dash_partner_book_print', { 'deal': entity.id }) }}">Rapport des réservations</a>
+                                                            </li>
+															{% endif %}
+                                                            <li>
+                                                                <a href="{{ path('dash_partner_deal_print', { 'deal': entity.id }) }}">Rapport du deal</a>
+                                                            </li>
+
+                                                        </ul>
+
+                                                        </ul>
+                                                    </div>
+                                                </div>
+
+
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ==================== END OF WIDGETS CONTAINER ==================== -->
+    </div>
+
+    <!-- ==================== END OF PAGE CONTENT ==================== -->
+{% endblock %}

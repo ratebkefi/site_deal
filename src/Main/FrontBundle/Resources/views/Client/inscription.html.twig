@@ -1,0 +1,353 @@
+{% extends '::base.html.twig' %}
+{% form_theme form 'form_table_layout.html.twig' %}
+{% block stylesheets %}
+    <style>
+        .help-block {
+            color: red;
+            display: block;
+            margin-bottom: 0px;
+            margin-top: 0px;
+        }
+    </style>
+{% endblock %}
+{% block javascripts %}
+    {% javascripts '@BackPlanningBundle/Resources/public/js/jquery.form-validator.js' %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    
+    <script>
+        function afficherCodePostale(id)
+        {
+            $.ajax({
+                type: "POST",
+                dataType: "json",
+                url: '{{path('viewcp')}}',
+                data: "id=" + id,
+                success: function (msg) {
+                    $("#ccp").val(msg);
+
+
+                }
+            });
+        }
+
+        function sendData3(id)
+        {
+
+            $.ajax({
+                type: "POST",
+                dataType: "json",
+                url: '{{path('listdelegation')}}',
+                data: "id=" + id,
+                success: function (msg) {
+                    var str = "<option value=''></option>";
+                    $("#delegation1").show();
+                    $.each(msg, function(index, value) { // pour chaque noeud JSON
+                        // on ajoute l option dans la liste
+                        //$("delegation2").append('<option value="'+ value.id +'">'+ value.name +'</option>');
+                        str += "<option value='"+ value.id+"'>"+ value.name+"</option>";
+
+                    });
+                    // $('#delegation3').html(str);
+
+                }
+            });
+        }
+        function sendData2(id)
+        {
+
+            $.ajax({
+                type: "POST",
+                dataType: "json",
+                url: '{{path('listdelegation')}}',
+                data: "id=" + id,
+                success: function (msg) {
+                    var str = "<option value=''></option>";
+                    $("#localite").show();
+                    $.each(msg, function(index, value) { // pour chaque noeud JSON
+                        // on ajoute l option dans la liste
+                        //$("delegation2").append('<option value="'+ value.id +'">'+ value.name +'</option>');
+                        str += "<option value='"+ value.id+"'>"+ value.name+"</option>";
+                    });
+                    $('#delegation3').html(str);
+
+                }
+            });
+        }
+        function sendData(id)
+        {
+
+            $.ajax({
+                type: "POST",
+                dataType: "json",
+                url: '{{path('listdelegation')}}',
+                data: "id=" + id,
+                success: function (msg) {
+                    var str = "<option value=''></option>";
+                    $("#delegation").show();
+                    $.each(msg, function(index, value) { // pour chaque noeud JSON
+                        // on ajoute l option dans la liste
+                        //$("delegation2").append('<option value="'+ value.id +'">'+ value.name +'</option>');
+                        str += "<option value='"+ value.id+"'>"+ value.name+"</option>";
+                    });
+                    $('#delegation2').html(str);
+
+                }
+            });
+        }
+        $('#ville').typeahead({
+            onSelect: function(item) {
+                $("#ccp").val(item.value)
+            },
+            ajax: {
+                url: '{{path('listvilleajx')}}',
+                triggerLength: 1
+            },
+            afterSelect: function (item) {
+                //save the id value into the hidden field
+                console.log(item)
+            },
+            displayField: 'full_name'
+
+        })
+
+        /* $.validator.setDefaults({
+         submitHandler: function() {
+         alert("submitted!");
+         }
+         });*/
+
+        $().ready(function () {
+            $("#inscription_client_title").attr({
+                'data-validation': 'required'
+            });
+            $("#inscription_client_fname").attr({
+                'data-validation': 'required'
+            });
+            $("#inscription_client_name").attr({
+                'data-validation': 'required'
+            });
+            $("#adresse1").attr({
+                'data-validation': 'required'
+            });
+
+            $("#ville").attr({
+                'data-validation': 'required'
+            });
+            $("#ccp").attr({
+                'data-validation': 'number'
+            });
+            $("#inscription_client_email").attr('data-validation', 'email');
+            $("#inscription_client_phone").attr({'data-validation': 'length number', 'data-validation-length': '8-8'});
+
+            $("#inscription_client_password_first").attr({
+                'data-validation': 'length',
+                'data-validation-length': 'min8'
+            });
+            $("#inscription_client_password_second").attr({
+                'data-validation': 'confirmation',
+                'data-validation-confirm':'inscription_client[password][first]'
+            });
+
+
+            $.validate({
+                modules: 'security'
+            } );
+        });
+    </script>
+    <script>
+
+        $(document).ready(function () {
+            $('.alert-success').delay(5000).fadeOut();
+        });
+        $(document).ready(function () {
+            $('.alert-error').delay(5000).fadeOut();
+        });
+        $("#cgv").change(function () {
+            if ($('#cgv').is(':checked')) {
+                $('#submit').removeAttr('disabled')
+            } else {
+                $('#submit').attr('disabled', 'disabled')
+            }
+
+        })
+
+    </script>
+{% endblock %}
+{% block body %}
+
+    {% for type, flashMessages in app.session.flashbag.all() %}
+        {% for flashMessage in flashMessages %}
+            <br/>
+            <div class="alert {{ type }}">
+                <button data-dismiss="alert" class="close" type="button">×</button>
+                {{ flashMessage|trans }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+    <div class="authen">
+        <div class="clearfix">
+            <div class="col-md-12 title">
+                <h1 class="bold">S’inscrire </h1> <span>|</span> <a class="teal" href="{{ path('identification') }}"><span> S’identifier</span></a>
+            </div>
+        </div>
+        <div class="row reg">
+            <div class="col-md-5 text-center signin">
+                <h3 class="bold">Inscrivez-vous avec votre compte facebook</h3>
+                <a class="btn btn-facebook" href="{{ loginUrl }}"><i class="fa fa-facebook"></i> Se connecter</a>
+            </div>
+			<div class="vertical-spacer  hidden-xs">
+              <span>ou</span>
+            </div>
+			<div class="horizontal-spacer hidden-md hidden-sm">
+              <span>ou</span>
+            </div>
+			<div class="col-md-offset-1 col-md-6">
+				<h3 class="bold">Créer votre compte BIGDeal.tn</h3>
+				{{ form_start(form, {'method': 'POST','attr': {'class': 'form-horizontal form','id':'inscriptionForm'}}) }}
+				<div class="form-group">
+					<label for="titre" class="col-sm-4 control-label hidden-xs">Titre</label>
+
+					<div class="col-sm-8">
+						{{ form_widget(form.title, { 'attr': {'class': "form-control"} }) }}
+
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="nom" class="col-sm-4 control-label hidden-xs">Prénom / Nom</label>
+
+					<div class="col-md-4 col-sm-4">
+						{{ form_widget(form.fname, { 'attr': {'class': "form-control",
+							'placeholder': "Enter votre Prénom"} }) }}
+					</div>
+					<div class="col-md-4 col-sm-4">
+						{{ form_widget(form.name, { 'attr': {'class': "form-control",
+							'placeholder': "Enter votre Nom"} }) }}
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="adresse" class="col-sm-4 control-label hidden-xs">Adresse</label>
+
+					<div class="col-md-8 col-sm-8">
+						<input type="text" name="adresse" class="form-control" id="adresse1"
+							   placeholder="Enter votre adresse">
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="indication_adresse" class="col-sm-4 control-label hidden-xs">Indication Adresse</label>
+
+					<div class="col-md-8 col-sm-8">
+						<input type="text" name="indication_adresse" class="form-control" id="adresse2"
+							   placeholder="Indication d'adresse (exp: à coté de..., en face de...)">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-4 control-label hidden-xs" for="gouvernorat">Gouvernorat /Délegations</label>
+					<div class="col-md-4 col-sm-4">
+						<select name="gouvernorat" onChange="javascript:sendData(''+this.value+'')" required="required">
+							<option value=""> Gouvernorat</option>
+
+							{% for item in gouvernorat %}
+								<option value="{{ item.id }}">{{ item.name }}</option>
+							{% endfor %}
+						</select>
+					</div>
+					<div class="col-md-4 col-sm-4">
+						<select name="delegation" id="delegation2" onChange="javascript:sendData2(''+this.value+'')" required="required">
+							<option value=""> Delegation</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="cp" class="col-sm-4 control-label hidden-xs">Ville / C.P.</label>
+
+					<div class="col-md-4 col-sm-4">
+						<select name="ville" id="delegation3"  required="required"  onChange="javascript:afficherCodePostale(''+this.value+'')">
+						<option value=""> Ville</option>
+						</select>
+					</div>
+					<div class="col-md-4 col-sm-4">
+						<input type="text" required="required" class="form-control cp" readonly name="cp" id="ccp" placeholder="Enter votre CP"
+							   maxlength="4" autocomplete="off">
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="email" class="col-sm-4 control-label hidden-xs">E-mail</label>
+
+					<div class="col-sm-8">
+						{{ form_widget(form.email, { 'attr': {'class': "form-control",
+							'placeholder': "Enter votre e-mail"} }) }}
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="phone" class="col-sm-4 control-label hidden-xs">Téléphone</label>
+
+					<div class="col-sm-8">
+						{{ form_widget(form.phone, { 'attr': {'class': "form-control",
+							'placeholder': "Enter votre numero de télephone"} }) }}
+					</div>
+				</div>
+				{% for passwordField in form.password %}
+					<div class="form-group">
+						<label for="password" class="col-sm-4 control-label hidden-xs">{% if loop.index==1 %}Mot de passe {% else %}Confirmation{% endif %}</label>
+						{% if loop.index==1 %} 
+						<div class="col-sm-8">
+							{{ form_widget(passwordField, { 'attr': {'class': 'form-control','placeholder': 'Mot de passe' } }) }}
+						</div>
+						{% else %}
+						<div class="col-sm-8">
+							{{ form_widget(passwordField, { 'attr': {'class': 'form-control','placeholder': 'Confirmation' } }) }}
+						</div>
+						{% endif %}
+					</div>
+				{% endfor %}
+
+
+				<div class="form-group">
+					<div class="col-sm-offset-4 col-sm-8">
+						<div class="checkbox">
+							<label>
+								<input type="checkbox"> Se connecter automatiquement depuis cet ordinateur
+							</label>
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-offset-4 col-sm-8">
+						<div class="checkbox">
+							<label>
+								<input type="checkbox"> Je veux recevoir des e-mails personnalisés sur les meilleurs commerces
+								locaux, produits et voyages. (en fonction de mon lieu de résidence, de mes préférences de
+								navigation sur internet et mobile, des données fournies par les cookies ou autres dispositifs,
+								de mon historique d’achat et d’autres informations).
+							</label>
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-offset-4 col-sm-8">
+						<div class="checkbox">
+							<label>
+								<input type="checkbox" id="cgv"> J'accepte les <a class="light-blue" target="_blank" href="{{ path('pages_detail',{'name':'conditions-generales'}) }}">Conditions générales de
+									commercialisation</a> ainsi que la <a class="light-blue" target="_blank" href="{{ path('pages_detail',{'name':'politique-de-confidentialite'}) }}">Politique de confidentialité</a>.
+							</label>
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-offset-4 col-sm-4 col-xs-6">
+						<input type="submit" id="submit" value="S'inscrire" disabled="disabled" class="btn btn-infos">
+					</div>
+					<div class="col-sm-4 col-sm-4 col-xs-6 login-link">
+						<a href="{{ path('identification') }}" title="login">Déja membre ?</a>
+					</div>
+				</div>
+				<input type="hidden" name="localite" id="localite">
+				{{ form_widget(form._token) }}
+				{{ form_end(form) }}
+			</div>
+        </div>
+        
+    </div>
+{% endblock %}

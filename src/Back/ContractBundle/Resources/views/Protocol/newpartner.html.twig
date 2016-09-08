@@ -1,0 +1,70 @@
+{% extends '::baseBack.html.twig' %}
+{% form_theme form 'form_table_layout.html.twig' %}
+{% block body -%}
+    <div class="content">
+        <div class="container-fluid">
+            <!-- ==================== COMMON ELEMENTS ROW ==================== -->
+            <div class="row-fluid">
+                <div class="span12">
+                    <!-- ==================== TEXT INPUTS HEADLINE ==================== -->
+                    <div class="containerHeadline">
+                        <i class="icon-edit"></i><h2>Ajouter un protocole</h2>
+                    </div>
+                    <!-- ==================== END OF TEXT INPUTS HEADLINE ==================== -->
+                    <!-- ==================== TEXT INPUTS FLOATING BOX ==================== -->
+                    <div class="floatingBox">
+                        <div class="container-fluid">
+                            {{ form_start(form, {'method': 'POST','attr': {'class': 'form-horizontal contentForm'}}) }}
+
+                            {{ form_row(form.datep,{'attr':{'class':'datepickerField'}}) }}
+                            {{ form_row(form.entreprise,{'attr':{'required':'required'}}) }}
+
+                            {{ form_row(form.status) }}
+
+                                    <div class="formFooter">
+                                        <button type="submit" class="btn btn-success"><i class="icon-ok"> </i> sdsdsd Valider</button>
+                                        <button type="reset" class="btn btn-danger"><i class="icon-remove"> </i> Effacer</button>
+
+                                        {{ form_widget(form._token) }}
+                                    </div>
+                                </form>
+                        </div>
+                    </div>
+                    <!-- ==================== END OF TEXT INPUTS FLOATING BOX ==================== -->
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    <!-- masked inputs -->
+    <script src="{{ asset('RessourcesBack/js/lib/jquery-inputmask/jquery.inputmask.min.js') }}"></script>
+    <script src="{{ asset('RessourcesBack/js/lib/jquery-inputmask/jquery.inputmask.extensions.js') }}"></script>
+    <script src="{{ asset('RessourcesBack/js/lib/jquery-inputmask/jquery.inputmask.date.extensions.js') }}"></script>
+    <script>
+	$(".datepickerField").inputmask("date");
+   
+
+
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+        var user_role = "{{app.user.roles[0] }}";
+        $('#back_contractbundle_protocol_entreprise option[value="1"]').attr("selected", "selected");
+        if(user_role=='COMMERCIAL')
+        {
+            document.getElementById("back_contractbundle_protocol_entreprise").disabled=true;
+            $('#back_contractbundle_protocol_entreprise option[value="1"]').attr("selected", "selected");
+
+
+        }
+        else
+        {
+            document.getElementById("back_contractbundle_protocol_entreprise").disabled=false;
+        }
+            $('form').bind('submit', function () {
+            $(this).find('#back_contractbundle_protocol_entreprise').prop('disabled', false);
+          });
+    });
+    </script>
+{% endblock %}

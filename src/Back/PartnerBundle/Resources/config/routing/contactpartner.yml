@@ -1,0 +1,27 @@
+back_contact_partner:
+    path:     /{partid}
+    defaults: { _controller: BackPartnerBundle:Contact:index }
+    requirements:
+        partid: \d+
+dash_contact_partner_update:
+    path:     /{partid}/update/{id}
+    defaults: { _controller: BackPartnerBundle:Contact:edit}
+    requirements:
+        id: \d+
+        partid: \d+
+dash_contact_partner_add:
+    path:     /{partid}/add
+    defaults: { _controller: BackPartnerBundle:Contact:add}
+    requirements:
+dash_contact_partner_show:
+    path:     /{partid}/view/{id}
+    defaults: { _controller: BackPartnerBundle:Contact:show}
+    requirements:
+        id: \d+
+        partid: \d+
+dash_contact_partner_delete:
+    path:     /{partid}/delete/{id}
+    defaults: { _controller: BackPartnerBundle:Contact:delete}
+    requirements:
+        id: \d+
+        partid: \d+

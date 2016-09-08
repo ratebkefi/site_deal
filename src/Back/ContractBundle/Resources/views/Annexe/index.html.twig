@@ -1,0 +1,133 @@
+{% extends '::baseBack.html.twig' %}
+
+{% block body -%}
+    <!-- ==================== PAGE CONTENT ==================== -->
+    <div class="content">
+
+        <!-- ==================== WIDGETS CONTAINER ==================== -->
+        <div class="container-fluid">
+            <a href="{{ path('add_annexe_manager', { 'protocol_id': protocol_id }) }}">
+                <button class="btn btn-danger" type="button">Ajouter</button>
+            </a>
+            <a class="btn btn-inverse pull-right" href="{{ path('back_protocol_homepage') }}"><i class="icon-list"></i>
+                Retour</a>
+
+            <!-- ==================== END OF ROW ==================== -->
+            <div class="row-fluid">
+                <div class="span12">
+                    {% for type, flashMessages in app.session.flashbag.all() %}
+                        {% for flashMessage in flashMessages %}<br/>
+                            <div class="alert {{ type }}" >
+                                <button data-dismiss="alert" class="close" type="button">×</button>
+                                {{ flashMessage|trans }}
+                            </div>
+
+                        {% endfor %}
+                    {% endfor %}
+                    <!-- ==================== DEFAULT TABLE HEADLINE ==================== -->
+                    <div class="containerHeadline">
+                        <i class="icon-table"></i>
+
+                        <h2>Annexe list</h2>
+                    </div>
+                    <!-- ==================== END OF DEFAULT TABLE HEADLINE ==================== -->
+
+                    <!-- ==================== DEFAULT TABLE FLOATING BOX ==================== -->
+                    <div class="floatingBox table">
+                        <div class="container-fluid">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>Objet</th>
+                                    <th>Minimum de coupons pour valider le deal</th>
+                                    <th>Réservation</th>
+                                    <th>Remarques</th>
+                                    
+                                    <th>Date de publication </th>
+                                    <th>Commission fixe (montant)</th>
+                                    <th>Commission Variable (%)</th>
+                                    <th>Protocole</th>
+                                    <th>Planning</th>
+                                    <th>Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for entity in pagination %}
+                                    <tr>
+                                        <td>{{ entity.object| raw }}</td>
+                                        <td>{{ entity.minCoupon }}</td>
+                                        <td>{% if entity.booking ==1 %} Oui {% else %} Non {% endif %} </td>
+                                        <td>{{ entity.remark| raw }}</td>
+                                        
+                                        <td>{% if entity.releaseDate %}{{ entity.releaseDate|date('d/m/Y') }}{% endif %}</td>
+                                        <td>{{ entity.fixedCommission }}</td>
+                                        <td>{{ entity.variableCommission }} %</td>
+                                        <td>{{ entity.protocol| raw }}</td>
+                                        <td>{{ entity.planning| raw }}</td>
+                                        <td>
+                                            <div class="btn-toolbar" style="margin: 0;">
+                                                <div class="btn-group">
+                                                    <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                                        Action <span
+                                                                class="caret"></span></button>
+                                                    <ul class="dropdown-menu pull-right">
+
+                                                        <li>
+                                                            <a href="{{ path('back_reference_homepage', { 'protocol_id': protocol_id,'annexe_id': entity.id}) }}">Liste
+                                                                Réference </a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="{{ path('dash_annexe_show', { 'id': entity.id ,'protocol_id': protocol_id}) }}">Afficher</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="{{ path('update_annexe_manager', { 'id': entity.id ,'protocol_id': protocol_id}) }}">Modifier</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="{{ path('pdf_annexe_manager', { 'id': entity.id ,'protocol_id': protocol_id}) }}">Annexe au Protocole D’accord </a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="{{ path('update_annexe_manager', { 'id': entity.id ,'protocol_id': protocol_id}) }}">Modifier</a>
+                                                        </li>
+                                                        {% if app.user.roles[0]=='ROLE_SUPER_ADMIN' %}
+
+                                                            <li>
+                                                                <a href="javascript:confirmdeletbox('{{ path('delete_annexe_manager', { 'id': entity.id ,'protocol_id': protocol_id}) }}')">Supprimer</a>
+                                                            </li>
+                                                        {% endif %}
+
+                                                    </ul>
+                                                </div>
+                                            </div>
+
+
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                            {# display navigation #}
+                            <div class="pagination pagination-large" style="text-align: center">
+                                {{ knp_pagination_render(pagination) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ==================== END OF WIDGETS CONTAINER ==================== -->
+    </div>
+
+    <!-- ==================== END OF PAGE CONTENT ==================== -->
+{% endblock %}
+{% block javascripts %}
+
+    <script>
+
+        $(document).ready(function () {
+            $('.alert-error').delay(5000).fadeOut();
+        });
+        $(document).ready(function () {
+            $('.alert-success').delay(5000).fadeOut();
+        });
+    </script>
+{% endblock %}

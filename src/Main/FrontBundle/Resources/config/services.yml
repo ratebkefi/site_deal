@@ -1,0 +1,25 @@
+parameters:
+#    main_front.example.class: Main\FrontBundle\Example
+    main_front.oauth_members.class: Main\FrontBundle\Services\OAuthMembersService
+services:
+    your.own.twig.controller_action_extension:
+        class: Main\FrontBundle\Twig\Extension\ControllerActionExtension
+        calls:
+            - [setRequest, ["@?request="]]
+        tags:
+            - { name: twig.extension }
+#    main_front.example:
+#        class: %main_front.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]
+    md5salted_encoder:
+        class: Main\FrontBundle\Service\Md5Salted
+    kernel.listener.main_front_exception_listener:
+        class: Main\FrontBundle\Listener\ExceptionListener
+        arguments: [@templating, @kernel]
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
+    client.security.interactive_login_listener:
+            class: Main\FrontBundle\Listener\AuthenticationListener
+            arguments: [@doctrine.orm.entity_manager, @security.context]
+            tags:
+                - { name: kernel.event_listener, event: security.interactive_login, method: onAuthenticationSuccess }

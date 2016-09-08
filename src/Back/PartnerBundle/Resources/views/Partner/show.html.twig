@@ -1,0 +1,557 @@
+{% extends '::baseBack.html.twig' %}
+{% block javascripts %}
+    {% javascripts '@BackPartnerBundle/Resources/public/js/*' %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    <script type="text/javascript">
+
+        $(function () {
+            var that = this;
+            $("#jRate").jRate({
+                startColor: '#f6b7cc',
+                endColor: '#e2007a',
+                width: 60,
+                height: 60,
+                {% if  app.user.roles[0]== 'DAF' %}
+                readOnly: true,
+            {% endif %}
+                rating: {{ rate }},
+                precision: 1,
+                min: 0,
+                max: 5,
+
+                onSet: function (rating) {
+
+                    $.ajax({
+                        type: "POST",
+                        url: "{{ path('user_vote_partner') }}",
+                        data: "rate=" + rating + "&voter={{ app.user.id }}&partner={{ entity.id }}",
+                        success: function (msg) {
+                            if (msg == 'true') {
+                                $('#rater').html('Votre Note est de ' + rating);
+                                $('#rater').attr('class', 'label label-success');
+
+                            }
+                        }
+                    });
+                }
+            });
+
+        });
+    </script>
+{% endblock %}
+{% block body -%}
+    <!-- ==================== PAGE CONTENT ==================== -->
+    <div class="content">
+        <!-- ==================== WIDGETS CONTAINER ==================== -->
+        <div class="container-fluid">
+            {% set partnerid=entity.id %}
+            {% if app.user.roles[0]!='SERVICECLIENT' and app.user.roles[0]!='REDACTEUR' and app.user.roles[0]!='CHEFSERVICECLI' and app.user.roles[0]!='DAF'  and app.user.roles[0]!= 'FINANCIER' %}
+                <a href="{{ path('dash_partner_update', { 'id': entity.id }) }}" class="btn btn-info"><i
+                            class="icon-pencil"></i> Modifier</a>
+            {% endif %}
+
+
+            <a href="{{ path('back_partner') }}" class="btn btn-inverse pull-right"><i class="icon-list"></i> Liste</a>
+
+
+            <!-- ==================== END OF ROW ==================== -->
+            <div class="row-fluid"></div>
+            <div class="row-fluid">
+
+                <div class="span4">
+                    {% if testvoter==1 %}
+                        <span class="label label-success" id="rater">Votre note est de {{ rateuser }}/5</span>
+                    {% else %}
+                        <span class="label label-important" id="rater">Vous n'avez pas encore noté ce partenaire</span>
+                        <br>
+                    {% endif %}
+                    <div id="jRate"></div>
+                </div>
+                <div class="span8">
+
+                </div>
+            </div>
+			{% for type, flashMessages in app.session.flashbag.all() %}
+                        {% for flashMessage in flashMessages %}
+                            <br/>
+                            <div class="alert {{ type }}">
+                                <button data-dismiss="alert" class="close" type="button">×</button>
+                                {{ flashMessage|trans }}
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
+            <div class="row-fluid">
+
+                <div class="span4">
+                    <!-- ==================== DEFAULT TABLE HEADLINE ==================== -->
+                    <div class="containerHeadline">
+                        <i class="icon-table"></i>
+
+                        <h2>Partenaire : {{ entity.name }}</h2>
+                    </div>
+                    <!-- ==================== END OF DEFAULT TABLE HEADLINE ==================== -->
+                    <!-- ==================== DEFAULT TABLE FLOATING BOX ==================== -->
+                    <div class="floatingBox table">
+                        <div class="container-fluid">
+                            <table class="table table-bordered">
+                                <tbody>
+
+                                <tr>
+                                    <th>Banque</th>
+                                    <td>{{ entity.bank }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Agence</th>
+                                    <td>{{ entity.agency }}</td>
+                                </tr>
+                                <tr>
+                                    <th>RIB</th>
+                                    <td>{{ entity.rib }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Adresse</th>
+                                    <td>{{ entity.address }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Téléphone</th>
+                                    <td>{{ entity.phone }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Logo</th>
+                                    <td>{% if entity.profilePicturePath!="" %}<img
+                                            src="{{ asset('uploads/user/'~entity.profilePicturePath) }}"
+                                            width="200" />{% endif %}</td>
+                                </tr>
+                                <tr>
+                                    <th>Site Web</th>
+                                    <td>{{ entity.webSite }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Page facebook</th>
+                                    <td><a href="{{ entity.fbpage }}" target="_blank">{{ entity.fbpage }}</a></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="span4">
+                    <!-- ==================== DEFAULT TABLE HEADLINE ==================== -->
+                    <div class="containerHeadline">
+                        <i class="icon-building"></i>
+
+                        <h2>Points de vente : {{ entity.name }}</h2>
+                    </div>
+                    <!-- ==================== END OF DEFAULT TABLE HEADLINE ==================== -->
+                    <!-- ==================== DEFAULT TABLE FLOATING BOX ==================== -->
+                    <div class="floatingBox table">
+                        <div class="container-fluid">
+                            <a href="{{ path('dash_sellingpoint_add',{ 'partid': entity.id }) }}">
+                                {% if app.user.roles[0]!='SERVICECLIENT' and app.user.roles[0]!='REDACTEUR' and app.user.roles[0]!='CHEFSERVICECLI' and app.user.roles[0]!='DAF'  and app.user.roles[0]!= 'FINANCIER' %}
+                                    <button class="btn btn-primary" type="button">Ajouter un point de vente</button>
+                                {% endif %}
+                            </a>
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>Point de vente</th>
+                                    <th width="25%">Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for listPointDeVente in pointDeVente %}
+                                    <tr>
+                                        <td>{{ listPointDeVente.name }}</td>
+
+                                        <td>
+                                            <div class="btn-toolbar" style="margin: 0;">
+                                                <div class="btn-group">
+                                                    <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                                        Action <span
+                                                                class="caret"></span></button>
+                                                    <ul class="dropdown-menu pull-right">
+
+                                                        <li>
+                                                            <a href="{{ path('dash_sellingpoint_show', { 'id': listPointDeVente.id ,'partid':entity.id}) }}">Afficher</a>
+                                                        </li>
+
+
+                                                        {% if app.user.roles[0]!='SERVICECLIENT' and app.user.roles[0]!='REDACTEUR' and app.user.roles[0]!='CHEFSERVICECLI' and app.user.roles[0]!='DAF'  and app.user.roles[0]!= 'FINANCIER'  %}
+                                                            <li>
+                                                                <a href="{{ path('dash_sellingpoint_update', { 'id': listPointDeVente.id,'partid':entity.id }) }}">Modifier</a>
+                                                            </li>
+                                                        {% endif %}
+                                                        {% if app.user.roles[0]=='ROLE_SUPER_ADMIN' %}
+                                                            <li>
+                                                                <a href="javascript:confirmdeletbox('{{ path('dash_sellingpoint_delete', { 'id': listPointDeVente.id,'partid':entity.id }) }}')">Supprimer</a>
+                                                            </li>
+                                                        {% endif %}
+
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="span4">
+                    <!-- ==================== DEFAULT TABLE HEADLINE ==================== -->
+                    <div class="containerHeadline">
+                        <i class="icon-group"></i>
+
+                        <h2>Contact : {{ entity.name }}</h2>
+                    </div>
+                    <!-- ==================== END OF DEFAULT TABLE HEADLINE ==================== -->
+                    <!-- ==================== DEFAULT TABLE FLOATING BOX ==================== -->
+                    <div class="floatingBox table">
+                        <div class="container-fluid">
+                            {% if app.user.roles[0]!='SERVICECLIENT' and app.user.roles[0]!='REDACTEUR' and app.user.roles[0]!='CHEFSERVICECLI' and app.user.roles[0]!='DAF'  and app.user.roles[0]!= 'FINANCIER' %}
+                            <a href="{{ path('dash_contact_partner_add',{ 'partid': entity.id }) }}">
+                                <button class="btn btn-primary" type="button">Ajouter un contact</button>
+                            </a>
+                            {% endif %}
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>Prénom</th>
+                                    <th>Nom</th>
+                                    <th>Contact principal</th>
+                                    <th>Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for contact in contact %}
+                                    <tr>
+                                        <td>{{ contact.firstname }}</td>
+                                        <td>{{ contact.lastname }}</td>
+                                        <td>{% if contact.principale %} Oui {% else %} Non {% endif %}</td>
+
+                                        <td>
+                                            <div class="btn-toolbar" style="margin: 0;">
+                                                <div class="btn-group">
+                                                    <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                                        Action <span
+                                                                class="caret"></span></button>
+                                                    <ul class="dropdown-menu pull-right">
+
+                                                        <li>
+                                                            <a href="{{ path('dash_contact_partner_show', { 'id': contact.id ,'partid':entity.id}) }}">Afficher </a>
+                                                        </li>
+
+                                                        {% if app.user.roles[0]!='SERVICECLIENT' and app.user.roles[0]!='REDACTEUR' and app.user.roles[0]!='CHEFSERVICECLI' and app.user.roles[0]!='DAF'  and app.user.roles[0]!= 'FINANCIER'  %}
+                                                            <li>
+                                                                <a href="{{ path('dash_contact_partner_update', { 'id': contact.id,'partid':entity.id }) }}">Modifier</a>
+                                                            </li>
+                                                        {% endif %}
+                                                        {% if app.user.roles[0]=='ROLE_SUPER_ADMIN' %}
+
+                                                            <li>
+                                                                <a href="javascript:confirmdeletbox('{{ path('dash_contact_partner_delete', { 'id': contact.id,'partid':entity.id }) }}')">Supprimer</a>
+                                                            </li>
+                                                        {% endif %}
+
+                                                    </ul>
+                                                </div>
+                                            </div>
+
+
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="row-fluid">
+
+
+                <div class="span12">
+                    <!-- ==================== DEFAULT TABLE HEADLINE ==================== -->
+                    <div class="containerHeadline">
+                        <i class="icon-asterisk"></i>
+
+                        <h2>Protocole : {{ entity.name }}</h2>
+                    </div>
+                    <!-- ==================== END OF DEFAULT TABLE HEADLINE ==================== -->
+                    <!-- ==================== DEFAULT TABLE FLOATING BOX ==================== -->
+                    <div class="floatingBox table">
+                        <div class="container-fluid">
+                            {% set testprotocole=1 %}
+                            {% for ListProtocol in protocol %}
+                                {% if ListProtocol.status==1 and ("now"|date('Ymd')  < ListProtocol.datep|date_modify("+1 year")|date('Ymd')) %}
+                                    {% set testprotocole=0 %}
+                                {% endif %}
+                            {% endfor %}
+
+                            {% if testprotocole==1 %}
+
+                            {% if app.user.roles[0]!='SERVICECLIENT' and app.user.roles[0]!='REDACTEUR' and app.user.roles[0]!='CHEFSERVICECLI' and app.user.roles[0]!='DAF'  and app.user.roles[0]!= 'FINANCIER' %}
+
+                                <a href="{{ path('add_protocol_manager_partner',{'id':entity.id}) }}">
+                                    <button class="btn btn-primary" type="button">Ajouter un protocole</button>
+                                </a>
+                            {% endif %}
+                            {% endif %}
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Actif?</th>
+                                    <th>Partenaire</th>
+                                    <th>Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for ListProtocol in protocol %}
+                                    {% if (ListProtocol.status == 0) or ("now"|date('Ymd')  > ListProtocol.datep|date_modify("+1 year")|date('Ymd')) %}
+                                        <tr class="alert alert-error"> {% else %}  <tr class="alert alert-success">{% endif %}
+
+                                    <td>{{ ListProtocol.datep|date("d/m/Y") }}</td>
+                                    <td>{% if ListProtocol.status == 1 %}Activé{% else %}Désactivé{% endif %}
+                                        {% if "now"|date('Ymd')  > ListProtocol.datep|date_modify("+1 year")|date('Ymd') %}| Expiré{% endif %}
+                                        {% if (ListProtocol.status == 0) or ("now"|date('Ymd')  > ListProtocol.datep|date_modify("+1 year")|date('Ymd')) %}
+
+                                        {% else %}
+                                            {# endDate and startDate are strings or DateTime objects #}
+                                            {% set startDate =  "now"|date('Y-m-d') %}
+                                            {% set endDate =  ListProtocol.datep|date_modify("+1 year")|date('Y-m-d') %}
+                                            {% set difference = date(endDate).diff(date(startDate)) %}
+                                            {% set leftDays = difference.days %}
+                                            {% if leftDays == 1 %}
+                                                | Expire dans   1 day
+                                            {% else %}
+                                                |  Expire dans   {{ leftDays }} Jour
+                                            {% endif %}
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ ListProtocol.user.name }}</td>
+                                    <td>
+                                        <div class="btn-toolbar" style="margin: 0;">
+                                            <div class="btn-group">
+                                                <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                                    Action <span
+                                                            class="caret"></span></button>
+                                                <ul class="dropdown-menu pull-right">
+
+
+
+                                                    <li>
+                                                        <a href="{{ path('dash_protocol_show', { 'id': ListProtocol.id,'partner': entity.id  }) }}">Afficher</a>
+                                                    </li>
+                                                    <li>
+                                                        <a target="_blank"
+                                                           href="{{ path('print_protocol_manager', { 'id': ListProtocol.id }) }}">Protocole
+                                                            D’accord</a>
+                                                    </li>
+
+                                                    {% if app.user.roles[0]!='SERVICECLIENT' and app.user.roles[0]!='REDACTEUR' and app.user.roles[0]!='CHEFSERVICECLI'  and app.user.roles[0]!='DAF'   and app.user.roles[0]!= 'FINANCIER' %}
+
+                                                        <li>
+                                                            <a href="{{ path('update_protocol_manager', { 'id': ListProtocol.id,'partner': entity.id  }) }}">Modifier</a>
+                                                        </li>
+                                                    {% endif %}
+                                                    {% if app.user.roles[0]=='ROLE_SUPER_ADMIN' %}
+
+                                                        <li>
+                                                            <a href="javascript:confirmdeletbox('{{ path('delete_protocol_manager', { 'id': ListProtocol.id,'partner': entity.id  }) }}')">Supprimer</a>
+                                                        </li>
+                                                    {% endif %}
+
+                                                </ul>
+                                            </div>
+                                        </div>
+
+
+                                    </td>
+                                    </tr>
+                                    <tr>
+                                        <td>&nbsp;</td>
+                                        <td colspan="3">
+                                            <h5>Liste des annexes</h5>
+                                            {% if app.user.roles[0]!='SERVICECLIENT' and app.user.roles[0]!='REDACTEUR' and app.user.roles[0]!='CHEFSERVICECLI'  and app.user.roles[0]!='DAF'  and app.user.roles[0]!= 'FINANCIER'  %}
+                                            <a href="{{ path('add_annexe_manager', { 'protocol_id': ListProtocol.id,'partner': entity.id  }) }}">
+                                                <button class="btn btn-primary" type="button">Ajouter une annexe
+                                                </button>
+                                            </a>
+{% endif %}
+                                            <table class="table blue">
+                                                <thead>
+                                                <tr class="alert alert-info">
+                                                    <th>Objet</th>
+                                                    <th>Minimum de coupons</th>
+                                                    <th>Réservation</th>
+                                                    <th>Remarques</th>
+                                                    <th>Date de publication</th>
+                                                    <th>Commission fixe (montant)</th>
+                                                    <th>Commission Variable (%)</th>
+                                                    <th>Protocole</th>
+                                                    <th>Planning</th>
+                                                    <th>Actions</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                {% for entity in ListProtocol.annexe %}
+                                                    <tr class="{% if entity.reference|length ==0 %} alert alert-error {% else %} alert alert-info {% endif %} ">
+                                                        <td>{{ entity.object| raw }}</td>
+                                                        <td>{{ entity.minCoupon }}</td>
+                                                        <td>{% if entity.booking ==1 %} Oui {% else %} Non {% endif %} </td>
+                                                        <td>{{ entity.remark| raw }}</td>
+
+                                                        <td>{% if entity.releaseDate %}{{ entity.releaseDate|date('d/m/Y') }}{% endif %}</td>
+                                                        <td>{{ entity.fixedCommission }}</td>
+                                                        <td>{{ entity.variableCommission }} %</td>
+                                                        <td>{{ entity.protocol| raw }}</td>
+                                                        <td>{{ entity.planning| raw }}</td>
+                                                        <td>
+                                                            <div class="btn-toolbar" style="margin: 0;">
+                                                                <div class="btn-group">
+                                                                    <button class="btn dropdown-toggle"
+                                                                            data-toggle="dropdown">
+                                                                        Action <span
+                                                                                class="caret"></span></button>
+                                                                    <ul class="dropdown-menu pull-right">
+
+
+                                                                        <li>
+                                                                            <a href="{{ path('dash_annexe_show', { 'id': entity.id ,'protocol_id': ListProtocol.id,'partner': partnerid }) }}">Afficher</a>
+                                                                        </li>
+
+                                                                        {% if app.user.roles[0]!='SERVICECLIENT' and app.user.roles[0]!='REDACTEUR' and app.user.roles[0]!='CHEFSERVICECLI'  and app.user.roles[0]!='DAF'  and app.user.roles[0]!= 'FINANCIER'  %}
+                                                                            <li>
+                                                                                <a href="{{ path('update_annexe_manager', { 'id': entity.id ,'protocol_id': ListProtocol.id,'partner': partnerid }) }}">Modifier</a>
+                                                                            </li>
+                                                                        {% endif %}
+                                                                        <li>
+                                                                            <a target="_blank"
+                                                                               href="{{ path('pdf_annexe_manager', { 'id': entity.id ,'protocol_id': ListProtocol.id}) }}">Annexe
+                                                                                au Protocole D’accord </a>
+                                                                        </li>
+																		<li>
+                                                                            <a target="_blank"
+                                                                               href="{{ path('pdf_annexepar_manager', { 'id': entity.id ,'protocol_id': ListProtocol.id}) }}">Annexe
+                                                                                au Protocole D’accord Partenaire</a>
+                                                                        </li>
+																		
+
+
+                                                                        {% if app.user.roles[0]=='ROLE_SUPER_ADMIN' %}
+
+                                                                            <li>
+                                                                                <a href="javascript:confirmdeletbox('{{ path('delete_annexe_manager', { 'id': entity.id ,'protocol_id': ListProtocol.id,'partner': partnerid }) }}')">Supprimer</a>
+                                                                            </li>
+                                                                        {% endif %}
+
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+
+
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="alert alert-dismissable">
+                                                        <td>&nbsp;</td>
+                                                        <td colspan="11">
+                                                            <h5>Liste des references</h5>
+
+                                                            {% if app.user.roles[0]!='SERVICECLIENT' and app.user.roles[0]!='REDACTEUR' and app.user.roles[0]!='CHEFSERVICECLI'  and app.user.roles[0]!='DAF'  and app.user.roles[0]!= 'FINANCIER' %} <a href="{{ path('add_reference_manager',{'protocol_id':ListProtocol.id,'annexe_id':entity.id,'partner': partnerid }) }}">
+                                                                <button class="btn btn-primary" type="button">Ajouter
+                                                                    une
+                                                                    référence
+                                                                </button>
+                                                            </a>{% endif %}
+
+                                                            <table class="table">
+                                                                <thead>
+                                                                <tr class="alert alert-dismissable">
+                                                                    <th>Titre</th>
+                                                                    <th>Prix boutique</th>
+                                                                    <th>Prix BIGDeal</th>
+                                                                    <th>Stock</th>
+
+                                                                    <th>Livraison</th>
+                                                                    <th>Annexe</th>
+                                                                    <th>Actions</th>
+                                                                </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                {% for entity1 in entity.reference %}
+                                                                    <tr class="alert alert-dismissable">
+                                                                        <td>{{ entity1.title }}</td>
+                                                                        <td>{{ entity1.shopPrice }}</td>
+                                                                        <td>{{ entity1.bigdealPrice }}</td>
+                                                                        <td>{{ entity1.maxCoupon }}</td>
+
+                                                                        <td>{% if entity1.shipping ==1 %} Oui {% else %} Non {% endif %}</td>
+                                                                        <td>{{ entity1.annexe }}</td>
+                                                                        <td>
+                                                                            <div class="btn-toolbar" style="margin: 0;">
+                                                                                <div class="btn-group">
+                                                                                    <button class="btn dropdown-toggle"
+                                                                                            data-toggle="dropdown">
+                                                                                        Action <span
+                                                                                                class="caret"></span>
+                                                                                    </button>
+                                                                                    <ul class="dropdown-menu pull-right">
+
+                                                                                        <li>
+                                                                                            <a href="{{ path('dash_reference_show', { 'id': entity1.id ,'protocol_id':ListProtocol.id,'annexe_id':entity.id,'partner': partnerid }) }}">Afficher</a>
+                                                                                        </li>
+
+                                                                                        {% if app.user.roles[0]!='SERVICECLIENT' and app.user.roles[0]!='REDACTEUR' and app.user.roles[0]!='CHEFSERVICECLI'  and app.user.roles[0]!= 'FINANCIER'   and app.user.roles[0]!= 'DAF'  and app.user.roles[0]!= 'FINANCIER'  %}
+                                                                                            <li>
+                                                                                                <a href="{{ path('update_reference_manager', { 'id': entity1.id ,'protocol_id':ListProtocol.id,'annexe_id':entity.id,'partner': partnerid}) }}">Modifier</a>
+                                                                                            </li>
+                                                                                        {% endif %}
+                                                                                        {% if app.user.roles[0]=='ROLE_SUPER_ADMIN' or app.user.roles[0]=='COMMERCIAL' or app.user.roles[0]=='PALAINER' %}
+
+                                                                                            <li>
+                                                                                                <a href="javascript:confirmdeletbox('{{ path('delete_reference_manager', { 'id': entity1.id ,'protocol_id':ListProtocol.id,'annexe_id':entity.id,'partner': partnerid }) }}')">Supprimer</a>
+                                                                                            </li>
+                                                                                        {% endif %}
+
+                                                                                    </ul>
+                                                                                </div>
+                                                                            </div>
+
+
+                                                                        </td>
+                                                                    </tr>
+                                                                {% endfor %}
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4"></td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ==================== END OF WIDGETS CONTAINER ==================== -->
+    </div>
+    <!-- ==================== END OF PAGE CONTENT ==================== -->
+{% endblock %}

@@ -1,0 +1,3 @@
+pages_detail:
+    path: /page/{name}.html
+    defaults: { _controller: MainFrontBundle:Pages:index}

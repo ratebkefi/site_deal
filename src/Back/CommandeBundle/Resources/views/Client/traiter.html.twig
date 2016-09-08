@@ -1,0 +1,180 @@
+{% extends '::baseBack.html.twig' %}
+{% block body -%}
+    <!-- ==================== PAGE CONTENT ==================== -->
+    <div class="content">
+        <!-- ==================== WIDGETS CONTAINER ==================== -->
+        <div class="container-fluid">
+            <!-- ==================== END OF ROW ==================== -->
+            <div class="row-fluid">
+                <div class="span12">
+                    <!-- ==================== DEFAULT TABLE HEADLINE ==================== -->
+                    <div class="containerHeadline">
+                        <i class="icon-table"></i><h2>Client : {{ client.fname }} {{ client.name }}</h2>
+                    </div>
+                    <!-- ==================== END OF DEFAULT TABLE HEADLINE ==================== -->
+                    <!-- ==================== DEFAULT TABLE FLOATING BOX ==================== -->
+                    <div class="floatingBox table">
+                        <div class="container-fluid">
+                            <table class="table table-bordered">
+                                <tbody>
+
+                                <tr>
+                                    <th>Client :</th>
+                                    <td>{{ client.fname }} {{ client.name }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Sexe :</th>
+                                    <td>{{ client.sex }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Date de naissance :</th>
+                                    <td>{% if client.datebirth is not null %} {{ client.datebirth|date('d-m-Y') }}{% endif%}</td>
+                                </tr>
+                                <tr>
+                                    <th>Téléphone :</th>
+                                    <td>{{ client.phone }}</td>
+                                </tr>
+                                {% for item in client.adresses %}
+                                    <tr>
+                                        <th>Adresse {{ loop.index }} :  </th>
+                                        {% if item.id == commande.adresse.id  %}
+                                        <td><b>{{ item.adress }}</b></td>
+                                        {% else %}
+                                        <td>{{ item.adress }}</td>
+                                        {%  endif %}
+                                    </tr>
+                                    <tr>
+
+                                        <th>Indcation Adresse {{ loop.index }} :</th>
+                                        {% if item.id == commande.adresse.id  %}
+                                        <td><b>{{ item.indcation }}</b></td>
+                                        {% else %}
+                                         <td>{{ item.indcation }}</td>
+                                        {%  endif %}
+                                    </tr>
+                                {% endfor %}
+                                <tr>
+                                    <th>Facebook ID :</th>
+                                    <td>{{ client.fbid }}</td>
+                                </tr>
+                                <tr>
+                                    <th>C.I.N :</th>
+                                    <td>{{ client.cin }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Date d'inscription :</th>
+                                    <td>{{ client.dcr|date('d-m-Y') }}</td>
+                                </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+             </div>
+          <div class="row-fluid">
+            <div class="span12">
+                <!-- ==================== DEFAULT TABLE HEADLINE ==================== -->
+                <div class="containerHeadline">
+                    <i class="icon-table"></i><h2>Commande :</h2>
+                </div>
+                <!-- ==================== END OF DEFAULT TABLE HEADLINE ==================== -->
+                <!-- ==================== DEFAULT TABLE FLOATING BOX ==================== -->
+                <div class="floatingBox table">
+                    <div class="container-fluid">
+
+                        <table class="table table-bordered">
+                            <tbody>
+                            <tr>
+                                <th>N° commande</th>
+                                <td>{{ commande.id }}</td>
+                            </tr>
+                            <tr>
+                                <th>Deal :</th>
+                                <td>{{ commande.deal }}</td>
+                            </tr>
+
+                            <tr>
+                                <th>Date création :</th>
+                                <td>{{ commande.dcr|date("d/m/Y H:i:s") }}</td>
+                            </tr>
+                            <tr>
+                                <th>Reference :</th>
+                                <td>{{ commande.reference.title }}</td>
+                            </tr>
+                            <tr>
+                                <th>Total commande :</th>
+                                <td>{{ commande.reference.bigdealPrice *  commande.qte + 3 }} DT</td>
+                            </tr>
+                            <tr>
+                                <th>Quantité :</th>
+                                <td>{{ commande.qte }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+
+                <div class="row-fluid">
+                <div class="span12">
+                    <!-- ==================== DEFAULT TABLE HEADLINE ==================== -->
+                    <div class="containerHeadline">
+                        <i class="icon-table"></i>
+
+                        <h2>Liste des coupons :</h2>
+                    </div>
+                    <!-- ==================== END OF DEFAULT TABLE HEADLINE ==================== -->
+
+                    <!-- ==================== DEFAULT TABLE FLOATING BOX ==================== -->
+                    <div class="floatingBox table">
+                        <div class="container-fluid">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>Code </th>
+                                    <th>Prix</th>
+                                    <th>Client</th>
+                                    <th>Etat de vente</th>
+                                    <th>Etat de reception</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for entity in entities %}
+                                    <tr>
+                                        <td>{{ entity.code }}</td>
+                                        <td>{{ entity.price }} <sup>TND</sup></td>
+                                        <td>{{ entity.client }}</td>
+                                        <td>{{ entity.vendu|getVenduCoupon }}</td>
+                                        <td>{{ entity.recu|getRecuCoupon }}</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+                </div>
+
+
+                <div class="floatingBox table">
+                    <div class="container-fluid">
+                        <div class="span12">
+                                <a href="{{ path('back_client_livraison') }}" class="btn btn-primary">Fermer</a>
+                                <a href="{{ path('coupon_commande_approuver', { 'id': commande.id }) }}" class="btn btn-success">Approuver la commande</a>
+                                <a href="{{ path('coupon_commande_annule', { 'id': commande.id }) }}" class="btn btn-danger">Annuler la commande</a>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+            </div>
+
+        <!-- ==================== END OF WIDGETS CONTAINER ==================== -->
+    </div>
+    <!-- ==================== END OF PAGE CONTENT ==================== -->
+{% endblock %}

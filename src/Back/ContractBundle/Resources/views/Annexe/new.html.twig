@@ -1,0 +1,298 @@
+{% extends '::baseBack.html.twig' %}
+{% form_theme form 'form_table_layout.html.twig' %}
+{% block body -%}
+    <div class="content">
+        <div class="container-fluid">
+
+            <!-- ==================== COMMON ELEMENTS ROW ==================== -->
+            <div class="row-fluid">
+
+                <!-- ==================== TEXT INPUTS HEADLINE ==================== -->
+                <div class="containerHeadline">
+                    <i class="icon-edit"></i>
+
+                    <h2>Ajouter une annexe</h2>
+                </div>
+                <!-- ==================== END OF TEXT INPUTS HEADLINE ==================== -->
+                <!-- ==================== TEXT INPUTS FLOATING BOX ==================== -->
+                <div class="floatingBox">
+                    <div class="container-fluid">
+
+                        {% if id is defined %}
+    <form method="POST" class=" contentForm"
+    action="{{ path('update_annexe_manager', { 'id': id, 'protocol_id': protocol_id,'partner':partner }) }}">
+{% else %}
+    <form class=" contentForm" method="POST"
+    action="{{ path('add_annexe_manager', { 'protocol_id': protocol_id,'partner':partner }) }}">
+{% endif %}
+                                <div class="span8">
+                                    {{ form_row(form.object) }}
+                                    {{ form_row(form.minCoupon, {'attr': {'min': '-1'}}) }}
+                                    {{ form_row(form.quota, {'attr': {'min': '1'}}) }}
+                                    {{ form_row(form.nbrGratuite, {'attr': {'min': '0'}}) }}
+                                    {{ form_row(form.booking) }}
+                                    {{ form_row(form.remark,{'attr':{'class':'tinymce'}}) }}
+                                    <div class="control-group">
+                                        <label class="control-label">Packs</label>
+                                        <div class="controls">
+                                            {{ form_widget(form.vedio,{'attr':{'class':'css-checkbox','for':'back_contractbundle_annexe_vedio'}}) }}
+                                            <label class="css-label" for="back_contractbundle_annexe_vedio">Vidéo</label>
+                                            {{ form_widget(form.image,{'attr':{'class':'css-checkbox','for':'back_contractbundle_annexe_image','id':'back_contractbundle_annexe_image'}}) }}
+                                            <label class="css-label" for="back_contractbundle_annexe_image">Image</label>
+
+                                        </div>
+                                    </div>
+
+                                    {% if id is not defined %}
+    <a href="javascript:addrow();">Ajouter une autre date</a>
+{% endif %}
+                                    <div class="span12" style="margin-left: 0">
+                                        <div class="span4">{{ form_row(form.releaseDate, {'attr':{'class': 'datepickerField'}}) }}</div>
+                                        <div class="span4"> {{ form_row(form.variableCommission) }}</div>
+                                    </div>
+
+
+                                    {% set i=2 %}
+                                    <div id="contdate" style="display: none;">
+                                        <div class="span12" id="bloc{{ i }}">
+                                            <div class="span4">
+                                                <div class="control-group ">
+                                                    <label class="control-label required"
+                                                           for="back_contractbundle_annexe_releaseDate">Date de publication {{ i }}</label>
+
+                                                    <div class="controls">
+                                                        <input type="text" name="releaseDate[]"
+                                                               required="required" class="datepickerField"/>
+
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            <div class="span4">
+                                                <div class="control-group ">
+                                                    <label class="control-label"
+                                                           for="back_contractbundle_annexe_variableCommission">Commission variable {{ i }}</label>
+
+                                                    <div class="controls">
+                                                        <input type="text"
+                                                               name="variableCommission[]"
+                                                               value="0"/>
+                                                        <a id="fileselectbutton" title="le dernier élément sera supprimer" href="javascript:deleterow()" class="btn">
+                                                            <i class="icon-trash"></i>
+                                                        </a>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {{ form_row(form.fixedCommission) }}
+                       <!-- ==================== END OF TAB NAVIGATIION ==================== -->
+                <div class="row-fluid">
+                    <div class="span12">
+                     <div class="containerHeadline">
+                            <h2>Voulez-vous lier cette annexe à un planning?</h2>
+
+                            </div>
+                            <div class="floatingBox">
+                                <div class="container-fluid">
+
+                                <div class="span4">
+                                <div class="control-group">
+                                        <label class="control-label">Région</label>
+
+                                        <div class="controls">
+                                            <select name="region" id="region">
+                                                <option value=""></option>
+
+                                                {% for item in region %}
+    <option value="{{ item.id }}">{{ item.name }}</option>
+{% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    </div>
+                                    <div class="span4">
+                                    <div class="control-group">
+                                        <label class="control-label">Catégorie</label>
+
+                                        <div class="controls">
+                                            <select name="category" id="category">
+                                                <option value="">Choisissez une catégorie</option>
+                                                {% for item in category %}
+    {% if item.category|length>0 %}
+        <optgroup label="{{ item.name }}">
+            {% for item2 in item.category %}
+                <option value="{{ item2.id }}">{{ item2.name }}</option>
+            {% endfor %}
+        </optgroup>
+    {% else %}
+        <option value="{{ item.id }}">{{ item.name }}</option>
+    {% endif %}
+{% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    </div>
+<div class="span4">
+                                    {{ form_row(form.planning) }}
+                                </div>
+                            </div>
+                            </div>
+                            </div>
+                    </div>
+
+
+
+
+
+                                    <input type="hidden" name="back_contractbundle_annexe[protocol]"
+                                           value="{{ protocol_id }}">
+
+                                    <div class="formFooter">
+                                        <button type="submit" class="btn btn-success"><i class="icon-ok"> </i> Valider
+                                        </button>
+                                        <button type="reset" class="btn btn-danger"><i class="icon-remove"> </i>
+                                            Effacer
+                                        </button>
+                                        <a href="{{ path('dash_partner_show', { 'id': partner }) }}">
+                                            <button class="btn btn-inverse" type="button"><i class="icon-list"></i>
+                                                Fiche Partenaire
+                                            </button>
+                                        </a>
+                                        {{ form_widget(form._token) }}
+                                    </div>
+
+
+                                </div>
+                                <div class="span4">
+                                    {% if id is defined %}
+    <h2>Liste des questions</h2>
+    {% for rep in question %}
+
+
+        <div class="control-group">
+            <label class="control-label">{{ rep.question }}</label>
+
+            <div class="controls">
+                {{ render(controller('BackContractBundle:Annexe:Reponse', { 'id': id, 'question': rep.id })) }}
+
+            </div>
+
+        </div>
+    {% endfor %}
+
+{% else %}
+    {% for rep in question %}
+
+
+        <div class="control-group">
+            <label class="control-label">{{ rep.question }}</label>
+
+            <div class="controls">
+                {{ render(controller('BackContractBundle:Annexe:Reponse', { 'id': 0, 'question': rep.id })) }}
+
+
+            </div>
+
+        </div>
+    {% endfor %}
+{% endif %}
+                                </div>
+                            </form>
+                            <!-- ==================== END OF TEXT INPUTS FLOATING BOX ==================== -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+    {% block javascripts %}
+
+
+        <!-- masked inputs -->
+        <script src="{{ asset('RessourcesBack/js/lib/jquery-inputmask/jquery.inputmask.min.js') }}"></script>
+        <script src="{{ asset('RessourcesBack/js/lib/jquery-inputmask/jquery.inputmask.extensions.js') }}"></script>
+        <script src="{{ asset('RessourcesBack/js/lib/jquery-inputmask/jquery.inputmask.date.extensions.js') }}"></script>
+
+
+        <script>
+            $(".datepickerField").inputmask("date");
+            var bloc = 2;
+            var htmlrow = $("#contdate").html();
+            $(function () {
+                $("#contdate").html("");
+                $("#region").change(function () {
+                    if ($('#region').val() != "") {
+                        $.ajax({
+                            type: "POST",
+                            dataType: "json",
+                            async: false,
+                            url: "{{ path('back_ajx_get_planing') }}",
+                            data: "region=" + $('#region').val() + "&categorie=" + $('#category').val(),
+                            success: function (data) {
+                                console.log(data)
+                                html = '<option value=""></option>';
+                                $.each(data, function (key, val) {
+                                    html += '<option value="' + val.id + '">' + val.name + '</option>';
+
+                                });
+
+                                $('#back_contractbundle_annexe_planning').html(html)
+                            }
+                        });
+                    }
+                });
+                $("#category").change(function () {
+                    if ($('#category').val() != "") {
+
+                        $.ajax({
+                            type: "POST",
+                            dataType: "json",
+                            async: false,
+                            url: "{{ path('back_ajx_get_planing') }}",
+                            data: "region=" + $('#region').val() + "&categorie=" + $('#category').val(),
+                            success: function (data) {
+
+                                console.log(data)
+                                html = '<option value=""></option>';
+                                $.each(data, function (key, val) {
+                                    html += '<option value="' + val.id + '">' + val.name + '</option>';
+
+                                });
+                                $('#back_contractbundle_annexe_planning').html(html)
+                            }
+                        });
+                    }
+                });
+            })
+            function addrow() {
+
+                if (bloc <= 8) {
+                    newhtml = "";
+                    if (bloc == 2) {
+                        $("#contdate").attr('style', 'display:bock;')
+                    }
+                    newhtml = replaceAll('bloc2', 'bloc' + bloc, htmlrow);
+                    newhtml = replaceAll('Date de publication 2', 'Date de publication ' + bloc, newhtml);
+                    newhtml = replaceAll('Commission variable 2', 'Commission variable ' + bloc, newhtml);
+                    //console.log(newhtml);
+                    $("#contdate").append(newhtml);
+                    $("#bloc" + bloc).attr('style', 'margin-left:0;');
+                    $(".datepickerField").inputmask("date");
+                    bloc++;
+
+                }
+            }
+            function replaceAll(find, replace, str) {
+
+                return str.replace(new RegExp(find, 'g'), replace);
+            }
+            function deleterow() {
+                $("#bloc" + (bloc - 1)).remove();
+                bloc--;
+            }
+        </script>
+    {% endblock %}
+

@@ -1,0 +1,19 @@
+<h1> Annexe de Facture</h1>
+<p>Cette Facture a été éditée suite à votre demande après récéption de <strong>{{ nbcoupon }}</strong> coupon(s) du deal <strong>{{ invoice.deal }}</strong> à la date {{ "now"|date('d/m/Y') }}</p>
+<p><strong>Gratuité</strong> = Nombre de coupons gratuits </p>
+<p><strong>Nombre de coupons</strong> = Coupons reçus -  Coupons remboursés - Coupons en attente de remboursement </p>
+<p><strong>Chiffre d'affaire</strong> = (Nombre de coupons X Prix) - (Nombre de coupons gratuits X prix minimum de référence)</p>
+<p><strong>Commission (en TTC)</strong> = Commission Fixe + ( Chiffre d'affaire X Commission Variable )</p>
+<p><strong>Montant dû</strong> = Chiffre d'affaire - Commission (en TTC) - Timbre fiscal </p>
+
+<p><hr></p>
+<p><strong>Gratuité</strong> = {{ coupongratuit }} </p>
+{% set nbcp= nbcoupon  - couponrenbourse - couponententerenbourse  %}
+<p><strong>Nombre de coupons</strong> = {{ nbcoupon }} - {{ couponrenbourse }} - {{ couponententerenbourse }}  = {{ nbcp }}</p>
+{% set comm = fixedCommission  +  invoice.comVariable %}
+<p><strong>Chiffre d'affaire </strong> = {{ (invoice.ca + coupongratuit * minPrice)|number_format(3, '.', ',') }} - ({{ coupongratuit }} X {{ minPrice|number_format(3, '.', ',') }}) = {{ invoice.ca|number_format(3, '.', ',')}}<sup>TND</sup></p>
+<p><strong>Commission (en TTC)</strong> = {{ fixedCommission|number_format(3, '.', ',') }} +  {{ invoice.comVariable|number_format(3, '.', ',') }}   = {{ comm|number_format(3, '.', ',') }}<sup>TND</sup></p>
+{% set MontantDu = invoice.virement  - 0.5 %}
+{% set sommeCommision = fixedCommission  + invoice.comVariable %}
+
+<p><strong>Montant dû</strong> = {{ invoice.ca|number_format(3, '.', ',') }} - {{ sommeCommision|number_format(3, '.', ',')   }} - 0.500 = {{ MontantDu|number_format(3, '.', ',')  }}  <sup>TND</sup></p>

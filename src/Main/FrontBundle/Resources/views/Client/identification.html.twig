@@ -1,0 +1,120 @@
+{% extends '::base.html.twig' %}
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ asset('public/css/enjoyhint/enjoyhint.css') }}">
+    <style>
+		.mySkip, .myNext, .mySkip:focus, .myNext:focus {
+            color: white;
+            border-color: #de0e79;
+            border-radius: 0;
+            margin-top: 10px;
+        }
+
+        .enjoyhint_close_btn {
+            display: none;
+        }
+
+        .mySkip, .mySkip:hover, .mySkip:focus {
+            background: transparent;
+        }
+
+        .myNext, .myNext:hover, .myNext:focus {
+            background: #de0e79;
+        }
+
+        .enjoy_hint_label {
+            margin-top: -11px;
+        }
+    </style>
+{% endblock %}
+{% block body %}
+ 
+    {% for type, flashMessages in app.session.flashbag.all() %}
+        {% for flashMessage in flashMessages %}
+            <br/>
+            <div class="alert {{ type }}">
+                <button data-dismiss="alert" class="close" type="button">×</button>
+                {{ flashMessage|trans }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+    <div class="authen">
+        <div class="clearfix">
+            <div class="col-md-12 title">
+                <h1 class="bold">S’identifier </h1> <span>|</span> <a class="teal" href="{{ path('inscription') }}"><span> S’inscrire</span></a>
+            </div>
+        </div>
+        <div class="row login">
+            <div class="col-md-5 text-center signin">
+                <h3 class="bold">Connectez-vous avec votre compte facebook</h3>
+                <a class="btn btn-facebook" href="{{ loginUrl }}"><i class="fa fa-facebook"></i> Se connecter</a>
+            </div>
+			<div class="vertical-spacer  hidden-xs">
+              <span>ou</span>
+            </div>
+			<div class="horizontal-spacer hidden-md hidden-sm">
+              <span>ou</span>
+            </div>
+			<div class="col-md-offset-1 col-md-6">
+				<h3 class="bold">Se connecter avec votre compte Bigdeal</h3>
+			
+				<form action="{{ path('login_check_client') }}" method="post" class="form-horizontal form">
+					{% if  error  %}
+						<div class="alert alert-danger">{% if error.message=="Bad credentials" %}Login ou mot de passe incorect {% else %}{{ error.message }}{% endif %}</div>
+					{% endif %}
+					<div class="form-group">
+						<label for="email" class="col-sm-3 control-label hidden-xs">E-mail</label>
+						<div class="col-sm-9">
+							<input type="text" placeholder= "Email" class="form-control" id="username" name="_username" value="{{ last_username }}" />
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="password" class="col-sm-3 control-label hidden-xs">Mot de passe</label>
+						<div class="col-sm-9">
+							<input type="password" id="password" name="_password" class="form-control" placeholder="Mot de passe" />
+							<br>
+
+						</div>
+                                                
+					</div>
+					<div class="form-group">
+						<div class="col-sm-offset-3 col-sm-5 col-xs-7 marg10">
+
+							<input type="checkbox" id="remember_me" name="_remember_me" value="on"/>
+							Se souvenir de moi<br>
+						</div>
+						<div class="col-sm-4 col-xs-5 marg10 pwdOublie">
+							<a href="{{ path('mot_de_pass_oublie') }}">Mot de passe oublié ?</a>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-offset-3 col-sm-9">
+							<input type="submit" value="Se connecter" class="btn btn-infos">
+						</div>
+					</div>
+				</form>
+			</div>
+        </div>
+        
+    </div>
+
+{% endblock %}
+    {% block javascripts %}
+    
+        <script language="javascript" type="text/javascript">
+            <!--
+            function popitup(url, title, w, h) {
+                var left = (screen.width/2)-(w/2);
+                var top = (screen.height/2)-(h/2);
+                return window.open(url, title, 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width='+w+', height='+h+', top='+top+', left='+left);
+            }
+
+            // -->
+            var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+	if (w > 767) {
+	  document.write('<script type="text/javascript" src="{{ asset('public/css/enjoyhint/enjoyhint.min.js') }}"><\/script>');
+	}
+	if (w > 767) {
+	  document.write('<script type="text/javascript" src="{{ asset('public/css/enjoyhint/main4.js') }}"><\/script>');
+	}
+        </script>
+    {% endblock %}

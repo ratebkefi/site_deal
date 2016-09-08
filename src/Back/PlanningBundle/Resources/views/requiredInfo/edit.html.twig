@@ -1,0 +1,60 @@
+{% extends '::baseBack.html.twig' %}
+{% block javascripts %}
+    <script>
+        $(document).ready(function () {
+            $("#back_planningbundle_requiredinfo_question").attr({
+                'data-validation': 'required'
+            });
+            $.validate();
+        });
+    </script>
+{% endblock %}
+{% block body -%}
+<div class="content">
+    <div class="container-fluid">
+
+        <!-- ==================== COMMON ELEMENTS ROW ==================== -->
+        <div class="row-fluid">
+            <div class="span12">
+                <!-- ==================== TEXT INPUTS HEADLINE ==================== -->
+                <div class="containerHeadline">
+                    <i class="icon-edit"></i><h2>Ajouter / Modifier une question</h2>
+                </div>
+                <!-- ==================== END OF TEXT INPUTS HEADLINE ==================== -->
+
+                <!-- ==================== TEXT INPUTS FLOATING BOX ==================== -->
+                <div class="floatingBox">
+                    <div class="container-fluid">
+
+                        <div class="container-fluid">
+{% if id is not defined %}
+                            <form class="form-horizontal contentForm" method="POST"
+                                  action="{{ path('add_requiredInfo_manager', { 'category_id': category_id }) }}">
+                                    {% else %}
+                                <form class="form-horizontal contentForm" method="POST"
+                                      action="{{ path('update_requiredInfo_manager',{'id' : id,'category_id': category_id}) }}">
+                                    {% endif %}                                <div class="control-group">
+                                        <label class="control-label">Question</label>
+                                        <div class="controls">
+                                            {{ form_widget(form.question) }}
+                                        </div>
+                                    </div>
+
+                                    <input type="hidden" name="back_planningbundle_requiredinfo[categoryId]" value="{{ category_id }}">
+                                    <div class="formFooter">
+                                        <button type="submit" class="btn btn-success"><i class="icon-ok"> </i> Valider</button>
+                                        <button type="reset" class="btn btn-danger"><i class="icon-remove"> </i> Effacer</button>
+                                        <a href="{{ path('back_requiredInfo', { 'category_id': category_id }) }}"><button class="btn btn-inverse" type="button"><i class="icon-list"></i> Liste</button></a>
+                                        {{ form_widget(form._token) }}
+                                    </div>
+                                </form>
+                        </div>
+
+                    </div>
+                </div>
+                <!-- ==================== END OF TEXT INPUTS FLOATING BOX ==================== -->
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

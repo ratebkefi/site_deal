@@ -1,0 +1,109 @@
+<table class="table">
+<thead>
+<tr>
+<th>#</th>
+<th>Date création</th>
+<th>Deal</th>
+<th>Reference</th>
+<th>Total commande</th>
+<th>Client</th>
+<th>Type client</th>
+<th>Tel</th>
+<th>Quantité</th>
+<th>Payer à</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+                                {% for entity in pagination %}
+                                    {% set nombreCommandeClient = nombreCommande(entity.client.id) %}
+                                    {% set prixCoupon = montantCoupon(entity.id) %}
+                                    {% set client = clientCoupon(entity.id) %}
+                                    {% if  type_client == 1 %}
+                                        {% if nombreCommandeClient <= 1 %}
+<tr class="{% if nombreCommandeClient  <= 1 %}alert alert-error{% elseif nombreCommandeClient > 1  and nombreCommandeClient <= 3 %}alert alert-info{% elseif  nombreCommandeClient > 3 %}alert alert-success{% endif %}">
+<td>{{ entity.id }}</td>
+<td>{{ entity.dcr|date("d/m/Y H:i:s") }}</td><td>{{ entity.deal }}</td><td>{{ entity.reference.title }}</td><td>{{ prixCoupon *  entity.qte }} DT</td><td>{{ client }}</td><td>
+                                                    {% if nombreCommandeClient <= 1 %}
+                                                        Nouveaux client
+                                                    {% elseif nombreCommandeClient > 1  and nombreCommandeClient <= 3 %}
+                                                        Ancien Client
+                                                    {% elseif  nombreCommandeClient > 3 %}
+                                                        Client fidéle
+                                                    {% endif %}
+</td><td>{{ entity.client.phone }}</td><td>{{ entity.qte }}</td><td>{% if entity.caisse is not null %}{{ entity.caisse.libelle }}{% endif %}</td><td>{% if entity.etat == 1 %} Payé {% elseif entity.etat==0 %} En attente {% else %} Epuisé{% endif %}</td></tr>
+                                        {% endif %}
+                                    {% endif %}
+                                    {% if  type_client == 2 %}
+                                        {% if nombreCommandeClient > 1  and nombreCommandeClient <= 3 %}
+<tr class="{% if nombreCommandeClient  <= 1 %}alert alert-error{% elseif nombreCommandeClient > 1  and nombreCommandeClient <= 3 %}alert alert-info{% elseif  nombreCommandeClient > 3 %}alert alert-success{% endif %}"><td>{{ entity.id }}</td><td>{{ entity.dcr|date("d/m/Y H:i:s") }}</td><td>{{ entity.deal }}</td>
+<td>{{ entity.reference.title }}</td><td>{{ prixCoupon *  entity.qte }} DT</td><td>{{ client }}</td><td>
+                                                    {% if nombreCommandeClient <= 1 %}
+                                                        Nouveaux client
+                                                    {% elseif nombreCommandeClient > 1  and nombreCommandeClient <= 3 %}
+                                                        Ancien Client
+                                                    {% elseif  nombreCommandeClient > 3 %}
+                                                        Client fidéle
+                                                    {% endif %}
+                                                </td>
+                                                <td>{{ entity.client.phone }}</td>
+                                                <td>{{ entity.qte }}</td>
+                                                <td>{% if entity.caisse is not null %}{{ entity.caisse.libelle }}{% endif %}
+                                                </td>
+                                                <td>{% if entity.etat == 1 %} Payé {% elseif entity.etat==0 %} En attente {% else %} Epuisé{% endif %}</td>
+                                            </tr>
+                                        {% endif %}
+                                    {% endif %}
+                                    {% if  type_client == 4 %}
+                                        {% if nombreCommandeClient > 3 %}
+                                            <tr class="{% if nombreCommandeClient  <= 1 %}alert alert-error{% elseif nombreCommandeClient > 1  and nombreCommandeClient <= 3 %}alert alert-info{% elseif  nombreCommandeClient > 3 %}alert alert-success{% endif %}">
+                                                <td>{{ entity.id }}</td>
+                                                <td>{{ entity.dcr|date("d/m/Y H:i:s") }}</td>
+                                                <td>{{ entity.deal }}</td>
+                                                <td>{{ entity.reference.title }}</td>
+                                                <td>{{ prixCoupon *  entity.qte }} DT</td>
+                                                <td>{{ client }}</td>
+                                                <td>
+                                                    {% if nombreCommandeClient <= 1 %}
+                                                        Nouveaux client
+                                                    {% elseif nombreCommandeClient > 1  and nombreCommandeClient <= 3 %}
+                                                        Ancien Client
+                                                    {% elseif  nombreCommandeClient > 3 %}
+                                                        Client fidéle
+                                                    {% endif %}
+                                                </td>
+                                                <td>{{ entity.client.phone }}</td>
+                                                <td>{{ entity.qte }}</td>
+                                                <td>{% if entity.caisse is not null %}{{ entity.caisse.libelle }}{% endif %}
+                                                </td>
+                                                <td>{% if entity.etat == 1 %} Payé {% elseif entity.etat==0 %} En attente {% else %} Epuisé{% endif %}</td>
+                                            </tr>
+                                        {% endif %}
+                                    {% endif %}
+                                    {% if  type_client == "" %}
+                                        <tr class="{% if nombreCommandeClient  <= 1 %}alert alert-error{% elseif nombreCommandeClient > 1  and nombreCommandeClient <= 3 %}alert alert-info{% elseif  nombreCommandeClient > 3 %}alert alert-success{% endif %}">
+                                            <td>{{ entity.id }}</td>
+                                            <td>{{ entity.dcr|date("d/m/Y H:i:s") }}</td>
+                                            <td>{{ entity.deal }}</td>
+                                            <td>{{ entity.reference.title }}</td>
+                                            <td>{{ prixCoupon *  entity.qte }} DT</td>
+                                            <td>{{ client }}</td>
+                                            <td>
+                                                {% if nombreCommandeClient <= 1 %}
+                                                    Nouveaux client
+                                                {% elseif nombreCommandeClient > 1  and nombreCommandeClient <= 3 %}
+                                                    Ancien Client
+                                                {% elseif  nombreCommandeClient > 3 %}
+                                                    Client fidéle
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ entity.client.phone }}</td>
+                                            <td>{{ entity.qte }}</td>
+                                            <td>{% if entity.caisse is not null %}{{ entity.caisse.libelle }}{% endif %}
+                                            </td>
+                                            <td>{% if entity.etat == 1 %} Payé {% elseif entity.etat==0 %} En attente {% else %} Epuisé{% endif %}</td>
+                                        </tr>
+                                    {% endif %}
+                                {% endfor %}
+                                </tbody>
+                            </table>                         

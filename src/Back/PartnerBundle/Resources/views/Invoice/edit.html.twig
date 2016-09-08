@@ -1,0 +1,294 @@
+{% extends '::baseBack.html.twig' %}
+{% form_theme form 'form_table_layout.html.twig' %}
+{% block body -%}
+    <div class="content">
+        <div class="container-fluid">
+
+            <!-- ==================== COMMON ELEMENTS ROW ==================== -->
+            <div class="row-fluid">
+                <div class="span12">
+                    <!-- ==================== TEXT INPUTS HEADLINE ==================== -->
+                    <div class="containerHeadline">
+                        <i class="icon-edit"></i>
+
+                        <h2>Modifier une facture</h2>
+
+                        <div class="controlButton pull-right"><i class="icon-remove removeElement"></i></div>
+                        <div class="controlButton pull-right"><i class="icon-caret-down minimizeElement"></i></div>
+                    </div>
+                    <!-- ==================== END OF TEXT INPUTS HEADLINE ==================== -->
+
+                    <!-- ==================== TEXT INPUTS FLOATING BOX ==================== -->
+                    <div class="floatingBox">
+                        <div class="container-fluid">
+                            {% if id is defined %}
+                                <h2>N° Facture : {% if entity.numfacture !=null %}{{(entity.numfacture)}}{% else %}{{ "%08d"|format(entity.id) }}{% endif %}</h2>
+                            {% endif %}
+                            <div class="container-fluid">
+                                {% if id is not defined %}
+                                    <form class="form-horizontal contentForm" method="POST"
+                                          action="{{ path('dash_invoice_add') }}" enctype='multipart/form-data'>
+                                    {% else %}
+                                        <form class="form-horizontal contentForm" method="POST"
+                                              action="{{ path('dash_invoice_update',{'id' : id }) }}" enctype='multipart/form-data'>
+                                        {% endif %}
+                                        {{ form_row(form.numfacture) }}
+                                        {% if coupon is defined %}
+                                            {{ form_row(form.user, { 'attr':{'readonly':'readonly','data-live-search':'true','class':'selectpicker'} }) }}
+
+                                        {% else %}
+                                            {{ form_row(form.user, { 'attr':{'class':'selectpicker','data-live-search':'true'} }) }}
+                                        {% endif %}
+                                        {{ form_row(form.deal) }}
+                                        {{ form_row(form.etat) }}
+                                        <div id="virement" {% if id is defined %} {% if entity.etat==2 %} style="display: block" {% else %} style="display: none" {% endif %}{% else %} style="display: none" {% endif %}>
+
+                                            {{ form_row(form.payement) }}
+                                            {{ form_row(form.dvir, { 'attr': {'class': "datepickerField"} }) }}
+                                            <div id="payement"  {% if id is defined %}  {% if entity.payement==2 %}  style="display: block" {% else %} style="display: none;" {% endif %}{% else %} style="display: none;" {% endif %}>
+                                                <div class="control-group">
+                                                    <label for="back_partnerbundle_invoice_file" class="control-label">Ordre de virement</label>
+                                                    <div class="controls">
+                                                        {{ form_widget(form.file) }}
+                                                        {% if id is defined %}
+                                                            {% if entity.path %}
+                                                                <a style="margin-right: 5px" target="_blank"
+                                                                   href="{{ asset('uploads/facture/'~entity.path) }}"
+                                                                   title="Télecharger"
+                                                                   class="dark-blue"><i
+                                                                        class="icon-paperclip icon-2x"></i></a>
+                                                                {% endif %}
+                                                            {% endif %}
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+                                        </div>
+                                        <div class="control-group coupon" style="display: none;">
+                                            <label class="control-label">Coupons</label>
+
+                                            <div class="controls" id="back_partnerbundle_invoice_coupon">
+
+                                            </div>
+                                        </div>
+
+                                        {% if coupon is defined %}
+                                            <div class="control-group coupon">
+                                                <label class="control-label">Coupons</label>
+                                                <div class="controls" id="back_partnerbundle_invoice_coupon">
+                                                    <!-- ==================== DEFAULT TABLE FLOATING BOX ==================== -->
+                                                    <div class="floatingBox table">
+                                                        <div class="container-fluid">
+
+                                                            <table class="table">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th class="hidden"><label><input type="checkbox" name="all" id="all"/> Sélectionner
+                                                                                tout</label></th>
+                                                                        <th>N° Coupon</th>
+                                                                        <th>Prix</th>
+                                                                        <th>Etat de vente</th>
+                                                                        <th>Etat de reception</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    {% for item in coupon %}
+
+                                                                        <tr id="tr{{ item.id }}">
+                                                                            <td class="hidden"><input id="{{ item.id }}" class="itemcheck" type="checkbox" checked="checked" name="coupon[]"
+                                                                                                      value="{{ item.id }}" onclick="modifFactureEdit({{ item.id }}, {{ item.price }})" ></td>
+                                                                            <td>{{ item.code }}</td>
+                                                                            <td>{{ item.price }} TND</td>
+                                                                            <td>{{ item.vendu|getVenduCoupon }}</td>
+                                                                            <td>{{ item.recu|getRecuCoupon }}</td>
+                                                                        </tr>
+                                                                    {% endfor %}
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <span class="label  badge-important"
+                                                      id="span_ca">Chiffre d'affaire  : {{ entity.ca }} TND</span>
+                                                <span class="label  badge-warning"
+                                                      id="com_fixe">Commission Fixe : {{ entity.comFixe }} TND</span>
+                                                <span class="label  badge-success" id="span_com_variable">Commission Variable : {{ entity.comVariable }}
+                                                    TND</span>
+                                                <span class="label  badge-primary"
+                                                      id="span_ca">Gratuité  : {{ minprice*nbrgratuit }} TND</span>
+                                                <input type="hidden" value="{{ entity.ca }}" name="ca" id="ca">
+                                                <input type="hidden" value="{{ entity.comVariable }}" name="com_variable"
+                                                       id="com_variable">
+                                                <input type="hidden" value="{{ entity.comFixe }}" name="com_fixe"
+                                                       id="com_fixe">
+                                            {% endif %}
+
+
+
+                                            <div class="formFooter">
+                                                <button type="submit" id="facturer" class="btn btn-success"><i
+                                                        class="icon-ok"> </i>
+                                                    Valider
+                                                </button>
+                                                <button type="reset" class="btn btn-danger"><i
+                                                        class="icon-remove"> </i>
+                                                    Effacer
+                                                </button>
+                                                <a href="{{ path('back_invoice') }}">
+                                                    <button class="btn btn-inverse" type="button"><i
+                                                            class="icon-list"></i>
+                                                        Liste
+                                                    </button>
+                                                </a>
+                                                {{ form_widget(form._token) }}
+                                            </div>
+                                    </form>
+                            </div>
+
+                        </div>
+                    </div>
+                    <!-- ==================== END OF TEXT INPUTS FLOATING BOX ==================== -->
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block stylesheets %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('RessourcesBack/css/bootstrap-select2.css') }}">
+{% endblock %}
+{% block javascripts %}
+    <script src="{{ asset('RessourcesBack/js/jquery.js') }}"></script>                   <!-- bootstrap slider plugin -->
+    <!-- masked inputs -->
+    <script src="{{ asset('RessourcesBack/js/jquery-1.10.1.min.js') }}"></script>
+    <script>window.jQuery || document.write('<script src="{{ asset('js/jquery-1.10.1.min.js') }}"><\/script>')</script>
+    <!-- masked inputs -->
+    <script src="{{ asset('RessourcesBack/js/lib/jquery-inputmask/jquery.inputmask.min.js') }}"></script>
+    <script src="{{ asset('RessourcesBack/js/lib/jquery-inputmask/jquery.inputmask.extensions.js') }}"></script>
+    <script src="{{ asset('RessourcesBack/js/lib/jquery-inputmask/jquery.inputmask.date.extensions.js') }}"></script>
+    {% javascripts '@BackPlanningBundle/Resources/public/js/jquery.form-validator.js' %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    <script src="{{ asset('RessourcesBack/js/bootstrap-select.js') }}"></script>
+    <script>
+                                                                                                                  $("#back_partnerbundle_invoice_dvir").removeAttr("required");
+                                                                                                                  $("#back_partnerbundle_invoice_file").removeAttr("required");
+                                                                                                                  $(".datepickerField").inputmask("date");
+                                                                                                                  $("#back_partnerbundle_invoice_payement").change(function() {
+
+                                                                                                          var payement = $("select#back_partnerbundle_invoice_payement option").filter(":selected").val();
+                                                                                                                  if (payement == 1)
+                                                                                                          {
+                                                                                                          $("#payement").hide();
+                                                                                                                  $("#back_partnerbundle_invoice_file").removeAttr("required");
+                                                                                                          }
+
+                                                                                                          if (payement == 2)
+                                                                                                          {
+                                                                                                          $("#payement").show();
+                                                                                                                  $('#back_partnerbundle_invoice_file').attr('required', 'required');
+                                                                                                          }
+
+                                                                                                          });
+                                                                                                                  $("#back_partnerbundle_invoice_etat").change(function() {
+                                                                                                          var virement = $("select#back_partnerbundle_invoice_etat option").filter(":selected").val();
+                                                                                                                  if (virement == 2)
+                                                                                                          {
+                                                                                                          $("#virement").show();
+                                                                                                                  $('#back_partnerbundle_invoice_file').attr('required', 'required');
+                                                                                                                  $('#back_partnerbundle_invoice_dvir').attr('required', 'required');
+                                                                                                          }
+                                                                                                          else
+                                                                                                          {
+                                                                                                          $("#virement").hide();
+                                                                                                                  $("#back_partnerbundle_invoice_dvir").removeAttr("required");
+                                                                                                                  $("#back_partnerbundle_invoice_file").removeAttr("required");
+                                                                                                          }
+                                                                                                          });        {% if coupon is defined %}
+
+                                                                                                                      function modifFactureEdit(idCoupon, prixCoupon) {
+                                                                                                                      var CA = $("#ca").val();
+                                                                                                                              var NewCA = 0;
+                                                                                                                              var ComVariable = 0;
+                                                                                                                              if ($('#' + idCoupon).is(':checked')) {
+                                                                                                                      //add
+                                                                                                                      NewCA = parseFloat(CA) + prixCoupon;
+                                                                                                                              $("#ca").val(NewCA);
+                                                                                                                              $('#span_ca').html("Chiffre d'affaire  : " + NewCA + " TND");
+                                                                                                                      }
+                                                                                                                      else {
+                                                                                                                      //moins
+                                                                                                                      NewCA = parseFloat(CA) - prixCoupon;
+                                                                                                                              $("#ca").val(NewCA);
+                                                                                                                              $('#span_ca').html("Chiffre d'affaire  : " + NewCA + " TND");
+                                                                                                                      }
+                                                                                                                      var ComVariable = parseFloat(NewCA * {{ commVariable }} / 100);
+                                                                                                                              $("#com_variable").val(ComVariable);
+                                                                                                                              $('#span_com_variable').html("Commission Variable : " + ComVariable + " TND");
+                                                                                                                      }
+        {% endif %}
+                    $("#back_partnerbundle_invoice_deal").change(function () {
+                    if ($("#back_partnerbundle_invoice_deal").val() != "") {
+
+                    $.ajax({
+                    type: "GET",
+                            url: "{{ path('back_coupon_ajax_invoice') }}",
+                            data: "id=" + $("#back_partnerbundle_invoice_deal").val(),
+                            success: function (msg) {
+                            if (msg != "") {
+
+                            $(".coupon").show();
+                                    $("#back_partnerbundle_invoice_coupon").html(msg);
+                            }
+                            else {
+                            $(".coupon").hide();
+                            }
+
+                            }
+                    });
+                    }
+                    else {
+                    $(".coupon").hide();
+                    }
+                    });
+                            $("#back_partnerbundle_invoice_user").change(function () {
+                    if ($("#back_partnerbundle_invoice_user").val() != "") {
+
+                    $.ajax({
+                    type: "POST",
+                            url: "{{ path('back_deal_ajax_invoice') }}",
+                            data: "id=" + $("#back_partnerbundle_invoice_user").val(),
+                            success: function (msg) {
+                            $("#back_partnerbundle_invoice_deal").removeAttr('readonly');
+                                    $("#back_partnerbundle_invoice_deal").html(msg)
+                            }
+                    });
+                    }
+                    });        {% if coupon is defined %}
+                                        var price = new Array();            {% for item in coupon %}
+                                                            price[{{ item.id }}] ={{ item.price }} ;            {% endfor %}
+        {% endif %}
+                            $(document).ready(function () {
+
+                    $('#all').click(function (event) {  //on click
+
+                    if (this.checked) { // check select status
+
+                    $('.itemcheck').each(function () { //loop through each checkbox
+                    this.checked = true; //select all checkboxes with class "checkbox1"
+
+                            modifFactureEdit($(this).val(), price[$(this).val()])
+                            ///console.log(price)
+                    });
+                    } else {
+
+                    $('.itemcheck').each(function () { //loop through each checkbox
+                    this.checked = false; //deselect all checkboxes with class "checkbox1"
+                            modifFactureEdit($(this).val(), price[$(this).val()])
+
+                    });
+                    }
+                    });
+                    });
+    </script>
+{% endblock %}

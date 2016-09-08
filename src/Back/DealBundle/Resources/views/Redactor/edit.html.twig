@@ -1,0 +1,151 @@
+{% extends '::baseBack.html.twig' %}
+
+{% block body -%}
+<div class="content">
+    <div class="container-fluid">
+
+        <!-- ==================== COMMON ELEMENTS ROW ==================== -->
+        <div class="row-fluid">
+            <div class="span12">
+                <!-- ==================== TEXT INPUTS HEADLINE ==================== -->
+                <div class="containerHeadline">
+                    <i class="icon-edit"></i><h2>Modifier un rédacteur</h2>
+                    <div class="controlButton pull-right"><i class="icon-remove removeElement"></i></div>
+                    <div class="controlButton pull-right"><i class="icon-caret-down minimizeElement"></i></div>
+                </div>
+                <!-- ==================== END OF TEXT INPUTS HEADLINE ==================== -->
+
+                <!-- ==================== TEXT INPUTS FLOATING BOX ==================== -->
+                <div class="floatingBox">
+                    <div class="container-fluid">
+                        <h2>Rédacteur  : {{ partner.name }}</h2>
+                        <div class="container-fluid">
+                            <form class="form-horizontal contentForm" method="POST" enctype="multipart/form-data" action="{{ path('update_redactor_manager',{'id' : partner.id}) }}">
+                                <div class="control-group">
+                                    <label class="control-label">Nom et Prénom</label>
+                                    <div class="controls">
+                                        {{ form_widget(form.name) }}
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <label class="control-label">Date de naissance : </label>
+                                    <div class="controls">
+                                        {{ form_widget(form.datenaisse) }}
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">E-mail : </label>
+                                    <div class="controls">
+                                        {{ form_widget(form.email) }}
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">C.I.N. : </label>
+                                    <div class="controls">
+                                        {{ form_widget(form.cin) }}
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">CIN délivrée le : </label>
+                                    <div class="controls">
+                                        {{ form_widget(form.datecin) }}
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <label class="control-label">Banque : </label>
+                                    <div class="controls">
+                                        {{ form_widget(form.bank) }}
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">Agence : </label>
+                                    <div class="controls">
+                                        {{ form_widget(form.agency) }}
+                                    </div>
+
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">Rib : </label>
+                                    <div class="controls">
+                                        {{ form_widget(form.rib) }}
+                                    </div>
+
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">Adresse : </label>
+                                    <div class="controls">
+                                        {{ form_widget(form.address) }}
+                                    </div>
+
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">Téléphone: </label>
+                                    <div class="controls">
+                                        {{ form_widget(form.phone) }}
+                                    </div>
+
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">Photo : </label>
+                                    <div class="controls">
+                                        {{ form_widget(form.profilePictureFile) }}
+                                    </div>
+
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">Téléphone d'urgence  : </label>
+                                    <div class="controls">
+                                        {{ form_widget(form.phoneurg) }}
+                                    </div>
+
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">Adresse d'urgence  : </label>
+                                    <div class="controls">
+                                        {{ form_widget(form.adresseurg) }}
+                                    </div>
+                                </div>
+                                <div class="formFooter">
+                                    <button type="submit" class="btn btn-success"><i class="icon-ok"> </i> Valider</button>
+                                    <button type="reset" class="btn btn-danger"><i class="icon-remove"> </i> Effacer</button>
+                                    <a href="{{ path('list_redactor') }}"><button class="btn btn-inverse" type="button"><i class="icon-list"></i> Liste</button></a>
+                                    {{ form_widget(form._token) }}
+                                </div>
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+                <!-- ==================== END OF TEXT INPUTS FLOATING BOX ==================== -->
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+ {% block javascripts %}
+<script type="text/javascript" src="{{asset('tinymce/tinymce.min.js')}}"></script>
+     <script>
+         $(document).ready(function () {
+             $("#back_dealbundle_redactor_name").attr({
+                 'data-validation': 'length',
+                 'data-validation-length': 'min4'
+             });
+             $("#back_dealbundle_redactor_email").attr('data-validation', 'email');
+             $("#back_dealbundle_redactor_datenaisse").attr({
+                 'data-validation': 'birthdate',
+                 'data-validation-format': 'dd/mm/yyyy'
+             });
+             $("#back_dealbundle_redactor_cin").attr({'data-validation': 'length number', 'data-validation-length': '8-8'});
+             $("#back_dealbundle_redactor_datecin").attr({
+                 'data-validation': 'birthdate',
+                 'data-validation-format': 'dd/mm/yyyy'
+             });
+             $("#back_dealbundle_redactor_rib").attr({'data-validation': 'length number', 'data-validation-length': '20-20'});
+             $("#back_dealbundle_redactor_phone").attr({'data-validation': 'length number', 'data-validation-length': '8-8'});
+             $("#back_dealbundle_redactor_adresseurg").attr({'data-validation': 'length number', 'data-validation-length': '8-8'});
+             $.validate();
+         });
+     </script>
+ {% endblock %}

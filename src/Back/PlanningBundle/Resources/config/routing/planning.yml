@@ -1,0 +1,36 @@
+#categorie
+back_planning_home:
+    path:     /{regionid}
+    defaults: { _controller: BackPlanningBundle:Planning:index }
+    requirements:
+        regionid: \d+
+
+add_planning_manager:
+    path:     /add
+    defaults: { _controller: BackPlanningBundle:Planning:add }
+update_planning_manager:
+    path:     /update/{id}/{regionid}
+    defaults: { _controller: BackPlanningBundle:Planning:edit}
+    requirements:
+        regionid: \d+
+        id: \d+
+show_planning_manager:
+    path:     /show/{id}/{regionid}
+    defaults: { _controller: BackPlanningBundle:Planning:show}
+    requirements:
+        regionid: \d+
+        id: \d+
+delete_planning_manager:
+    path:     /delete
+    defaults: { _controller: BackPlanningBundle:Planning:delete}
+back_ajx_get_anexe_test_ref:
+    path:     /testrefannex
+    defaults: { _controller: BackPlanningBundle:Planning:testrefannex}
+
+back_ajx_planning_json:
+    path:     /ajxplanning
+    defaults: { _controller: BackPlanningBundle:Planning:ajxPlanning}
+
+back_ajx_leplanning_json:
+    path:     /ajxleplanning
+    defaults: { _controller: BackPlanningBundle:Planning:ajxlePlanning}

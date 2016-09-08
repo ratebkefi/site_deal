@@ -1,0 +1,25 @@
+#banque
+back_paymentmethod:
+    path:     /
+    defaults: { _controller: BackCommandeBundle:Paymentmethod:index }
+
+
+update_paymentmethod_manager:
+    path:     /update/{id}
+    defaults: { _controller: BackCommandeBundle:Paymentmethod:edit}
+    requirements:
+        id: \d+
+add_paymentmethod_manager:
+    path:     /add
+    defaults: { _controller: BackCommandeBundle:Paymentmethod:add}
+
+activate_paymentmethod_manager:
+    path:     /act/{id}
+    defaults: { _controller: BackCommandeBundle:Paymentmethod:activate}
+    requirements:
+        id: \d+
+unactivate_paymentmethod_manager:
+    path:     /unact/{id}
+    defaults: { _controller: BackCommandeBundle:Paymentmethod:unactivate}
+    requirements:
+        id: \d+

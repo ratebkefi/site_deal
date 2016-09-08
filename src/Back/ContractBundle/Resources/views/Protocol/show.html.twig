@@ -1,0 +1,53 @@
+{% extends '::baseBack.html.twig' %}
+{% block body -%}
+    <!-- ==================== PAGE CONTENT ==================== -->
+    <div class="content">
+        <!-- ==================== WIDGETS CONTAINER ==================== -->
+        <div class="container-fluid">
+            {% if app.user.roles[0]!='SERVICECLIENT' and app.user.roles[0]!='CHEFSERVICECLI'   and app.user.roles[0]!='DAF'  and app.user.roles[0]!= 'FINANCIER' %}
+            <a href="{{ path('add_protocol_manager_partner',{'id':partner}) }}">
+                <button class="btn btn-danger" type="button"><i class="icon-plus"></i> Ajouter</button>
+            </a>
+            <a href="{{ path('update_protocol_manager', { 'id': entity.id,'partner':partner }) }}">
+                <button class="btn btn-info" type="button"><i class="icon-pencil"></i> Modifier</button>
+            </a>
+            {% endif %}
+            {% if app.user.roles[0]=='ROLE_SUPER_ADMIN' %}
+                <a class="btn btn-danger" href="{{ path('delete_protocol_manager', { 'id': entity.id ,'partner':partner}) }}"><i
+                            class="icon-remove"></i> Supprimer</a>
+            {% endif %}
+
+
+            <!-- ==================== END OF ROW ==================== -->
+            <div class="row-fluid">
+                <div class="span12">
+                    <!-- ==================== DEFAULT TABLE HEADLINE ==================== -->
+                    <div class="containerHeadline">
+                        <i class="icon-table"></i>
+                    </div>
+                    <!-- ==================== END OF DEFAULT TABLE HEADLINE ==================== -->
+                    <!-- ==================== DEFAULT TABLE FLOATING BOX ==================== -->
+                    <div class="floatingBox table">
+                        <div class="container-fluid">
+                            <table class="table table-bordered">
+                                <tbody>
+
+                                <tr>
+                                    <th>Date</th>
+                                    <td>{{ entity.datep|date("m/d/Y") }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Actif?</th>
+                                    <td>{% if entity.status ==1 %} Oui {% else %} Non {% endif %}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ==================== END OF WIDGETS CONTAINER ==================== -->
+    </div>
+    <!-- ==================== END OF PAGE CONTENT ==================== -->
+{% endblock %}

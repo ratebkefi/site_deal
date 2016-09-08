@@ -1,0 +1,17 @@
+{% include 'MainFrontBundle:Email:header.html.twig' %}
+Bonjour <strong>{{ client.name }} {{ client.fname }} </strong>,<br/>
+Vous avez payé la commande N°<strong>{{ "%09d"|format(commande.id) }}</strong> avec les détails suivants chez notre paybox<br/>
+Commande <strong>{{ "%09d"|format(commande.id) }}</strong><br/>
+Deal: <strong>{{ commande.deal }}</strong><br/>
+Quantité : <strong>{{ commande.qte }}</strong><br/>
+Prix total : <strong>{{ commande.reference.bigdealPrice *  commande.qte }}  DT</strong><br/>
+Date de commande : <strong>{{ commande.dcr|date('Y-m-d H:i:s') }}</strong><br/>
+Mode de paiement : <strong>Paybox</strong><br/>
+<br/>
+<br/>
+Connectez-vous à votre compte avec votre adresse email et votre mot de passe puis allez à la rubrique « Mes commandes » pour récupérer votre coupon.
+<br/>
+<br/>
+
+<strong>L’équipe BIGDeal</strong>
+{% include 'MainFrontBundle:Email:footer.html.twig' %}

@@ -1,0 +1,72 @@
+{% extends '::baseBack.html.twig' %}
+{% block body -%}
+    <!-- ==================== PAGE CONTENT ==================== -->
+    <div class="content">
+        <!-- ==================== WIDGETS CONTAINER ==================== -->
+        <div class="container-fluid">
+            {% if  app.user.roles[0]!= 'DAF' and app.user.roles[0]!= 'FINANCIER' %}
+
+                <a href="{{ path('update_financier_manager', { 'id': entity.id }) }}" class="btn btn-info"><i
+                            class="icon-pencil"></i> Modifier</a>
+            {% endif %}
+            <a href="{{ path('list_financier') }}" class="btn btn-inverse pull-right"><i class="icon-list"></i>
+                Liste</a>
+
+
+            <!-- ==================== END OF ROW ==================== -->
+            <div class="row-fluid">
+                <div class="span12">
+                    <!-- ==================== DEFAULT TABLE HEADLINE ==================== -->
+
+                    <!-- ==================== END OF DEFAULT TABLE HEADLINE ==================== -->
+                    <!-- ==================== DEFAULT TABLE FLOATING BOX ==================== -->
+                    <div class="floatingBox table">
+                        <div class="container-fluid">
+                            <table class="table table-bordered">
+                                <tbody>
+
+                                <tr>
+                                    <th>Banque :</th>
+                                    <td>{{ entity.bank }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Agence :</th>
+                                    <td>{{ entity.agency }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Rib :</th>
+                                    <td>{{ entity.rib }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Adresse :</th>
+                                    <td>{{ entity.address }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Téléphone :</th>
+                                    <td>{{ entity.phone }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Photo :</th>
+                                    <td><img src="{{ asset('uploads/user/'~entity.profilePicturePath) }}" width="200"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Téléphone d'urgence :</th>
+                                    <td>{{ entity.phoneurg }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Adresse d'urgence</th>
+                                    <td>{{ entity.adresseurg }}</td>
+                                </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ==================== END OF WIDGETS CONTAINER ==================== -->
+    </div>
+    <!-- ==================== END OF PAGE CONTENT ==================== -->
+{% endblock %}

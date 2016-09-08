@@ -1,0 +1,141 @@
+{% extends '::baseBack.html.twig' %}
+{% block body -%}
+    <!-- ==================== PAGE CONTENT ==================== -->
+    <div class="content">
+        <!-- ==================== WIDGETS CONTAINER ==================== -->
+        <div class="container-fluid">
+
+
+            <!-- ==================== END OF ROW ==================== -->
+            <div class="row-fluid">
+                <div class="span12">
+                    <div class="containerHeadline">
+                        <i class="icon-zoom-in"></i>
+
+                        <h2>Filtre de recherche</h2>
+
+                        <div class="controlButton pull-right"><i class="icon-caret-down minimizeElement"></i></div>
+                    </div>
+                    <div class="floatingBox  ">
+
+                        <div class="container-fluid" style="padding: 10px">
+                            <form method="get" action="" class="form-horizontal contentForm" style="padding:0; margin:0">
+                            <div class="span10" >
+                                <label>Deal</label>
+                                <select id="back_commandebundle_commandfilter_deal"
+                                        name="back_commandebundle_commandfilter[deal]" class="span12 selectpicker"
+                                        data-live-search="true">
+                                    <option value="">Choisissez un deal</option>
+                                    {% for key,item in deals %}
+                                    <option value="{{ key }}"{% if data['deal'] is defined and data['deal']==key %} selected="selected"{% endif %}>{{ item }}</option>
+                                    {% endfor %}
+                                </select>
+
+
+                            </div>
+                            <div class="span2">
+                                <label>&nbsp;</label>
+                                <input type="submit" value="Rechecher" class="btn btn-success"/>
+<br>
+                            </div> </form>
+                        </div>
+                    </div>
+                    <!-- ==================== DEFAULT TABLE HEADLINE ==================== -->
+                    <form action="{{ path("print_coupon") }}" method="post">
+                    <a href="javascript:validlivraison()" class="btn btn-danger"><i class="icon-truck"></i> Livrer les
+                        coupons</a>
+                        <button type="submit" class="btn btn-success"><i class="icon-file-pdf"></i>Imprimer le reçu</button>
+                    <div class="containerHeadline">
+                        <i class="icon-table"></i>
+                        <h2>Liste des coupons à livrer</h2>
+                    </div>
+                    <!-- ==================== END OF DEFAULT TABLE HEADLINE ==================== -->
+                    <!-- ==================== DEFAULT TABLE FLOATING BOX ==================== -->
+                    <div class="floatingBox table">
+                        <div class="container-fluid">
+                            <table class="table">
+                                <thead>
+                                <tr >
+                                    <th><label><input type="checkbox" name="all" id="all"/> Sélectionnez
+                                            tous</label></th>
+                                    <th>Code</th>
+                                    <th>Deal</th>
+                                    <th>Client</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for entity in entities %}
+                                    <tr id="tr{{ entity.id }}"  {% if entity.aramexpdf  %} class="alert alert-success" {% else %} class="alert alert-error" {% endif %}>
+                                        <td><input type="checkbox" class="itemcheck" id="item[]" name="item[]" value="{{ entity.id }}"/></td>
+                                        <td>{{ entity.code }}</td>
+                                        <td>{{ entity.command.deal }}</td>
+                                        <td>{{ entity.client }}</td>
+                                        <td></td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                   </div> </form>
+            </div>
+        </div>
+        <!-- ==================== END OF WIDGETS CONTAINER ==================== -->
+    </div>
+
+    <!-- ==================== END OF PAGE CONTENT ==================== -->
+{% endblock %}
+{% block stylesheets %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('RessourcesBack/css/bootstrap-select.css') }}">
+{% endblock %}
+{% block javascripts %}
+    <script src="{{ asset('RessourcesBack/js/bootstrap-select.js') }}"></script>
+    <script src="{{ asset('RessourcesBack/js/vendor/jquery-ui-1.10.2.custom.min.js') }}"></script>        <!-- jquery ui dragging -->
+    <script>
+        $(document).ready(function () {
+
+            $('#all').click(function (event) {  //on click
+                if (this.checked) { // check select status
+                    $('.itemcheck').each(function () { //loop through each checkbox
+                        this.checked = true;  //select all checkboxes with class "checkbox1"
+                    });
+                } else {
+                    $('.itemcheck').each(function () { //loop through each checkbox
+                        this.checked = false; //deselect all checkboxes with class "checkbox1"
+                    });
+                }
+            });
+            $(".bootstrap-select").attr('style','width:100%')
+        });
+        function validlivraison() {
+            $(".itemcheck").each(function () {
+                $.ajaxSetup({async: false});
+                if ($(this).is(':checked')) {
+                    id = $(this).val();
+                    $('#tr' + id).attr('class', 'error');
+                    $.ajax({
+                        type: "POST",
+                        url: "{{ path('livrer_coupon') }}",
+                        data: "id=" + id,
+                        success: function (msg) {
+                            if (msg != 'false') {
+                                $('#tr' + id).attr('class', 'success');
+                                lien = "<a href='" + msg + "'";
+                                lien += " target='_blank' class='btn btn-success'>";
+                                lien += " <i class='icon-file-pdf'></i>Imprimer le reçu</a>";
+                                $('#tr' + id + ' td:nth-child(5)').html(lien);
+                                $('#tr' + id + ' td:nth-child(1) input').remove();
+                            } else {
+                                $('#tr' + id).attr('class', 'info');
+                            }
+                        }
+                    });
+                }
+
+            })
+            bootbox.alert("Processus Terminé!")
+        }
+    </script>
+{% endblock %}

@@ -1,0 +1,6 @@
+services:
+    booking.twig_extension:
+        class: Main\BookingBundle\Twig\Extension\BookingExtension
+        public: true
+        tags:
+            - { name: twig.extension }

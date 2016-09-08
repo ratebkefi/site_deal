@@ -1,0 +1,793 @@
+{% extends '::baseBack.html.twig' %}
+
+{% block body %}
+    <!-- ==================== PAGE CONTENT ==================== -->
+    <div class="content">
+        <!-- ==================== END OF BREADCRUMBS / DATETIME ==================== -->
+        <!-- ==================== WIDGETS CONTAINER ==================== -->
+        <div class="container-fluid">
+            <!-- ==================== CALENDAR ROW ==================== -->
+            <div class="row-fluid">
+                <!-- ==================== CALENDAR CONTAINER ==================== -->
+                <div class="span9">
+                    <!-- ==================== CALENDAR HEADLINE ==================== -->
+                    <div class="containerHeadline">
+                        <i class="icon-calendar"></i>
+
+                        <h2>Région : {{ region.name }}</h2>
+
+                        <div class="controlButton pull-right"><i class="icon-caret-down minimizeElement"></i></div>
+                    </div>
+                    <!-- ==================== END OF CALENDAR HEADLINE ==================== -->
+
+                    <!-- ==================== CALENDAR FLOATING BOX ==================== -->
+                    <div class="floatingBox">
+                        <div class="container-fluid">
+                            <div id="calendar"></div>
+                        </div>
+                    </div>
+                    <!-- ==================== END OF CALENDAR FLOATING BOX ==================== -->
+                </div>
+                <!-- ==================== END OF CALENDAR CONTAINER ==================== -->
+
+                <!-- ==================== EVENTS CONTAINER ==================== -->
+                <div class="span3">
+                    <!-- ==================== Légende des icons ================== -->
+                    <div class="containerHeadline">
+                        <i class="icon-info"></i>
+
+                        <h2>Légende des icônes</h2>
+
+                        <div class="controlButton pull-right"><i class="icon-caret-down minimizeElement"></i></div>
+                    </div>
+
+                    <div class="floatingBox floatingBoxPlanning plan-status">
+                        <div class="container-fluid">
+                            <ul>
+                                <li><a class="whiteText " href="{{ path('back_planning_home',{'regionid':regionid}) }}?status=0"><img alt="Pré-Planifié" title="Pré-Planifié"
+                                         src="{{ asset('public/images/calendar-preplanif-16.png') }}"><span>Pré-Planifié</span>
+                               </a> </li>
+                                <li><a class="whiteText " href="{{ path('back_planning_home',{'regionid':regionid}) }}?status=3"><img alt="Validé" title="Validé"
+                                         src="{{ asset('public/images/valide.png') }}"><span>Validé</span></a></li>
+                                <li><a class="whiteText " href="{{ path('back_planning_home',{'regionid':regionid}) }}?status=1"><img alt="Planifié" title="Planifié"
+                                         src="{{ asset('public/images/calendar-planif-16.png') }}"><span>Planifié</span>
+                                </a></li>
+                                <li><a class="whiteText " href="{{ path('back_planning_home',{'regionid':regionid}) }}?status=5"><img alt="Réfusé" title="Rédaction refusée"
+                                         src="{{ asset('public/images/refused.png') }}"><span>Rédaction refusée</span>
+                                </a></li>
+                                <li><a class="whiteText " href="{{ path('back_planning_home',{'regionid':regionid}) }}?status=2"><img alt="Rédigé" title="Rédigé"
+                                         src="{{ asset('public/images/rediger.png') }}"><span>Rédigé</span></a></li>
+                                <li><a class="whiteText " href="{{ path('back_planning_home',{'regionid':regionid}) }}?status=4"><img alt="Annulé" title="Annulé"
+                                         src="{{ asset('public/images/cancel.png') }}"><span>Annulé</span></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- ==================== planning Info PopUp ==================== -->
+                    <div id="planning-info">
+
+                        <div class="containerHeadline">
+                            <i class="icon-info"></i>
+
+                            <h2>Planning</h2>
+
+                            <div class="controlButton pull-right"><i class="icon-remove hideElement"></i></div>
+                            <div class="controlButton pull-right"><i class="icon-caret-down minimizeElement"></i></div>
+                        </div>
+
+                        <div class="floatingBox">
+                            <div class="container-fluid">
+                                <h5 class="headline" id="object_planning"></h5>
+                            </div>
+                            <div class="container-fluid" id="container-fluid">
+
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ==================== End planning Info PopUp ==================== -->
+
+                    <!-- ==================== EVENTS HEADLINE ==================== -->
+                    <div class="containerHeadline">
+
+                        <i class="icon-share"></i>
+
+                        <h2>Ajout de planning</h2>
+
+                        <div class="controlButton pull-right"><i class="icon-caret-down minimizeElement"></i></div>
+                    </div>
+                    <!-- ==================== END OF EVENTS HEADLINE ==================== -->
+
+                    <!-- ==================== EVENTS FLOATING BOX ==================== -->
+                    <div class="floatingBox floatingBoxPlanning">
+                        <div class="container-fluid">
+                            {% if (app.user.roles[0]=='ROLE_SUPER_ADMIN' ) or  ( app.user.roles[0]=='PALAINER') %}
+
+                                <form id="newEventForm" class="contentForm" onsubmit="return false">
+                                    <!-- <input type="text" class="span12" id="newEventName" placeholder="New event name...">-->
+                                    <input type="text" class="span12" id="idobject" placeholder="Objet du planning">
+                                    <input type="text" class="span12" id="idtarif" placeholder="Tarif">
+                                    <input type="text" class="span12" id="idca"
+                                           placeholder="Objectif Chiffre d'affaire">
+                                    <textarea class="span12" id="iddescription" placeholder="Description"></textarea>
+                                    <input type="text" class="span12 datetimepicker" id="startdate"
+                                           placeholder="Date de début">
+                                    <input type="text" class="span12 datetimepicker" id="enddate"
+                                           placeholder="Date de fin">
+                                    <textarea class="span12" id="idremarque" placeholder="Remarques"></textarea>
+                                    <select class="span12" id="idcategorie">
+
+                                        {% for item in category %}
+                                            {% if item.category|length>0 %}
+                                                <optgroup label="{{ item.name }}">
+                                                    {% for item2 in item.category %}
+                                                        <option value="{{ item2.id }}">{{ item2.name }}</option>
+                                                    {% endfor %}
+                                                </optgroup>
+                                            {% else %}
+                                                <option value="{{ item.id }}">{{ item.name }}</option>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                    <button id="addNewEvent" class="btn btn-success" type="submit"><i
+                                                class="icon-plus-sign"></i> Valider
+                                    </button>
+                                </form>
+                            {% endif %}
+                            <div id='external-events' class="external-events">
+                                {% for item in entities2 %}
+
+                                    <div class='external-event' style="background: {{ item.categoryId.color }}">
+                                        {% if app.user.roles[0]=='COMMERCIAL' %}
+                                            <label>{{ item.object }}
+                                                {% if (app.user.roles[0]=='ROLE_SUPER_ADMIN' ) or  ( app.user.roles[0]=='PALAINER') %}
+                                                    <a href="{{ path('update_planning_manager',{'id':item.id,'regionid':regionid}) }}"
+                                                       class="pull-right whiteText updateplanning"> <img alt="Editer"
+                                                                                                         title="Editer"
+                                                                                                         class="pull-right"
+                                                                                                         src="{{ asset('public/images/edit.png') }}"></a>
+                                                {% endif %}
+                                                &nbsp;&nbsp;<a
+                                                        href="{{ path('show_planning_manager',{'id':item.id,'regionid':regionid}) }}"
+                                                        class="pull-right whiteText updateplanning"> <img alt="Afficher"
+                                                                                                          title="Afficher"
+                                                                                                          class="pull-right"
+                                                                                                          src="{{ asset('public/images/eye-outline.png') }}"></a>&nbsp;
+                                                {% if item.state ==0 %} <img alt="Pré-Planifié" title="Pré-Planifié"
+                                                                             class="pull-right"
+                                                                             src="{{ asset('public/images/calendar-preplanif-16.png') }}">&nbsp;&nbsp; {% endif %}
+                                                {% if item.state ==1 %} <img  alt="Planifié" title="Planifié"
+                                                                              class="pull-right"
+                                                                              src="{{ asset('public/images/calendar-planif-16.png') }}">{% endif %}
+                                                {% if item.state ==2 %} <img  alt="Rédigé" title="Rédigé"
+                                                                              class="pull-right"
+                                                                              src="{{ asset('public/images/rediger.png') }}">{% endif %}
+                                                {% if item.state ==3 %} <img  alt="Validé" title="Validé"
+                                                                              class="pull-right"
+                                                                              src="{{ asset('public/images/valide.png') }}">{% endif %}
+                                                {% if item.state ==4 %} <img alt="Annulé" title="Annulé"
+                                                                             class="pull-right"
+                                                                             src="{{ asset('public/images/cancel.png') }}">{% endif %}
+                                                {% if item.state ==5 %} <img alt="Réfusé" title="Rédaction refusée"
+                                                                             class="pull-right"
+                                                                             src="{{ asset('public/images/refused.png') }}">{% endif %}
+
+
+                                            </label>
+
+                                        {% else %}
+
+                                            <label for="event{{ item.id }}"
+                                                   class="scss-label"><span>{{ item.object }}</span>
+                                                {% if (app.user.roles[0]=='ROLE_SUPER_ADMIN' ) or  ( app.user.roles[0]=='PALAINER') %}
+                                                    <a href="{{ path('update_planning_manager',{'id':item.id,'regionid':regionid}) }}"
+                                                       class="pull-right whiteText updateplanning"><img alt="Editer"
+                                                                                                        title="Editer"
+                                                                                                        class="pull-right"
+                                                                                                        src="{{ asset('public/images/edit.png') }}"></a>
+                                                {% endif %}
+                                                &nbsp;&nbsp;<a
+                                                        href="{{ path('show_planning_manager',{'id':item.id,'regionid':regionid}) }}"
+                                                        class="pull-right whiteText updateplanning"><img alt="Afficher"
+                                                                                                         title="Afficher"
+                                                                                                         class="pull-right"
+                                                                                                         src="{{ asset('public/images/eye-outline.png') }}"></a>&nbsp;
+                                                &nbsp;&nbsp;
+                                                {% if item.state ==0 %} <img alt="Pré-Planifié" title="Pré-Planifié"
+                                                                             class="pull-right"
+                                                                             src="{{ asset('public/images/calendar-preplanif-16.png') }}">&nbsp;&nbsp; {% endif %}
+                                                {% if item.state ==1 %} <img  alt="Planifié" title="Planifié"
+                                                                              class="pull-right"
+                                                                              src="{{ asset('public/images/calendar-planif-16.png') }}">{% endif %}
+                                                {% if item.state ==2 %} <img  alt="Rédigé" title="Rédigé"
+                                                                              class="pull-right"
+                                                                              src="{{ asset('public/images/rediger.png') }}">{% endif %}
+                                                {% if item.state ==3 %} <img  alt="Validé" title="Validé"
+                                                                              class="pull-right"
+                                                                              src="{{ asset('public/images/valide.png') }}">{% endif %}
+                                                {% if item.state ==4 %} <img alt="Annulé" title="Annulé"
+                                                                             class="pull-right"
+                                                                             src="{{ asset('public/images/cancel.png') }}">{% endif %}
+                                                {% if item.state ==5 %} <img alt="Réfusé" title="Rédaction refusée"
+                                                                             class="pull-right"
+                                                                             src="{{ asset('public/images/refused.png') }}">{% endif %}
+
+                                            </label>
+                                        {% endif %}
+
+                                    </div>
+                                {% endfor %}
+                                <p>
+                                    <input id="drop-remove" class="css-checkbox hidden" type="checkbox"/>
+                                    <label for="drop-remove" class="css-label hidden">remove after drop </label>
+                                </p>
+                            </div>
+                            <div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ==================== END OF EVENTS FLOATING BOX ==================== -->
+                </div>
+                <!-- ==================== END OF EVENTS CONTAINER ==================== -->
+
+            </div>
+            <!-- ==================== END OF CALENDAR ROW ==================== -->
+
+        </div>
+    </div><!-- ==================== END OF PAGE CONTENT ==================== -->
+{% endblock %}
+
+{% block javascripts %}
+    <!-- masked inputs -->
+    <script src="{{ asset('RessourcesBack/js/lib/jquery-inputmask/jquery.inputmask.min.js') }}"></script>
+    <script src="{{ asset('RessourcesBack/js/lib/jquery-inputmask/jquery.inputmask.extensions.js') }}"></script>
+    <script src="{{ asset('RessourcesBack/js/lib/jquery-inputmask/jquery.inputmask.date.extensions.js') }}"></script>
+
+    <script src="{{ asset('RessourcesBack/js/vendor/bootstrap-datetimepicker.min.js') }}"></script>
+    <script src="{{ asset('RessourcesBack/js/vendor/jquery-ui-1.10.2.custom.min.js') }}"></script>        <!-- jquery ui dragging -->
+    <script src="{{ asset('RessourcesBack/js/vendor/fullcalendar.js') }}"></script>                   <!-- fullcalendar plugin -->
+
+    <!-- parsley validator plugin -->
+
+    <script>
+        var linkajxplanning = "{{ path('back_ajx_planning_json') }}";
+        var getPlanning = "{{ path('back_ajx_leplanning_json') }}";
+
+        // couleur des categorie
+        var color = [];
+        {% for item in category %}
+        color[{{ item.id }}] = '{{ item.color }}';
+        {% endfor %}
+
+        $(".datetimepicker").inputmask("datetime");
+        function afficherleplanning(idPlanning) {
+            $.ajax({
+                type: "POST",
+                dataType: "json",
+                url: getPlanning,
+                data: "id=" + idPlanning,
+                success: function (msg) {
+
+                    if (msg.state == 0) {
+                        var etat = "Pré-Planifié"
+                    }
+                    if (msg.state == 1) {
+                        var etat = "Planifié"
+                    }
+                    if (msg.state == 2) {
+                        var etat = "Rédigé"
+                    }
+                    if (msg.state == 3) {
+                        var etat = "Validé"
+                    }
+                    if (msg.state == 4) {
+                        var etat = "Annulé"
+                    }
+                    if (msg.state == 5) {
+                        var etat = "Rédaction refusée"
+                    }
+                    bodyhtml = "";
+                    //Etat
+                    bodyhtml += "<div class='row-fluid' >";
+                    bodyhtml += "<div class='span12 headline' >";
+                    bodyhtml += "<h3>Etat</h3><span>" + etat + "</span>";
+                    bodyhtml += "</div>";
+                    bodyhtml += "</div>";
+                    //Objet
+                    bodyhtml += "<div class='row-fluid' >";
+                    bodyhtml += "<div class='span12 headline' >";
+                    bodyhtml += "<h3>Objet</h3><span>" + msg.object + "</span>";
+                    bodyhtml += "</div>";
+                    bodyhtml += "</div>";
+                    //Tarif
+                    bodyhtml += "<div class='row-fluid' >";
+                    bodyhtml += "<div class='span12 headline' >";
+                    bodyhtml += "<h3>Tarif</h3><span>" + msg.tariff + "</span>";
+                    bodyhtml += "</div>";
+                    bodyhtml += "</div>";
+                    //Objectif Chiffre d'affaire
+                    bodyhtml += "<div class='row-fluid' >";
+                    bodyhtml += "<div class='span12 headline' >";
+                    bodyhtml += "<h3>Objectif Chiffre d'affaire</h3><span>" + msg.ca + "</span>";
+                    bodyhtml += "</div>";
+                    bodyhtml += "</div>";
+                    //Description
+                    bodyhtml += "<div class='row-fluid' >";
+                    bodyhtml += "<div class='span12 headline' >";
+                    bodyhtml += "<h3>Description</h3><span>" + msg.description + "</span>";
+                    bodyhtml += "</div>";
+                    bodyhtml += "</div>";
+                    //Date de début
+                    bodyhtml += "<div class='row-fluid' >";
+                    bodyhtml += "<div class='span12 headline' >";
+                    bodyhtml += "<h3>Date de début</h3><span>" + msg.startDate + "</span>";
+                    bodyhtml += "</div>";
+                    bodyhtml += "</div>";
+                    //Date de fin
+                    bodyhtml += "<div class='row-fluid' >";
+                    bodyhtml += "<div class='span12 headline' >";
+                    bodyhtml += "<h3>Date de fin</h3><span>" + msg.endDate + "</span>";
+                    bodyhtml += "</div>";
+                    bodyhtml += "</div>";
+                    //Remarques
+                    bodyhtml += "<div class='row-fluid' >";
+                    bodyhtml += "<div class='span12 headline' >";
+                    bodyhtml += "<h3>Remarques</h3><span>" + msg.remarks + "</span>";
+                    bodyhtml += "</div>";
+                    bodyhtml += "</div>";
+                    //Catégorie
+                    bodyhtml += "<div class='row-fluid' >";
+                    bodyhtml += "<div class='span12 headline' >";
+                    bodyhtml += "<h3>Catégorie</h3><span>" + msg.category + "</span>";
+                    bodyhtml += "</div>";
+                    bodyhtml += "</div>";
+                    //Région
+                    bodyhtml += "<div class='row-fluid' >";
+                    bodyhtml += "<div class='span12 headline' >";
+                    bodyhtml += "<h3>Région</h3><span>" + msg.region + "</span>";
+                    bodyhtml += "</div>";
+                    bodyhtml += "</div>";
+                    if (msg.state == 0) {
+
+                        if (msg.route_annexe != null) {
+                            bodyhtml += "<div class='row-fluid' >";
+                            bodyhtml += "<div class='span12 headline' >";
+                            bodyhtml += "<h3>Annexe proposée</h3>";
+                            bodyhtml += "</div>";
+                            bodyhtml += "</div>";
+                            $.each(msg.route_annexe, function (index, value) {
+                                bodyhtml += "<div class='row-fluid' >";
+                                bodyhtml += "<div class='span12 headline' >";
+                                bodyhtml += "<span><a target='_blanc' href='" + value.route + "'>" + value.name + "</span></a>";
+                                bodyhtml += "</div>";
+                                bodyhtml += "</div>";
+                            });
+                        }
+                    }
+                    //icones
+                    bodyhtml += "<div class='row-fluid' >";
+                    bodyhtml += "<div style='background: #e2007a;line-height: 2.2' class='span12 text-center'>";
+                    if (msg.state == 0) {
+                        bodyhtml += "<img src='/public/images/calendar-preplanif-16.png' title='Pré-Planifié' alt='Pré-Planifié'>";
+                    }
+                    if (msg.state == 1) {
+                        bodyhtml += "<img src='/public/images/calendar-planif-16.png' title='Planifié' alt='Planifié'>";
+                    }
+                    if (msg.state == 2) {
+                        bodyhtml += "<img src='/public/images/rediger.png' title='Rédigé' alt='Rédigé'>";
+                    }
+                    if (msg.state == 3) {
+                        bodyhtml += "<img src='/public/images/valide.png' title='Validé' alt='Validé'>";
+                    }
+                    if (msg.state == 4) {
+                        bodyhtml += "<img src='/public/images/cancel.png' title='Annulé' alt='Annulé'>";
+
+                    }
+                    if (msg.state == 5) {
+                        bodyhtml += "<img src='/public/images/refused.png' title='Rédaction refusée' alt='Rédaction refusée'>";
+
+
+                    }
+                    {% if (app.user.roles[0]=='ROLE_SUPER_ADMIN' ) or  ( app.user.roles[0]=='PALAINER') or  ( app.user.roles[0]=='CHEFRED') %}
+                    bodyhtml += "<a class='updateplanning' href='" + msg.route_update + "'> <img src='/public/images/edit.png' title='Editer' alt='Editer'></a>";
+                    {% endif %}
+                    bodyhtml += "<a class='updateplanning' href='" + msg.route_show + "'><img src='/public/images/eye-outline.png' title='Afficher' alt='Afficher'></a>";
+
+                    if (msg.annexe) {
+                        bodyhtml += "<a target='_blanc' href='" + msg.route_pdf + "'><img src='/public/images/pdf.png' title='Télecharger Pdf' alt='Télecharger Pdf'></a>";
+
+
+                    }
+
+
+                    bodyhtml += "</div>";
+                    bodyhtml += "</div>";
+
+                    $("#object_planning").html("" + msg.object);
+                    $("#container-fluid").html(bodyhtml);
+
+                }
+            });
+        }
+        $(function () {
+            // fancybox
+            $('.updateplanning').fancybox({
+                'height': 'auto',
+                'width': 880,
+                'type': 'iframe',
+                'scrolling': 'auto',
+                'autoScale': false
+            });
+            /* initialize the external events
+             -----------------------------------------------------------------*/
+            function externalEvents() {
+
+                $('#external-events div.external-event').each(function () {
+
+                    // create an Event Object (http://arshaw.com/fullcalendar/docs/event_data/Event_Object/)
+                    // it doesn't need to have a start or end
+                    var eventObject = {
+                        title: $.trim($(this).text()) // use the element's text as the event title
+                    };
+
+                    // store the Event Object in the DOM element so we can get to it later
+                    $(this).data('eventObject', eventObject);
+
+                    // make the event draggable using jQuery UI
+                    $(this).draggable({
+                        zIndex: 999,
+                        revert: true,      // will cause the event to go back to its
+                        revertDuration: 0,  //  original position after the drag
+                        appendTo: 'body',
+                        containment: 'window',
+                        scroll: false,
+                        helper: 'clone'
+                    });
+
+                });
+
+            };
+
+            /* initialize the calendar
+             -----------------------------------------------------------------*/
+
+            function calInit() {
+
+                $('#calendar').fullCalendar({
+                    header: {
+                        left: '',
+                        center: 'title',
+                        right: 'prev,next'
+                    },
+
+                    defaultDate: '{{ "now"|date('Y-m-d') }}',
+                    editable: false,
+                    droppable: false, // this allows things to be dropped onto the calendar !!!
+                    eventLimit: true, // allow "more" link when too many events
+                    // implementation de la bdd
+
+                    events: [
+                        {% for item in entities %}
+                        {
+                            {% set planningLie = verifPlanningLie( item.id ) %}
+                            {% if planningLie > 0 and item.state == 0 %}
+                            {% set classeReli = ";text-decoration:underline;" %}
+                            {% else %}
+                            {% set classeReli = "" %}
+                            {% endif %}
+                            {% if  item.state == 4 %}
+                            {% set annuler = ";text-decoration:line-through;" %}
+                            {% else %}
+                            {% set annuler = "" %}
+                            {% endif %}
+
+                            id: {{ item.id }},
+                            title: "{{ item.object|raw }}",
+                            start: '{{ item.startDate|date('Y-m-d') }}T{{ item.startDate|date('H:i') }}:00',
+                            end: '{{ item.startDate|date('Y-m-d') }}T23:59',
+                            className: '{{ item.categoryId.color~annuler~classeReli }}',
+                            url: 'javascript:afficherleplanning("{{ item.id }}")'
+                        },
+                        {% endfor %}
+
+                    ],
+                    drop: function (date, allDay) { // this function is called when something is dropped
+                        // retrieve the dropped element's stored Event Object
+                        var originalEventObject = $(this).data('eventObject');
+                        // we need to copy it, so that multiple events don't have a reference to the same object
+                        var copiedEventObject = $.extend({}, originalEventObject);
+                        // assign it the date that was reported
+                        copiedEventObject.start = date;
+                        copiedEventObject.allDay = allDay;
+                        // render the event on the calendar
+                        // the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
+                        $('#calendar').fullCalendar('renderEvent', copiedEventObject, true);
+                        // is the "remove after drop" checkbox checked?
+                        if ($('#drop-remove').is(':checked')) {
+                            // if so, remove the element from the "Draggable Events" list
+                            $(this).remove();
+                        }
+                    }
+
+                });
+
+
+                externalEvents();
+                $('.fc-button-prev span').click(function () {
+
+                    var date1 = $('#calendar').fullCalendar('getDate');
+                    loadPlanningDuMois("01/" + (date1.getMonth()) + "/" + date1.getFullYear());
+                    $(this).parents('span').eq(0).trigger("destroy");
+                });
+
+                $('.fc-button-next span').click(function () {
+                    var date2 = $('#calendar').fullCalendar('getDate');
+
+
+                    loadPlanningDuMois("01/" + (date2.getMonth() + 2) + "/" + date2.getFullYear());
+                    $(this).parents('span').eq(0).trigger("destroy");
+
+                });
+            };
+
+
+            function loadPlanningDuMois(date) {
+
+                var bodyhtml = "";
+                $.ajax({
+                    type: "POST",
+                    dataType: "json",
+                    url: linkajxplanning,
+                    data: "date=" + date + "&region={{ regionid }}",
+                    success: function (msg) {
+                        bodyhtml = "";
+                        $.each(msg, function (index, value) {
+
+                            bodyhtml += "<div class='external-event' style='background: " + value.color + "'>";
+                            {% if app.user.roles[0]=='COMMERCIAL'  %}
+                            bodyhtml += "<label >" + value.object + "";
+                            {% if (app.user.roles[0]=='ROLE_SUPER_ADMIN' ) or  ( app.user.roles[0]=='PALAINER') %}
+                            bodyhtml += '<a href="' + value.route_update + '" class="pull-right whiteText updateplanning"> <img alt="Editer" title="Editer" class="pull-right" src="{{ asset('public/images/edit.png') }}"></a>';
+                            {% endif %}
+                            bodyhtml += '&nbsp;&nbsp;<a href="' + value.route_show + '" class="pull-right whiteText updateplanning"> <img  style="margin-right:9px; " alt="Afficher" title="Afficher" class="pull-right" src="{{ asset('public/images/eye-outline.png') }}"></a>&nbsp;';
+
+                            if (value.state == 0) {
+                                bodyhtml += '<img style="margin-right:9px; " alt="Pré-Planifié" title="Pré-Planifié" class="pull-right" src="{{ asset('public/images/calendar-preplanif-16.png') }}">&nbsp;&nbsp;';
+
+                            }
+                            if (value.state == 1) {
+                                bodyhtml += '<img  style="margin-right:9px; " alt="Planifié" title="Planifié" class="pull-right" src="{{ asset('public/images/calendar-planif-16.png') }}">';
+
+                            }
+                            if (value.state == 2) {
+                                bodyhtml += '<img  style="margin-right:9px; " alt="Rédigé" title="Rédigé" class="pull-right" src="{{ asset('public/images/rediger.png') }}">';
+
+                            }
+                            if (value.state == 3) {
+                                bodyhtml += '<img  style="margin-right:9px; " alt="Validé" title="Validé" class="pull-right" src="{{ asset('public/images/valide.png') }}">';
+
+                            }
+                            bodyhtml += "</label>";
+
+                            {% else %}
+
+                            bodyhtml += '<label for="event' + value.id + '" class="scss-label"><span>' + value.object + '</span>';
+                            {% if (app.user.roles[0]=='ROLE_SUPER_ADMIN' ) or  ( app.user.roles[0]=='PALAINER') %}
+                            bodyhtml += '<a href="' + value.route_update + '" class="pull-right whiteText updateplanning"><img alt="Editer" title="Editer" class="pull-right" src="{{ asset('public/images/edit.png') }}"></a>';
+                            {% endif %}
+                            bodyhtml += '&nbsp;&nbsp;<a href="' + value.route_show + '" class="pull-right whiteText updateplanning"><img  style="margin-right:9px; " alt="Afficher" title="Afficher" class="pull-right" src="{{ asset('public/images/eye-outline.png') }}"></a>&nbsp;';
+                            bodyhtml += "&nbsp;&nbsp;";
+                            if (value.state == 0) {
+                                bodyhtml += '<img style="margin-right:9px; " alt="Pré-Planifié" title="Pré-Planifié" class="pull-right" src="{{ asset('public/images/calendar-preplanif-16.png') }}">&nbsp;&nbsp;';
+
+                            }
+                            if (value.state == 1) {
+                                bodyhtml += '<img  style="margin-right:9px; " alt="Planifié" title="Planifié" class="pull-right" src="{{ asset('public/images/calendar-planif-16.png') }}">';
+
+                            }
+                            if (value.state == 2) {
+                                bodyhtml += '<img  style="margin-right:9px; " alt="Rédigé" title="Rédigé" class="pull-right" src="{{ asset('public/images/rediger.png') }}">';
+
+                            }
+                            if (value.state == 3) {
+                                bodyhtml += '<img  style="margin-right:9px; " alt="Validé" title="Validé" class="pull-right" src="{{ asset('public/images/valide.png') }}">';
+
+                            }
+
+                            bodyhtml += "</label>";
+                            {% endif %}
+
+                            bodyhtml += "</div>";
+
+
+                        });
+                        $("#external-events").html(bodyhtml);
+
+                    }
+                });
+            }
+
+            function validatePrice(textBoxId) {
+                var textVal = textBoxId;
+                var regex = /^(\$|)([1-9]\d{0,2}(\,\d{3})*|([1-9]\d*))(\.\d{2})?$/;
+                var passed = textVal.match(regex);
+                if (passed == null) {
+                    alert("Le tarif doit être un nombre")
+                    return true;
+                }
+                else
+                    return false;
+            }
+
+            function validatePriceObjectif(textBoxId) {
+                var textVal = textBoxId;
+                var regex = /^(\$|)([1-9]\d{0,2}(\,\d{3})*|([1-9]\d*))(\.\d{2})?$/;
+                var passed = textVal.match(regex);
+                if (passed == null) {
+                    alert("L'Objectif de chiffre d'affaire doit être un nombre")
+                    return true;
+                }
+                else
+                    return false;
+            }
+
+            function verfierDate(startdate, enddate) {
+                if (enddate <= startdate) {
+                    alert("La date de début doit être inférieure à la date de fin")
+                    return true;
+                }
+                else
+                    return false;
+            }
+
+            function newEvent() {
+                if ($('#idobject').val() != ''
+                        && $('#idtarif').val() != ''
+                        && !validatePrice($('#idtarif').val())
+                        && $('#iddescription').val() != ''
+                        && $('#idca').val() != ''
+                        && !validatePriceObjectif($('#idca').val())
+                        && !verfierDate(new Date($('#startdate').val()).getTime(), new Date($('#enddate').val()).getTime())
+
+                        && $('#startdate').val() != ''
+                        && $('#enddate').val() != ''
+                        && $('#idremarque').val() != ''
+                        && $('#idcategorie').val() != '') {
+
+                    var idobject = $('#idobject').val();
+                    var idtarif = $('#idtarif').val();
+                    var iddescription = $('#iddescription').val();
+                    var idca = $('#idca').val();
+                    var startdate = $('#startdate').val();
+                    var enddate = $('#enddate').val();
+                    var idremarque = $('#idremarque').val();
+                    var idcategorie = $('#idcategorie').val();
+
+                    $.ajax({
+                        type: "POST",
+                        async: false,
+                        url: "{{ path('add_planning_manager') }}",
+                        data: "idca=" + idca + "&idobject=" + idobject + "&idtarif=" + idtarif + "&iddescription=" + iddescription + "&startdate=" + startdate + "&enddate=" + enddate + "&idremarque=" + idremarque + "&idcategorie=" + idcategorie + "&regionid={{ region.id }}",
+                        success: function (msg) {
+                            if (msg == "false") {
+                                displayError();
+                            } else {
+                                idplanning = msg
+                                $('#external-events p').before('<div class="external-event" style="background: ' + color[idcategorie] + '"><input id="event' + idplanning + '" class="css-checkbox" type="checkbox" value="' + idplanning + '"/><label for="event' + idplanning + '" class="css-label">' + idobject + ' ' + '</label>');
+                                //externalEvents();
+                                //deleteEvent();
+                                //checkChecked();
+                                $('#idobject').val('');
+                                $('#idtarif').val('');
+                                $('#idca').val('');
+                                $('#iddescription').val('');
+                                $('#startdate').val('');
+                                $('#enddate').val('');
+                                $('#idremarque').val('');
+                                $('#idcategorie').val('');
+                                location.reload();
+                            }
+
+                        }
+                    });
+
+
+                } else {
+
+                    displayError();
+                }
+            };
+
+            function displayError() {
+                $('#alertBlock').remove();
+                $('#idcategorie').after('<span class="help-block" id="alertBlock">'
+                + '<div class="alert alert-error" id="event-error">'
+                + '<button type="button" class="close" data-dismiss="alert">&times;</button>'
+                + '<strong>Oh !</strong> Vérifiez vos données.'
+                + '</div>'
+                + '</span>');
+                $('#alertBlock').delay('3500').fadeOut(700, function () {
+                    $(this).remove();
+                });
+            };
+
+            function checkChecked() {
+
+                $('.external-event input:checkbox').click(function () {
+                    var all_checkboxes = $('.external-event input[type="checkbox"]:checked');
+
+                    if ($(this).is(':checked')) {
+
+                        $('#deleteEvent').removeClass('disabled');
+                    }
+
+                    if (all_checkboxes.length == 0) {
+
+                        $('#deleteEvent').addClass('disabled');
+                    }
+                });
+
+            };
+
+            function deleteEvent() {
+                var all_checkboxes = $('.external-event input[type="checkbox"]:checked');
+                all_checkboxes.each(function (index) {
+                    $.ajax({
+                        type: "POST",
+                        url: "{{ path('delete_planning_manager') }}",
+                        data: "id=" + $(all_checkboxes[index]).val(),
+                        success: function (msg) {
+
+                        }
+                    });
+                });
+                all_checkboxes.parent().fadeOut(300, function () {
+                    $(this).remove()
+                });
+                location.reload();
+            };
+
+
+            calInit();
+            checkChecked();
+
+            $('#addNewEvent').click(function () {
+                newEvent();
+                return false;
+            });
+
+            $('#newEventName').keypress(function (e) {
+                if (e.which == 13) {
+                    newEvent();
+                    return false;
+                }
+            });
+
+            $('#deleteEvent').click(function () {
+                deleteEvent();
+                $('#deleteEvent').addClass('disabled');
+            });
+
+        });
+        $("#planning-info").hide();
+        $('#calendar').on('click', '.fc-event', function (e) {
+            console.log('link click');
+            /*$("#planning-info").show().siblings("div").hide();*/
+            $("#planning-info").show();
+            e.stopPropagation();
+        });
+        $('#planning-info').on('click', '.hideElement', function (e) {
+            $("#planning-info").hide();
+            e.stopPropagation();
+        });
+
+
+    </script>
+
+{% endblock %}
+{% block stylesheets %}
+    <link href="{{ asset('RessourcesBack/css/bootstrap-datetimepicker.css') }}" type="text/css" rel="stylesheet"/>
+    <link href="{{ asset('RessourcesBack/css/fullcalendar/fullcalendar.css') }}" type="text/css" rel="stylesheet"/>
+    <link href="{{ asset('RessourcesBack/css/fullcalendar/fullcalendar.print.css') }}" media='print' type="text/css"
+          rel="stylesheet"/>
+{% endblock %}
+

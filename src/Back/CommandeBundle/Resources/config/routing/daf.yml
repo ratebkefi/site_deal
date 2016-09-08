@@ -1,0 +1,105 @@
+list_daf:
+    path:     /
+    defaults: { _controller: BackCommandeBundle:Daf:index }
+
+update_daf_manager:
+    path:     /update/{id}
+    defaults: { _controller: BackCommandeBundle:Daf:edit}
+    requirements:
+        id: \d+
+view_daf_manager:
+    path:     /view/{id}
+    defaults: { _controller: BackCommandeBundle:Daf:view}
+    requirements:
+        id: \d+
+add_daf_manager:
+    path:     /add
+    defaults: { _controller: BackCommandeBundle:Daf:add}
+
+activate_daf_manager:
+    path:     /act/{id}
+    defaults: { _controller: BackCommandeBundle:Daf:activate}
+    requirements:
+        id: \d+
+unactivate_daf_manager:
+    path:     /unact/{id}
+    defaults: { _controller: BackCommandeBundle:Daf:unactivate}
+    requirements:
+        id: \d+
+retrait_daf_manager:
+    path:     /retrait/{id}
+    defaults: { _controller: BackCommandeBundle:Daf:retrait}
+    requirements:
+        id: \d+
+daf_historique_caisse:
+    path:     /caisse/{id}
+    defaults: { _controller: BackCommandeBundle:Daf:caisse}
+    requirements:
+        id: \d+
+back_ajx_ticket8_json:
+    pattern: /ticket/ticket8json
+    defaults: { _controller: "BackCommandeBundle:Daf:daf8json"}
+back_ajx_ticket9_json:
+    pattern: /ticket/ticket9json
+    defaults: { _controller: "BackCommandeBundle:Daf:daf9json"}
+
+back_ajx_ticket157_json:
+     pattern: /ticket/ticket157json
+     defaults: { _controller: "BackCommandeBundle:Daf:ticket157json"}
+back_ajx_ticket158_json:
+     pattern: /ticket/ticket158json
+     defaults: { _controller: "BackCommandeBundle:Daf:ticket158json"}
+back_ajx_ticket159_json:
+    pattern: /ticket/ticket159json
+    defaults: { _controller: "BackCommandeBundle:Daf:ticket159json"}
+back_ajx_ticket160_json:
+    pattern: /ticket/ticket160json
+    defaults: { _controller: "BackCommandeBundle:Daf:ticket160json"}
+back_ajx_ticket161_json:
+    pattern: /ticket/ticket161json
+    defaults: { _controller: "BackCommandeBundle:Daf:ticket161json"}
+back_ajx_ticket162_json:
+    pattern: /ticket/ticket162json
+    defaults: { _controller: "BackCommandeBundle:Daf:ticket162json"}
+back_ajx_ticket163_json:
+     pattern: /ticket/ticket163json
+     defaults: { _controller: "BackCommandeBundle:Daf:ticket163json"}
+back_ajx_ticket164_json:
+     pattern: /ticket/ticket164json
+     defaults: { _controller: "BackCommandeBundle:Daf:ticket164json"}
+back_ajx_ticket165_json:
+     pattern: /ticket/ticket165json
+     defaults: { _controller: "BackCommandeBundle:Daf:ticket165json"}
+back_ajx_ticket166_json:
+     pattern: /ticket/ticket166json
+     defaults: { _controller: "BackCommandeBundle:Daf:ticket166json"}
+back_ajx_ticket167_json:
+     pattern: /ticket/ticket167json
+     defaults: { _controller: "BackCommandeBundle:Daf:ticket167json"}
+back_ajx_ticket168_json:
+     pattern: /ticket/ticket168json
+     defaults: { _controller: "BackCommandeBundle:Daf:ticket168json"}
+back_ajx_ticket169_json:
+     pattern: /ticket/ticket169json
+     defaults: { _controller: "BackCommandeBundle:Daf:ticket169json"}
+recapitulatif_facturation_un_financier:
+    path:     /recapitulatiffacturationun
+    defaults: { _controller: BackDashBundle:Default:RecapitulatifFacturationUn }
+recapitulatif_facturation_deux_financier:
+    path:     /recapitulatiffacturationdeux
+    defaults: { _controller: BackDashBundle:Default:RecapitulatifFacturationDeux }
+recapitulatif_facturation_ca_financier:
+    path:     /recapitulatiffca
+    defaults: { _controller: BackDashBundle:Default:RecapitulatifFacturationCA}
+performances_marchant:
+    path:     /recapitulatifperformanceperf
+    defaults: { _controller: BackDashBundle:Default:RecapitulatifPerformancesMarchant}
+performances_commercial:
+    path:     /recapitulatifperformancecomm
+    defaults: { _controller: BackDashBundle:Default:RecapitulatifPerformancesComm}
+
+daf_partner_show:
+    path:     /partner/view/{id}
+    defaults: { _controller: BackPartnerBundle:Partner:schow}
+    requirements:
+        id: \d+

@@ -1,0 +1,119 @@
+{% extends '::baseBack.html.twig' %}
+
+{% block body %}
+    <!-- ==================== PAGE CONTENT ==================== -->
+    <div class="content">
+        <!-- ==================== END OF BREADCRUMBS / DATETIME ==================== -->
+        <!-- ==================== WIDGETS CONTAINER ==================== -->
+        <div class="container-fluid">
+            <!-- ==================== CALENDAR ROW ==================== -->
+            <div class="row-fluid">
+                <!-- ==================== CALENDAR CONTAINER ==================== -->
+                <div class="span12">
+                    <!-- ==================== CALENDAR HEADLINE ==================== -->
+                    <a href="{{ path('compagne_new') }}" class="btn btn-danger">
+                        <i class="icon-user" style="opacity: 1;"></i> Créer une campagne
+                    </a>
+                    <div class="containerHeadline">
+                        <i class="icon-calendar"></i>
+
+                        <h2>Liste des Compagnes </h2>
+
+                        <div class="controlButton pull-right"><i class="icon-caret-down minimizeElement"></i></div>
+                    </div>
+
+
+                    <div class="floatingBox table ">
+                        <div class="container-fluid">
+                            <table class="tablesorter centerFirstLast tablesorter-default hasFilters" id="example">
+                                <thead>
+                                <tr class="tablesorter-headerRow">
+                            <th class="tablesorter-header tablesorter-headerAsc"><div class="tablesorter-header-inner">ID</div></th>
+                            <th class="tablesorter-header"> <div class="tablesorter-header-inner">Nom de la campagne</div></th>
+                            <th class="tablesorter-header"><div class="tablesorter-header-inner">Date de creation</div></th>
+                            <th class="tablesorter-header"><div class="tablesorter-header-inner">Créée par</div></th>
+                            <th class="tablesorter-header"><div class="tablesorter-header-inner">Date de la derniere modification</div></th>
+                            <th class="tablesorter-header"><div class="tablesorter-header-inner">Modifiée par</div></th>
+                            <th class="tablesorter-header"><div class="tablesorter-header-inner">Actions</div></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for entity in entities %}
+                            <tr class="info odd" >
+                                <td><a href="{{ path('compagne_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                                <td>{{ entity.namecompagne }}</td>
+                                <td>{% if entity.datecreated %}{{ entity.datecreated|date('Y-m-d H:i:s') }}{% endif %}</td>
+                                <td>{{ entity.createdby }}</td>
+                                <td>{% if entity.dateupdated %}{{ entity.dateupdated|date('Y-m-d H:i:s') }}{% endif %}</td>
+                                <td>{{ entity.updatedby }}</td>
+                                <td>
+                                    <div class="btn-toolbar" style="margin: 0;">
+                                        <div class="btn-group">
+                                            <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                                Action <span class="caret"></span></button>
+                                            <ul class="dropdown-menu pull-right">
+                                                <li style="text-align: left">
+                                                    <a href="{{ path('compagne_edit', { 'id': entity.id }) }}">Modifier</a>
+                                                </li>
+                                                <li style="text-align: left">
+                                                    <a href="{{ path('compagne_show', { 'id': entity.id }) }}">Apercu</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                            <div class="pagination pagination-large" style="text-align: center">
+                            <ul class="pagination">
+
+                                {% if(page>4) %}<li class="page "><a href="{{ path('dash_compagnes', {'page': page-1}) }}"><-</a> </li>  <li class="first"><a href="{{ path('dash_compagnes', {'page': 1}) }}" title=""><i class="icon_debut"></i>Début</a></li> {% endif %}
+                                {# On utilise la fonction range(a, b) qui crée un tableau de valeurs entre a et b #}
+                                {% for p in range(1, nbPages) %}
+                                    {% if (p < page+4) and (p > page-4) %}
+                                        <li{% if p == page %} class="current active "{% endif %}>
+                                            <a href="{{ path('dash_compagnes', {'page': p}) }}">{{ p }}</a>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% if(page<nbPages-3) %}<li class="page "><a href="{{ path('dash_compagnes', {'page': page+1}) }}">-></a> </li>  <li class="fin"><a href="{{ path('dash_compagnes', {'page': nbPages}) }}" title="">Fin<i class="last"></i></a></li> {% endif %}
+                            </ul>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    <!-- ==================== END OF CALENDAR FLOATING BOX ==================== -->
+                </div>
+                <!-- ==================== END OF CALENDAR CONTAINER ==================== -->
+
+                <!-- ==================== EVENTS CONTAINER ==================== -->
+
+                <!-- ==================== END OF EVENTS CONTAINER ==================== -->
+
+            </div>
+            <!-- ==================== END OF CALENDAR ROW ==================== -->
+
+        </div>
+    </div><!-- ==================== END OF PAGE CONTENT ==================== -->
+{% endblock %}
+
+{% block javascripts %}
+
+
+{% endblock %}
+
+
+
+
+{% block stylesheets %}
+
+    <link href="{{ asset('RessourcesBack/css/bootstrap-datetimepicker.css') }}" type="text/css" rel="stylesheet"/>
+    <link href="{{ asset('RessourcesBack/css/fullcalendar/fullcalendar.css') }}" type="text/css" rel="stylesheet"/>
+    <link href="{{ asset('RessourcesBack/css/fullcalendar/fullcalendar.print.css') }}" media='print' type="text/css" rel="stylesheet"/>
+{% endblock %}
+

@@ -1,0 +1,143 @@
+list_chefserviceclient:
+    path:     /
+    defaults: { _controller: BackDashBundle:Default:index }
+volume_tickets_client:
+    path:     /volumetickets
+    defaults: { _controller: BackDashBundle:Default:TicketsClient }
+nombre_tickets_total_client:
+    path:     /nombremtickets
+    defaults: { _controller: BackDashBundle:Default:NombreTicketsClient }
+nombre_message_client:
+    path:     /nombremessage
+    defaults: { _controller: BackDashBundle:Default:MessageClient }
+delai_traitement_client:
+    path:     /delaitraitement
+    defaults: { _controller: BackDashBundle:Default:TraitementClient }
+view_ticket_client:
+    path:     /{id}/ticket/view/
+    defaults: { _controller: BackCommandeBundle:ServiceClient:viewTicket }
+montant_remboursements_client:
+    path:     /montantremboursements
+    defaults: { _controller: BackDashBundle:Default:MontantRemboursementsClient }
+nombre_remboursement_client:
+    path:     /nombreremboursement
+    defaults: { _controller: BackDashBundle:Default:NombreRemboursementClient }
+volume_coupons_client:
+    path:     /volumecoupons
+    defaults: { _controller: BackDashBundle:Default:VolumeCouponsClient }
+nombre_commande_client:
+    path:     /nombrecommande
+    defaults: { _controller: BackDashBundle:Default:NombreCommandeClient }
+nombre_commande_total_client:
+    path:     /nombretotalcommande
+    defaults: { _controller: BackDashBundle:Default:NombreTotalCommandeClient }
+statistique_client:
+    path:     /statistiqueclient
+    defaults: { _controller: BackDashBundle:Default:StatistiqueClient }
+recapitulatif_client:
+    path:     /recapitulatifclient
+    defaults: { _controller: BackDashBundle:Default:RecapitulatifClient }
+recapitulatif_remboursement:
+   path:     /recapitulatifremboursement
+   defaults: { _controller: BackDashBundle:Default:RecapitulatifRemboursement }
+recapitulatif_commentaires:
+   path:     /recapitulatifcommentaires
+   defaults: { _controller: BackDashBundle:Default:RecapitulatifCommentaires }
+fact_coup_nb_coup_financier:
+    path:     /factcoupnbcoup
+    defaults: { _controller: BackDashBundle:Default:FactCoupNbCoupFinancier }
+fact_coup_prix_financier:
+    path:     /factcoupprix
+    defaults: { _controller: BackDashBundle:Default:FactCoupPrixCoupFinancier }
+volume_paiement_financier:
+    path:     /volumepaiement
+    defaults: { _controller: BackDashBundle:Default:VolumePaiementFinancier }
+volume_caisse_financier:
+    path:     /volumecaisse
+    defaults: { _controller: BackDashBundle:Default:VolumeCaisseFinancier }
+montant_caisse_financier:
+    path:     /montantcaisse
+    defaults: { _controller: BackDashBundle:Default:MontantCaisseFinancier }
+montant_remboursements_financier:
+    path:     /montantremboursements
+    defaults: { _controller: BackDashBundle:Default:MontantRemboursementsFinancier }
+chiffre_affaire_tous_deal_commercial:
+    path:     /chiffreaffairetousdeal
+    defaults: { _controller: BackDashBundle:Default:ChiffreAffaireTousDealCommercial }
+chiffre_affaire_commercial:
+    path:     /chiffreaffaire
+    defaults: { _controller: BackDashBundle:Default:ChiffreAffaireCommercial }
+chiffre_affaire_deal_commercial:
+    path:     /chiffreaffairedeal
+    defaults: { _controller: BackDashBundle:Default:ChiffreAffaireDealCommercial }
+volume_contrats_commercial:
+    path:     /volumecontratscom
+    defaults: { _controller: BackDashBundle:Default:VolumeContratsCommercial }
+nombre_deal_redacteur:
+    path:     /nombredeal
+    defaults: { _controller: BackDashBundle:Default:NombreDealRedacteur }
+duree_generation_redaction_deal_redacteur:
+    path:     /dureegenerationredactiondeal
+    defaults: { _controller: BackDashBundle:Default:DureeGenerationRedactionDealRedacteur }
+duree_redaction:
+    path:     /dureeredaction
+    defaults: { _controller: BackDashBundle:Default:DureeRedaction }
+nombre_annexes_choisis_commercial_planificateur:
+    path:     /nombreannexeschoisiscommercial
+    defaults: { _controller: BackDashBundle:Default:NombreAnnexesChoisisCommercialPlanificateur }
+nombre_contrats_signes_commercial_planificateur:
+    path:     /nombrecontratssignescommercial
+    defaults: { _controller: BackDashBundle:Default:NombreContratsSignesCommercialPlanificateur }
+deal_annules_planificateur:
+    path:     /dealannules
+    defaults: { _controller: BackDashBundle:Default:DealAnnulesPlanificateur }
+nouveaux_contrats_planificateur:
+    path:     /nouveauxcontrats
+    defaults: { _controller: BackDashBundle:Default:NouveauxContratsPlanificateur }
+nombre_deal_etat_planificateur:
+    path:     /nombredealetat
+    defaults: { _controller: BackDashBundle:Default:NombreDealEtatPlanificateur }
+delai_avant_publication_deals_planificateur:
+    path:     /delaiavantpublicationdeals
+    defaults: { _controller: BackDashBundle:Default:DelaiAvantPublicationDealsPlanificateur }
+update_chefserviceclient_manager:
+    path:     /update/{id}
+    defaults: { _controller: BackCommandeBundle:ChefServiceClient:edit}
+    requirements:
+        id: \d+
+
+view_chefserviceclient_manager:
+    path:     /view/{id}
+    defaults: { _controller: BackCommandeBundle:ChefServiceClient:view}
+    requirements:
+        id: \d+
+
+add_chefserviceclient_manager:
+    path:     /add
+    defaults: { _controller: BackCommandeBundle:ChefServiceClient:add}
+
+activate_chefserviceclient_manager:
+    path:     /act/{id}
+    defaults: { _controller: BackCommandeBundle:ChefServiceClient:activate}
+    requirements:
+        id: \d+
+
+unactivate_chefserviceclient_manager:
+    path:     /unact/{id}
+    defaults: { _controller: BackCommandeBundle:ChefServiceClient:unactivate}
+    requirements:
+        id: \d+
+
+delete_chefserviceclient_manager:
+    path:     /unact/{id}
+    defaults: { _controller: BackCommandeBundle:ChefServiceClient:unactivate}
+    requirements:
+        id: \d+
+
+pdf_annexe_manager_chef:
+    path:     /{protocol_id}/pdf/{id}
+    defaults: { _controller: BackContractBundle:Annexe:print }
+
+back_reportlivraisoncsv_chef:
+    path:     /exportchef/{date1}/{date2}/{type}
+    defaults: { _controller: BackDealBundle:ReportLivraison:exportchef }

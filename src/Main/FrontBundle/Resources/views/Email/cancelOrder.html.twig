@@ -1,0 +1,12 @@
+{% include 'MainFrontBundle:Email:header.html.twig' %}
+
+Bonjour <strong>{{ client.name }} {{ client.fname }}</strong>,<br/>
+Vous avez récemment essayé de commander le deal  {{ commande.deal.title }}.<br/>
+La transaction monétique n’a pas pu aboutir.<br/>
+Si vous avez reçu un coupon, merci de ne pas l’utiliser car il a été annulé.<br/>
+Vous pouvez recommander votre deal avant son expiration en cliquant ici <a href="https://www.bigdeal.tn{{ path('deal_detail',  {'region':(app.session.get('region')|getAlias),'categorie':(commande.deal.planning.categoryId|getAlias), 'id': commande.deal.id ,'name':(commande.deal.title|getAlias)}) }}" >{{ commande.deal.title }}</a><br/>
+Si vous avez des questions, n’hésitez pas à nous contacter au <strong>71 168 444</strong>.<br/>
+<br/>
+<br/>
+<strong>L’équipe BIGDeal</strong>
+{% include 'MainFrontBundle:Email:footer.html.twig' %}

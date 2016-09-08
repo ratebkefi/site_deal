@@ -1,0 +1,25 @@
+back_deal:
+    resource: "@BackDealBundle/Resources/config/routing/deal.yml"
+    prefix:   /deal
+list_redator:
+   resource: "@BackDealBundle/Resources/config/routing/redator.yml"
+   prefix:   /redactor
+back_reportdeal:
+    resource: "@BackDealBundle/Resources/config/routing/reportdeal.yml"
+    prefix:   /report
+back_reportlivraison:
+    resource: "@BackDealBundle/Resources/config/routing/reportlivraison.yml"
+    prefix:   /reportlivraison
+back_comment:
+    resource: "@BackDealBundle/Resources/config/routing/comment.yml"
+    prefix:   /comment
+list_chefredator:
+   resource: "@BackDealBundle/Resources/config/routing/chefredator.yml"
+   prefix:   /chefredactor
+back_reportfinancier:
+    resource: "@BackDealBundle/Resources/config/routing/reportfinancier.yml"
+    prefix:   /reportfinancier
+
+back_suivicommande:
+    path:     /suivi
+    defaults: { _controller: BackCommandeBundle:Command:suiviCommande }

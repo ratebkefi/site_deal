@@ -1,0 +1,134 @@
+{% extends '::baseBack.html.twig' %}
+{% block body %}
+    <div class="container-fluid">
+
+        <div class="row-fluid" style="margin-bottom:0">
+            <div class="span12">
+                <div class="row-fluid" style="margin-bottom:0">
+                    <div class="span12">
+
+                        <div class="containerHeadline">
+                            <i class="icon-zoom-in"></i><h2>Filtre</h2>
+
+                        </div>
+
+                        <div class="floatingBox">
+                            <div class="container-fluid">
+                                <form onsubmit="return false;">
+                                    <div class="span3">
+                                        <label>Catégorie</label>
+                                        <select class="span12" onchange="chargerselectdeal()" id="idcategorie">
+                                            <option value=""></option>
+                                            {% for item in category %}
+                                                {% if item.category|length>0 %}
+                                                    <optgroup label="{{ item.name }}">
+                                                        {% for item2 in item.category %}
+                                                            <option value="{{ item2.id }}">{{ item2.name }}</option>
+                                                        {% endfor %}
+                                                    </optgroup>
+                                                {% else %}
+                                                    <option value="{{ item.id }}">{{ item.name }}</option>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="span3">
+                                        <label>Région</label>
+                                        <select class="span12" onchange="chargerselectdeal()" id="idregion">
+                                            <option value=""></option>
+                                            {% for item in region %}
+                                                <option value="{{ item.id }}">{{ item.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="span3">
+                                        <label>Date de début</label>
+                                        <input type="text" onblur="chargerselectdeal()" class="span10 datetime" name="dated" id="dated" value="{{ dated|date('d/m/Y') }}" />
+                                    </div>
+                                    <div class="span3">
+                                        <label>Date de fin</label>
+                                        <input type="text" name="datef" onblur="chargerselectdeal()" class="span10 datetime" id="datef" value="{{ datef|date('d/m/Y') }}" />
+
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row-fluid" style="margin-bottom:0">
+            <div class="span12">
+
+                <div class="row-fluid" style="margin-bottom:0">
+
+
+                    <div class="span12">
+
+                        <div class="containerHeadline">
+                            <i class="icon-ticket"></i><h2>Volume des contrats</h2>
+                            <div class="controlButton pull-right"><i class="icon-remove removeElement"></i></div>
+                            <div class="controlButton pull-right"><i class="icon-caret-down minimizeElement"></i></div>
+                            <div class="controlButton pull-right"><i class="icon-refresh " onclick="loadgraphcontrat()"></i></div>
+                        </div>
+
+                        <div class="floatingBox">
+                            <div class="container-fluid">
+                                <div class="span12">
+                                    <label>Commercial</label>
+                                    <select id="idcommercial" class="span12" onchange="loadgraphcontrat()">
+                                        <option value="">Choisissez un commercial</option>
+                                        {% for item in commecial %}
+                                            <option value="{{ item.id }}">{{ item }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="container-fluid">
+                                <div class="demoPieChart" id="firstPieChartContrar"></div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+{% endblock %}
+ {% block stylesheets %}
+     <link rel="stylesheet" type="text/css" href="{{ asset('RessourcesBack/css/bootstrap-select.css') }}">
+     <link rel="stylesheet" type="text/css" href="{{ asset('RessourcesBack/css/jquery.dataTables.css') }}">
+ {% endblock %}
+{% block javascripts %}
+
+
+    <script src="{{ asset('RessourcesBack/js/lib/jquery-inputmask/jquery.inputmask.min.js') }}"></script>
+    <script src="{{ asset('RessourcesBack/js/lib/jquery-inputmask/jquery.inputmask.extensions.js') }}"></script>
+    <script src="{{ asset('RessourcesBack/js/lib/jquery-inputmask/jquery.inputmask.date.extensions.js') }}"></script>
+
+    <script src="{{ asset('RessourcesBack/js/vendor/jquery.sparkline.min.js') }}"></script>               <!-- small charts plugin -->
+    <script src="{{ asset('RessourcesBack/js/vendor/jquery.flot.min.js') }}"></script>                    <!-- charts plugin -->
+    <script src="{{ asset('RessourcesBack/js/vendor/jquery.flot.resize.min.js') }}"></script>             <!-- charts plugin / resizing extension -->
+    <script src="{{ asset('RessourcesBack/js/vendor/jquery.flot.pie.min.js') }}"></script>                <!-- charts plugin / pie chart extension -->
+    <script src="{{ asset('RessourcesBack/js/bootstrap-select.js') }}"></script>
+
+    {% javascripts '@BackDashBundle/Resources/public/js/jquery.dataTables.js' %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    <script type="text/javascript">
+
+        var linkajxdeal="{{ path('back_dash_json_dc_deal') }}";
+        var linkajxcontrat="{{ path('back_dash_json_contrat') }}";
+
+    </script>
+    {% javascripts '@BackDashBundle/Resources/public/js/directeurcommercial.js' %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+{% endblock %}

@@ -1,0 +1,18 @@
+#categorie
+back_requiredInfo:
+    path:     /{category_id}/
+    defaults: { _controller: BackPlanningBundle:requiredInfo:index }
+
+add_requiredInfo_manager:
+    path:     /{category_id}/add
+    defaults: { _controller: BackPlanningBundle:requiredInfo:add }
+update_requiredInfo_manager:
+    path:     /{category_id}/update/{id}
+    defaults: { _controller: BackPlanningBundle:requiredInfo:edit}
+    requirements:
+        id: \d+
+delete_requiredInfo_manager:
+    path:     /{category_id}/delete/{id}
+    defaults: { _controller: BackPlanningBundle:requiredInfo:delete}
+    requirements:
+        id: \d+

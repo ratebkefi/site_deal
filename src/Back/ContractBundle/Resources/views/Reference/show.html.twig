@@ -1,0 +1,88 @@
+{% extends '::baseBack.html.twig' %}
+{% block body -%}
+    <!-- ==================== PAGE CONTENT ==================== -->
+    <div class="content">
+        <!-- ==================== WIDGETS CONTAINER ==================== -->
+        <div class="container-fluid">
+            {% if app.user.roles[0]!='SERVICECLIENT' and app.user.roles[0]!='REDACTEUR' and app.user.roles[0]!='CHEFSERVICECLI' and app.user.roles[0]!='DAF' %}
+            <a href="{{ path('add_reference_manager', { 'protocol_id':protocol_id,'annexe_id':annexe_id,'partner':partner}) }}">
+                <button class="btn btn-danger" type="button"><i class="icon-plus"></i> Ajouter</button>
+            </a>
+            <a href="{{ path('update_reference_manager', { 'id': entity.id , 'protocol_id':protocol_id,'annexe_id':annexe_id,'partner':partner}) }}">
+                <button class="btn btn-info" type="button"><i class="icon-pencil"></i> Modifier</button>
+            </a>
+            {% endif %}
+            {% if app.user.roles[0]=='ROLE_SUPER_ADMIN' %}
+
+            <a class="btn btn-danger"
+               href="{{ path('delete_reference_manager', { 'id': entity.id ,'protocol_id':protocol_id,'annexe_id':annexe_id,'partner':partner}) }}"><i
+                        class="icon-remove"></i> Supprimer</a>
+            {% endif %}
+
+
+            <!-- ==================== END OF ROW ==================== -->
+            <div class="row-fluid">
+                <div class="span12">
+                    <!-- ==================== DEFAULT TABLE HEADLINE ==================== -->
+                    <div class="containerHeadline">
+                        <i class="icon-table"></i>
+
+                        <h2>Référence {{ entity.title }}</h2>
+                    </div>
+                    <!-- ==================== END OF DEFAULT TABLE HEADLINE ==================== -->
+                    <!-- ==================== DEFAULT TABLE FLOATING BOX ==================== -->
+                    <div class="floatingBox table">
+                        <div class="container-fluid">
+                            <table class="table table-bordered">
+                                <tbody>
+                                <tr>
+                                    <th>Titre</th>
+                                    <td>{{ entity.title }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Prix boutique</th>
+                                    <td>{{ entity.shopPrice }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Prix BIGDeal</th>
+                                    <td>{{ entity.bigdealPrice }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Stock</th>
+                                    <td>{{ entity.maxCoupon }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Les marchandises retournées</th>
+                                    <td>{{ entity.returnedGoods }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Livraison</th>
+                                    <td>{% if entity.shipping ==1 %} Oui {% else %} Non {% endif %}</td>
+                                </tr>
+                                <tr>
+                                    <th>Poids</th>
+                                    <td>{{ entity.weight }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Longueur</th>
+                                    <td>{{ entity.length }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Largeur</th>
+                                    <td>{{ entity.width }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Hauteur</th>
+                                    <td>{{ entity.height }}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ==================== END OF WIDGETS CONTAINER ==================== -->
+    </div>
+    <!-- ==================== END OF PAGE CONTENT ==================== -->
+{% endblock %}

@@ -1,0 +1,3 @@
+main_ratingclient_homepage:
+    path:     /hello/{name}
+    defaults: { _controller: MainRatingclientBundle:Default:index }

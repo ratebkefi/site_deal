@@ -1,0 +1,31 @@
+
+<form target="_parent" action="{{ path('front_booking_book',{'date':date,'deal':deal,'codeCoupon':codeCoupon}) }}" class="contentForm"
+      method="POST" id="form">
+
+    Réservation le :
+    {{ date }}<br>
+    {% set i =0 %}
+    {% set len = morning|length %}
+    Matin : <br/>
+    {% for key,value in morning %}
+        {% if i != len-1 %}
+            <input type="radio" value="{{ value }}-{{ value +1 }}" name="booking">De {{ value }} à {{ value +1 }}<br/>
+        {% endif %}
+        {% set i = i +1 %}
+    {% endfor %}
+    {% set i =0 %}
+    {% set len = afternon|length %}
+    Aprés midi : <br/>
+    {% for key,value in afternon %}
+        {% if i != len-1 %}
+            <input type="radio" value="{{ value }}-{{ value +1 }}" name="booking">De {{ value }} à {{ value +1 }}<br/>
+        {% endif %}
+        {% set i = i +1 %}
+
+
+    {% endfor %}
+    <input type="hidden" value="{{ date }}" name="date">
+    <input type="hidden" value="{{ deal }}" name="deal">
+    <input type="hidden" value="{{ date }}" name="couponId">
+    <input type="submit" value="Réserver" name="book">
+</form>

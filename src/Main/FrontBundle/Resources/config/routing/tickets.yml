@@ -1,0 +1,9 @@
+ticket_manager:
+    path: /ticket.html
+    defaults: { _controller: MainFrontBundle:Ticket:ticket}
+ajouter_ticket:
+    path: /ajouterticket.html
+    defaults: { _controller: MainFrontBundle:Ticket:add}
+detail_ticket:
+    path: /{id}/detailticket.html
+    defaults: { _controller: MainFrontBundle:Ticket:detail}

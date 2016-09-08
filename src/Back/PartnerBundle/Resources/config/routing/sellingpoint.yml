@@ -1,0 +1,38 @@
+back_sellingpoint_partner:
+    path:     /
+    defaults: { _controller: BackPartnerBundle:SellingPoint:index }
+back_sellingpoint:
+    path:     /list/{partid}
+    defaults: { _controller: BackPartnerBundle:SellingPoint:list }
+    requirements:
+        partid: \d+
+view_cp:
+    path:     /viewcp
+    defaults: { _controller: BackPartnerBundle:SellingPoint:codePostale }
+list_villeajx:
+     path:     /delegation
+     defaults: { _controller: BackPartnerBundle:SellingPoint:delegation }
+
+dash_sellingpoint_update:
+    path:     /{partid}/update/{id}
+    defaults: { _controller: BackPartnerBundle:SellingPoint:edit}
+    requirements:
+        id: \d+
+        partid: \d+
+dash_sellingpoint_add:
+    path:     /{partid}/add
+    defaults: { _controller: BackPartnerBundle:SellingPoint:add}
+    requirements:
+        partid: \d+
+dash_sellingpoint_show:
+    path:     /{partid}/view/{id}
+    defaults: { _controller: BackPartnerBundle:SellingPoint:show}
+    requirements:
+        id: \d+
+        partid: \d+
+dash_sellingpoint_delete:
+    path:     /{partid}/delete/{id}
+    defaults: { _controller: BackPartnerBundle:SellingPoint:delete}
+    requirements:
+        id: \d+
+        partid: \d+

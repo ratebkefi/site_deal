@@ -1,0 +1,268 @@
+{% extends '::baseBack.html.twig' %}
+{% block body -%}
+    <!-- ==================== PAGE CONTENT ==================== -->
+    <div class="content">
+
+        <!-- ==================== WIDGETS CONTAINER ==================== -->
+        <div class="container-fluid">
+
+
+            <!-- ==================== END OF ROW ==================== -->
+            <div class="row-fluid">
+                <div class="span12">
+                    <div class="containerHeadline">
+                        <i class="icon-zoom-in"></i>
+
+                        <h2>Filtre de recherche</h2>
+
+                        <div class="controlButton pull-right"><i class="icon-caret-down minimizeElement"></i></div>
+                    </div>
+                    <div class="floatingBox table ">
+
+                        {{ form_start(form, {'method': 'GET','attr': {'class': 'form-horizontal contentForm','style':'padding:0; margin:0'}}) }}
+
+                        <div class="container-fluid" style="padding: 3px 10px">
+                            <div class="span2">
+                                <label>Type client </label>
+                                <select name="type_client">
+                                    <option></option>
+                                    <option value="1" {% if type_client == 1 %} selected="selected" {% endif %}>Nouveaux
+                                        client
+                                    </option>
+                                    <option value="2" {% if type_client == 2 %} selected="selected" {% endif %}>Ancien
+                                        client
+                                    </option>
+                                    <option value="4" {% if type_client == 4 %} selected="selected" {% endif %}>Client
+                                        fidèle
+                                    </option>
+                                </select></div>
+                            <div class="span2">
+                                <label>&Eacute;tat de commande</label>
+                                {{ form_widget(form.etat,{'attr':{'class':'span12'}}) }}
+                            </div>
+                            <div class="span4">
+                                <label>Deal</label>
+                                {{ form_widget(form.deal,{'attr':{'class':'span12 selectpicker','data-live-search':'true'}}) }}
+
+                            </div>
+                            <div class="span4">
+                                <label>&nbsp;</label>
+                                <input type="submit" value="Rechecher" class="btn btn-success"/>
+{%if deal_encour %}
+                                <input type="submit" name="export" value="Export" class="btn btn-danger"/>
+								{% endif %}
+								<br /><br />
+                            </div>
+                        </div>
+
+                        {{ form_end(form) }}
+                    </div>
+
+                    <div class="containerHeadline">
+                        <i class="icon-flag"></i>
+
+                        <h2>Légende</h2>
+
+                        <div class="controlButton pull-right"><i class="icon-caret-down minimizeElement"></i></div>
+                    </div>
+                    <div class="floatingBox table ">
+                        <div class="container-fluid">
+                            <div class="span4">
+                                <div class="alert alert-error">
+                                    <strong>Nouveau client</strong>
+                                </div>
+                            </div>
+                            <div class="span4">
+                                <div class="alert alert-info">
+                                    <strong>Ancien client</strong>
+                                </div>
+                            </div>
+
+                            <div class="span4">
+                                <div class="alert alert-success">
+                                    <strong>Client Fidèle</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ==================== DEFAULT TABLE HEADLINE ==================== -->
+                    <div class="containerHeadline">
+                        <i class="icon-table"></i>
+
+                        <h2>Liste des commandes</h2>
+                    </div>
+                    <!-- ==================== END OF DEFAULT TABLE HEADLINE ==================== -->
+                    <!-- ==================== DEFAULT TABLE FLOATING BOX ==================== -->
+                    <div class="floatingBox table">
+                        <div class="container-fluid">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Date création</th>
+                                    <th>Deal</th>
+                                    <th>Reference</th>
+                                    <th>Total commande</th>
+                                    <th>Client</th>
+                                    <th>Type client</th>
+                                    <th>Tel</th>
+
+                                    <th>Quantité</th>
+                                    <th>Payer à</th>
+                                    <th>Status</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for entity in pagination %}
+                                    {% set nombreCommandeClient = nombreCommande(entity.client.id) %}
+                                    {% set prixCoupon = montantCoupon(entity.id) %}
+                                    {% set client = clientCoupon(entity.id) %}
+                                    {% if  type_client == 1 %}
+                                        {% if nombreCommandeClient <= 1 %}
+                                            <tr class="{% if nombreCommandeClient  <= 1 %}alert alert-error{% elseif nombreCommandeClient > 1  and nombreCommandeClient <= 3 %}alert alert-info{% elseif  nombreCommandeClient > 3 %}alert alert-success{% endif %}">
+                                                <td>{{ entity.id }}</td>
+                                                <td>
+                                                    {{ entity.dcr|date("d/m/Y H:i:s") }}
+                                                </td>
+                                                <td>{{ entity.deal }}</td>
+                                                <td>{{ entity.reference.title }}</td>
+                                                <td>{{ prixCoupon *  entity.qte }} DT</td>
+
+                                                <td>{{ client }}</td>
+                                                <td>
+
+                                                    {% if nombreCommandeClient <= 1 %}
+                                                        Nouveaux client
+                                                    {% elseif nombreCommandeClient > 1  and nombreCommandeClient <= 3 %}
+                                                        Ancien Client
+                                                    {% elseif  nombreCommandeClient > 3 %}
+                                                        Client fidéle
+                                                    {% endif %}
+                                                </td>
+                                                <td>{{ entity.client.phone }}</td>
+
+                                                <td>{{ entity.qte }}</td>
+                                                <td>{% if entity.caisse is not null %}{{ entity.caisse.libelle }}{% endif %}
+                                                </td>
+                                                <td>{% if entity.etat == 1 %} Payé {% elseif entity.etat==0 %} En attente {% else %} Epuisé{% endif %}</td>
+                                            </tr>
+                                        {% endif %}
+                                    {% endif %}
+                                    {% if  type_client == 2 %}
+                                        {% if nombreCommandeClient > 1  and nombreCommandeClient <= 3 %}
+                                            <tr class="{% if nombreCommandeClient  <= 1 %}alert alert-error{% elseif nombreCommandeClient > 1  and nombreCommandeClient <= 3 %}alert alert-info{% elseif  nombreCommandeClient > 3 %}alert alert-success{% endif %}">
+                                                <td>{{ entity.id }}</td>
+                                                <td>
+                                                    {{ entity.dcr|date("d/m/Y H:i:s") }}
+                                                </td>
+                                                <td>{{ entity.deal }}</td>
+                                                <td>{{ entity.reference.title }}</td>
+                                                <td>{{ prixCoupon *  entity.qte }} DT</td>
+
+                                                <td>{{ client }}</td>
+                                                <td>
+
+                                                    {% if nombreCommandeClient <= 1 %}
+                                                        Nouveaux client
+                                                    {% elseif nombreCommandeClient > 1  and nombreCommandeClient <= 3 %}
+                                                        Ancien Client
+                                                    {% elseif  nombreCommandeClient > 3 %}
+                                                        Client fidéle
+                                                    {% endif %}
+                                                </td>
+                                                <td>{{ entity.client.phone }}</td>
+
+                                                <td>{{ entity.qte }}</td>
+                                                <td>{% if entity.caisse is not null %}{{ entity.caisse.libelle }}{% endif %}
+                                                </td>
+                                                <td>{% if entity.etat == 1 %} Payé {% elseif entity.etat==0 %} En attente {% else %} Epuisé{% endif %}</td>
+                                            </tr>
+                                        {% endif %}
+                                    {% endif %}
+                                    {% if  type_client == 4 %}
+                                        {% if nombreCommandeClient > 3 %}
+                                            <tr class="{% if nombreCommandeClient  <= 1 %}alert alert-error{% elseif nombreCommandeClient > 1  and nombreCommandeClient <= 3 %}alert alert-info{% elseif  nombreCommandeClient > 3 %}alert alert-success{% endif %}">
+                                                <td>{{ entity.id }}</td>
+                                                <td>
+                                                    {{ entity.dcr|date("d/m/Y H:i:s") }}
+                                                </td>
+                                                <td>{{ entity.deal }}</td>
+                                                <td>{{ entity.reference.title }}</td>
+                                                <td>{{ prixCoupon *  entity.qte }} DT</td>
+
+                                                <td>{{ client }}</td>
+                                                <td>
+
+                                                    {% if nombreCommandeClient <= 1 %}
+                                                        Nouveaux client
+                                                    {% elseif nombreCommandeClient > 1  and nombreCommandeClient <= 3 %}
+                                                        Ancien Client
+                                                    {% elseif  nombreCommandeClient > 3 %}
+                                                        Client fidéle
+                                                    {% endif %}
+                                                </td>
+                                                <td>{{ entity.client.phone }}</td>
+
+                                                <td>{{ entity.qte }}</td>
+                                                <td>{% if entity.caisse is not null %}{{ entity.caisse.libelle }}{% endif %}
+                                                </td>
+                                                <td>{% if entity.etat == 1 %} Payé {% elseif entity.etat==0 %} En attente {% else %} Epuisé{% endif %}</td>
+                                            </tr>
+                                        {% endif %}
+                                    {% endif %}
+                                    {% if  type_client == "" %}
+                                        <tr class="{% if nombreCommandeClient  <= 1 %}alert alert-error{% elseif nombreCommandeClient > 1  and nombreCommandeClient <= 3 %}alert alert-info{% elseif  nombreCommandeClient > 3 %}alert alert-success{% endif %}">
+                                            <td>{{ entity.id }}</td>
+                                            <td>
+                                                {{ entity.dcr|date("d/m/Y H:i:s") }}
+                                            </td>
+                                            <td>{{ entity.deal }}</td>
+                                            <td>{{ entity.reference.title }}</td>
+                                            <td>{{ prixCoupon *  entity.qte }} DT</td>
+
+                                            <td>{{ client }}</td>
+                                            <td>
+
+                                                {% if nombreCommandeClient <= 1 %}
+                                                    Nouveaux client
+                                                {% elseif nombreCommandeClient > 1  and nombreCommandeClient <= 3 %}
+                                                    Ancien Client
+                                                {% elseif  nombreCommandeClient > 3 %}
+                                                    Client fidéle
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ entity.client.phone }}</td>
+
+                                            <td>{{ entity.qte }}</td>
+                                            <td>{% if entity.caisse is not null %}{{ entity.caisse.libelle }}{% endif %}
+                                            </td>
+                                            <td>{% if entity.etat == 1 %} Payé {% elseif entity.etat==0 %} En attente {% else %} Epuisé{% endif %}</td>
+                                        </tr>
+                                    {% endif %}
+                                {% endfor %}
+
+                                </tbody>
+                            </table>
+                            {# display navigation #}
+                            <div class="pagination pagination-large" style="text-align: center">
+                                {{ knp_pagination_render(pagination) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ==================== END OF WIDGETS CONTAINER ==================== -->
+    </div>
+
+    <!-- ==================== END OF PAGE CONTENT ==================== -->
+    <link rel="stylesheet" type="text/css" href="{{ asset('RessourcesBack/css/bootstrap-select.css') }}">
+
+{% endblock %}
+    {% block javascripts %}
+        <script src="{{ asset('RessourcesBack/js/bootstrap-select.js') }}"></script>
+
+        <!-- masked inputs -->
+        <script src="{{ asset('public/js/jquery.ui.autocomplete.min.js') }}"></script>
+        <script src="{{ asset('RessourcesBack/js/vendor/jquery-ui-1.10.2.custom.min.js') }}"></script>        <!-- jquery ui dragging -->
+    {% endblock %}

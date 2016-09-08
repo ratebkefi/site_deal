@@ -1,0 +1,28 @@
+{% extends '::base.html.twig' %}
+{% block stylesheets %}
+
+{% endblock %}
+{% block javascripts %}
+
+{% endblock %}
+
+
+{% block body %}
+    <div class="page-error">
+        <div class="row">
+            <div class="col-sm-offset-2 col-sm-8">
+                <img src="{{ asset('public/images/404.png') }}" class="img-responsive" alt="404 not found" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-offset-2 col-sm-8">
+                <h1>Page Introuvable</h1>
+                <div class="text-center">
+                	<a href="{{ path('main_front_homepage') }}" class="btn btn-danger"><i class="fa fa-reply pr-10"></i>Retour à la page d'accueil</a>
+            	</div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

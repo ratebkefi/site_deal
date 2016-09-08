@@ -1,0 +1,162 @@
+<link href="{{ asset('RessourcesBack/css/bootstrap-responsive.min.css') }}" type="text/css" rel="stylesheet"/>
+<link href="{{ asset('RessourcesBack/css/styles.css') }}" type="text/css" rel="stylesheet"/>
+<script src="{{ asset('RessourcesBack/js/jquery-1.10.1.min.js') }}"></script>
+<script src="{{ asset('RessourcesBack/js/vendor/bootstrap.min.js') }}"></script>
+<script src="{{ asset('RessourcesBack/js/lib/bootbox/bootbox.min.js') }}"></script>
+
+<!-- ==================== COMMON ELEMENTS ROW ==================== -->
+
+<div class="span12">
+    <!-- ==================== TEXT INPUTS HEADLINE ==================== -->
+    <div class="containerHeadline">
+        <i class="icon-edit"></i>
+
+        <h2>Retrait</h2>
+
+        <div class="controlButton pull-right"><i class="icon-remove removeElement"></i></div>
+        <div class="controlButton pull-right"><i class="icon-caret-down minimizeElement"></i></div>
+    </div>
+    <!-- ==================== END OF TEXT INPUTS HEADLINE ==================== -->
+
+    <!-- ==================== TEXT INPUTS FLOATING BOX ==================== -->
+    <div class="floatingBox">
+        <!-- ==================== WIDGETS CONTAINER ==================== -->
+        <div class="container-fluid">
+            <!-- ==================== DEFAULT TABLE HEADLINE ==================== -->
+
+            <!-- ==================== END OF DEFAULT TABLE HEADLINE ==================== -->
+            <!-- ==================== DEFAULT TABLE FLOATING BOX ==================== -->
+
+
+            <form target="_parent" action="{{ path('retrait_responsablecaissier_manager' , { 'id': id }) }}" class="contentForm" method="POST" id="form">
+                <div class="container-fluid">
+                    <div class="span11">
+                        <div class="containerHeadline">
+                            <i class="icon-dollar"></i><h2>Sélectionnez le type de retrait</h2>
+                            <div class="controlButton pull-right"><i class="icon-remove removeElement"></i></div>
+                            <div class="controlButton pull-right"><i class="icon-caret-down minimizeElement"></i></div>
+                        </div>
+                        <div class="floatingBox inlineSelect inline danger">
+                            <div class="container-fluid">
+                                <div class="control-group">
+                                    <div class="controls">
+                                        {% for payement in  modepayement %}
+
+                                        <label class="checkbox {% if payement.id ==1 %} checked {% endif %}" style="width: 48%">
+                                            <input class="spann{{ payement.id }} css-checkbox" type="checkbox" name="mode[]" onclick="afficherModePayement({{ payement.id }})" value="{{ payement.id }}" {% if payement.id ==1 %} checked="checked" {% endif %} >
+                                            <span class="css-label">{{ payement.name }}</span>
+                                        </label>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="container-fluid" id="espece">
+                    <div class="row-fluid">
+                        <div class="span12">
+                            <h3>Espèce</h3>
+                    <table width="100%" class="table table-bordered">
+
+                        <tbody>
+                        <tr>
+                            <td width="80px;" style="border: none !important;">Montant :</td>
+                            <td style="border: none !important;"><input type="text" size="20px" value="" name="espece" id="input-espece"  required="required"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                        </div></div>
+                <div class="container-fluid" id="cheque" style="display: none;">
+                    <div class="row-fluid">
+                        <div class="span12">
+                            <h3>Chèque</h3>
+                            <table class="table table-bordered" id="deal_container">
+                                <tr>
+                                    <td width="80px" style="border: none !important;">Montant:</td>
+                                    <td style="border: none !important;"><input id="input-cheque" type="text" size="20px"
+                                                                                value=""
+                                                                                name="montant_cheque"
+                                                                                style="width: 180px;" >
+
+                                    </td>
+                                </tr>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="formFooter">
+                    <button type="submit" class="btn btn-success submit" id="submit"><i class="icon-ok"> </i> Valider
+                    </button>
+                    {{ form_widget(form._token) }}
+                </div>
+            </form>
+
+
+        </div>
+        <!-- ==================== END OF WIDGETS CONTAINER ==================== -->
+    </div>
+
+    <!-- ==================== END OF PAGE CONTENT ==================== -->
+
+    {% block javascripts %}
+        <script src="{{ asset('RessourcesBack/js/jquery.js') }}"></script>                   <!-- bootstrap slider plugin -->
+
+        <script>
+
+
+        $("#form").submit(function(){
+            var checked = $("#form input:checked").length > 0;
+            if (!checked){
+                bootbox.alert("Sélectionnez au moins un type de retrait");
+                return false;
+            }
+        });
+
+
+
+
+        function afficherModePayement(valeur) {
+                if (valeur == 1) {
+                    if( $('.spann'+valeur).is(':checked') ) {
+                        $("#espece").show();
+                        $("#input-espece").attr("required", "true");
+
+                    }
+                    else
+                    {
+                        $("#espece").hide();
+                        $("#input-espece").removeAttr("required");
+
+                    }
+
+
+                   // $("#cheque").hide();
+
+                }
+                if (valeur == 2) {
+                    if( $('.spann'+valeur).is(':checked') ) {
+                        $("#cheque").show();
+                        $("#input-cheque").attr("required", "true");
+
+                    }
+                    else
+                    {
+                        $("#cheque").hide();
+                        $("#input-cheque").removeAttr("required");
+                    }
+
+
+                }
+
+
+            }
+
+
+
+
+
+        </script>
+    {% endblock %}

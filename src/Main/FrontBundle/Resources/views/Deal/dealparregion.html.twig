@@ -1,0 +1,53 @@
+{% if pagination|length>0 %}
+	
+    <div id="shows" class="row ddcontainer{{region.id}}">
+        {% for item in pagination %}
+            
+            <div class="col-md-6 show dditem{{region.id}}">
+                <a href="{{ path('deal_detail',  {'region':(item.planning.regionId|getAlias),'categorie':(item.planning.categoryId|getAlias), 'id': item.id ,'name':(item.title|getAlias)}) }}"><img src="{{ asset(item.image1| imagine_filter('homedeal')) }}" class="img-responsive" alt="{{ item.title }}" /></a>
+				
+                <div class="details">
+	                <p class="dealTitle"><a href="{{ path('deal_detail',  {'region':(item.planning.regionId|getAlias),'categorie':(item.planning.categoryId|getAlias), 'id': item.id ,'name':(item.title|getAlias)}) }}">{{ item.title }}</a></p>
+	                <p><i class="fa fa-tags teal"></i><span class="dark-gray">
+					
+
+					{% set pointVente=item.planning.defaultannexe.protocol.user.sellingpoint %}
+					       {% if pointVente|length != 0 %}
+
+                          {% if pointVente[0].visible == 0   %}
+                                                                    {{ pointVente[0].name }}
+                                                            {% else %}
+                                                                {{ pointVente[0].visibleAdress }}
+                                                            {% endif %}
+                                                            {% endif %}
+															
+					</span>  <i class="fa fa-map-marker teal"></i><span class="dark-gray">{{ item.planning.regionId }}</span></p>
+	                <div class="row">
+		                <div class="teal bold col-md-3 col-sm-3 col-xs-4 border">
+						
+						{% set ref=item.planning.defaultannexe.reference[0] %}
+		                    {{ ref.bigdealPrice }}<sup>DT</sup><span class="bottom dark-gray">{{ ref.shopPrice }}<sup>DT</sup></span>
+		                
+						 </div>
+						 <div class="teal bold col-md-3 col-sm-3 col-xs-3 BigfidPrice">
+		                	{{ ref.bigdealPrice|getBigfid }} <i class="flaticon-computerchip"></i>
+		                </div>
+						 <div class="teal bold col-md-2 col-sm-2 col-xs-3"><i class="flaticon-group2"></i> {{ item.id|nombreAcheteurs }}</div>
+		                
+		                <div class="col-md-4 col-xs-2">
+	                		<a href="{{ path('deal_detail',  {'region':(item.planning.regionId|getAlias),'categorie':(item.planning.categoryId|getAlias), 'id': item.id ,'name':(item.title|getAlias)}) }}" class="btn"><i class="fa fa-arrow-circle-right hidden-md hidden-sm"></i><span class="hidden-xs">Voir le Deal</span></a>
+	                	</div>
+	                </div>
+	            </div>
+            </div>
+            {% if loop.index%2==0 %}<div class="clearfix"></div>{% endif %}
+
+        {% endfor %}
+        <div style="clear: both;"></div>
+       
+    </div>
+        {% else %}
+            <div class="alert alert-danger">Cette région ne contient pas des deals</div>
+    {% endif %}
+
+	

@@ -1,0 +1,25 @@
+main_front_homepage:
+    path:     /
+    defaults: { _controller: MainFrontBundle:Default:index }
+hide_banner:
+    path:     /hidebanner
+    defaults: { _controller: MainFrontBundle:Default:hidebanner }
+
+deal_detail:
+    resource: "@MainFrontBundle/Resources/config/routing/deal.yml"
+    prefix:   /
+pages_detail:
+    resource: "@MainFrontBundle/Resources/config/routing/pages.yml"
+    prefix:   /
+
+inscription:
+    resource: "@MainFrontBundle/Resources/config/routing/client.yml"
+    prefix:   /
+
+
+pages_detail:
+    resource: "@MainFrontBundle/Resources/config/routing/pages.yml"
+    prefix:   /
+ticket:
+    resource: "@MainFrontBundle/Resources/config/routing/tickets.yml"
+    prefix:   /
